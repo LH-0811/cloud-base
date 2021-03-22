@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cloud</groupId>
+    <artifactId>base</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <modules>
+        <module>core-common</module>
+        <module>boot-example</module>
+        <module>dependency-mybatis-tk</module>
+        <module>dependency-alibaba-cloud</module>
+        <module>modules-security</module>
+        <module>moudles-logger</module>
+        <module>modules-multi-datasource</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <!--  三方库 版本管理  -->
+        <druid.version>1.1.21</druid.version>
+        <mybatis-spring-boot-starter.version>2.1.2</mybatis-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.2.12</pagehelper-spring-boot-starter.version>
+        <tk.mybatis.version>2.1.5</tk.mybatis.version>
+        <swagger2.version>2.8.0</swagger2.version>
+        <guava.version>28.1-jre</guava.version>
+        <fastjson.version>1.2.60</fastjson.version>
+        <security-jwt.version>1.0.10.RELEASE</security-jwt.version>
+        <cloud-security.version>2.2.2.RELEASE</cloud-security.version>
+        <security-oauth2.version>2.2.2.RELEASE</security-oauth2.version>
+        <servlet-api.version>9.0.38</servlet-api.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+    </properties>
+
+    <!--
+        2020 3 12
+        本次代码 用最新版
+        官网推荐版本对应关系：https://cloud.spring.io/spring-cloud-static/Hoxton.SR6/reference/html/spring-cloud.html
+        Hoxton  2.2.x
+
+        Greenwich   2.1.x
+
+        Finchley    2.0.x
+
+        Edgware 1.5.x
+
+        Dalston 1.5.x
+        -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- 版本对照 https://spring.io/projects/spring-cloud-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>2.2.10.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- 版本对照 https://start.spring.io/actuator/info-->
+            <!-- "Hoxton.SR3": "Spring Boot >=2.2.0.M4 and <2.2.6.BUILD-SNAPSHOT",-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <!--SR3 版本 与openfeign整合sentinel会报错-->
+                <version>Hoxton.SR8</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--cloud alibaba https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md
+                        1.5.x 版本适用于 Spring Boot 1.5.x
+                        2.0.x 版本适用于 Spring Boot 2.0.x
+                        2.1.x 版本适用于 Spring Boot 2.1.x
+                        2.2.x 版本适用于 Spring Boot 2.2.x
+            -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.2.0.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-security</artifactId>
+                <version>${cloud-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-oauth2</artifactId>
+                <version>${security-oauth2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+            </dependency>
+
+            <!-- 数据库连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot-starter.version}</version>
+            </dependency>
+            <!-- mybatis 加强-->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper-spring-boot-starter</artifactId>
+                <version>${tk.mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections4.version}</version>
+            </dependency>
+            <!--swagger-ui-->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+            <!-- guava-->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
