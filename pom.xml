@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cloud</groupId>
-    <artifactId>base</artifactId>
+    <artifactId>cloud-base</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>core-common</module>
