@@ -10,12 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cloud.base</groupId>
-    <artifactId>cloud-example-provider</artifactId>
+    <artifactId>cloud-example-consumer</artifactId>
     <packaging>pom</packaging>
-    <description>云服务示例提供者</description>
     <modules>
-        <module>cloud-example-provider-api</module>
-        <module>cloud-example-provider-impl</module>
+        <module>cloud-example-consumer-api</module>
+        <module>cloud-example-consumer-impl</module>
     </modules>
 
 

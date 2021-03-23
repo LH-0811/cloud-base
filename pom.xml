@@ -16,6 +16,7 @@
         <module>moudles-logger</module>
         <module>modules-multi-datasource</module>
         <module>cloud-example-provider</module>
+        <module>cloud-example-consumer</module>
     </modules>
     <packaging>pom</packaging>
 
