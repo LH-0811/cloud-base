@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 测试统一异常处理 和 基础返回信息封装类
+ *
  * @author lh0811
  * @date 2021/3/21
  */
