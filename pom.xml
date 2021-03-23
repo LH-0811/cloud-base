@@ -15,6 +15,7 @@
         <module>modules-security</module>
         <module>moudles-logger</module>
         <module>modules-multi-datasource</module>
+        <module>cloud-example-provider</module>
     </modules>
     <packaging>pom</packaging>
 
