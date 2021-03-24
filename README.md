@@ -22,4 +22,6 @@ boot-example: springboot单体应用示例
 
 cloud-example-*: springcloud 应用示例
 
+cloud-gateway: 通用网关
+
 ```
