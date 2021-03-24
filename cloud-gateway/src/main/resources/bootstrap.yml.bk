@@ -1,24 +1,19 @@
-## 如果是走配置中心用这个配置文件 其他的配置都可以放到配置中心去处理。
 #spring:
 #  application:
-#    name: product
+#    name: gateway
 #  cloud:
 #    nacos:
 #      config:
 #        server-addr: 127.0.0.1:8848
 #        file-extension: yaml
-#        namespace: 481a933a-5972-4cb8-90de-b4d91a8ce4a3
-#        # group: dev
+#        namespace: 2adfab9d-7e77-4ab0-bc0a-1470247b0755
 #        extension-configs:
-#          - data-id: datasource.yaml
-#            group: dev
-#            refresh: true
 #          - data-id: application.yaml
 #            group: dev
 #            refresh: true
 #          - data-id: springcloud-register.yaml
 #            group: dev
 #            refresh: true
-#          - data-id: product.yaml
+#          - data-id: gateway.yaml
 #            group: dev
 #            refresh: true

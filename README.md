@@ -18,5 +18,8 @@ modules-*：
 *注意：这一类属于针对某种通用功能的实现，理论上业务服务只需要引入这些功能组件就可以针对业务使用现有功能。
 但是由于是一种功能的实现，所以每个模块都应该有个readme来描述如何使用该功能模块。
 
+boot-example: springboot单体应用示例
+
+cloud-example-*: springcloud 应用示例
 
 ```

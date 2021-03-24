@@ -1,0 +1,26 @@
+server:
+  port: 8800
+spring:
+  jackson:
+    time-zone: GMT+8
+    generator:
+      WRITE_NUMBERS_AS_STRINGS: true
+  application:
+    name: cloud-gateway
+  cloud:
+    #gateway 设置使用服务名路由 默认服务名是大写
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          #gateway 服务名小写 (不建议)
+#          lower-case-service-id: true
+    nacos: # 配置nacos
+      discovery: # 服务发现地址
+        server-addr: 127.0.0.1:8848 # nacos 启动地址
+# 健康检查
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

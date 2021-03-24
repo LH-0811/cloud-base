@@ -17,6 +17,7 @@
         <module>modules-multi-datasource</module>
         <module>cloud-example-provider</module>
         <module>cloud-example-consumer</module>
+        <module>cloud-gateway</module>
     </modules>
     <packaging>pom</packaging>
 
