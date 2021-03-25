@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 80022
  Source Host           : localhost:3306
- Source Schema         : test1
+ Source Schema         : example-storage
 
  Target Server Type    : MySQL
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 25/03/2021 17:21:12
+ Date: 25/03/2021 20:33:18
 */
 
 SET NAMES utf8mb4;
@@ -27,6 +27,7 @@ CREATE TABLE `t_storage` (
   `total` int DEFAULT NULL COMMENT '总库存',
   `used` int DEFAULT NULL COMMENT '已用库存',
   `residue` int DEFAULT NULL COMMENT '剩余库存',
+  `price` decimal(10,2) DEFAULT NULL COMMENT '单价',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
@@ -34,7 +35,7 @@ CREATE TABLE `t_storage` (
 -- Records of t_storage
 -- ----------------------------
 BEGIN;
-INSERT INTO `t_storage` VALUES (1, 1, 100, 0, 100);
+INSERT INTO `t_storage` VALUES (1, 1, 100, 0, 100, 10.00);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
