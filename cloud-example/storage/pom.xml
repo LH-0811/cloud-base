@@ -11,6 +11,6 @@
 
     <artifactId>storage</artifactId>
     <packaging>pom</packaging>
-
+    <description>库存模块</description>
 
 </project>

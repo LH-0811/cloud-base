@@ -11,5 +11,5 @@
 
     <artifactId>order</artifactId>
     <packaging>pom</packaging>
-
+    <description>订单模块</description>
 </project>

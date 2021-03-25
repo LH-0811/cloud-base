@@ -11,9 +11,9 @@
 
     <artifactId>account</artifactId>
     <packaging>pom</packaging>
-
-    <description>
-
-    </description>
-
+    <description>账户模块</description>
+    <modules>
+        <module>example-account-api</module>
+        <module>example-account-impl</module>
+    </modules>
 </project>

@@ -3,29 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>cloud-example-consumer</artifactId>
+        <artifactId>account</artifactId>
         <groupId>com.cloud.base</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cloud-example-consumer-impl</artifactId>
+    <artifactId>example-account-impl</artifactId>
 
     <dependencies>
+        <!-- 引用自身api -->
         <dependency>
             <groupId>com.cloud.base</groupId>
-            <artifactId>cloud-example-consumer-api</artifactId>
+            <artifactId>example-account-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-        <!-- 引用接口 -->
-        <dependency>
-            <groupId>com.cloud.base</groupId>
-            <artifactId>cloud-example-provider-api</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
     </dependencies>
+
 
     <build>
         <plugins>

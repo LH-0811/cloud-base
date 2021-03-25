@@ -28,7 +28,13 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
+
         <!--  三方库 版本管理  -->
+        <springboot.version>2.2.10.RELEASE</springboot.version>
+        <springcloud.version>Hoxton.SR8</springcloud.version>
+        <springcloud-alibaba.version>2.2.0.RELEASE</springcloud-alibaba.version>
+
+
         <druid.version>1.1.21</druid.version>
         <mybatis-spring-boot-starter.version>2.1.2</mybatis-spring-boot-starter.version>
         <pagehelper-spring-boot-starter.version>1.2.12</pagehelper-spring-boot-starter.version>
@@ -41,53 +47,35 @@
         <security-oauth2.version>2.2.2.RELEASE</security-oauth2.version>
         <servlet-api.version>9.0.38</servlet-api.version>
         <commons-collections4.version>4.4</commons-collections4.version>
+
     </properties>
 
-    <!--
-        2020 3 12
-        本次代码 用最新版
-        官网推荐版本对应关系：https://cloud.spring.io/spring-cloud-static/Hoxton.SR6/reference/html/spring-cloud.html
-        Hoxton  2.2.x
 
-        Greenwich   2.1.x
-
-        Finchley    2.0.x
-
-        Edgware 1.5.x
-
-        Dalston 1.5.x
-        -->
     <dependencyManagement>
         <dependencies>
-            <!-- 版本对照 https://spring.io/projects/spring-cloud-->
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.2.10.RELEASE</version>
+                <version>${springboot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- 版本对照 https://start.spring.io/actuator/info-->
-            <!-- "Hoxton.SR3": "Spring Boot >=2.2.0.M4 and <2.2.6.BUILD-SNAPSHOT",-->
+
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <!--SR3 版本 与openfeign整合sentinel会报错-->
-                <version>Hoxton.SR8</version>
+                <version>${springcloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
 
-            <!--cloud alibaba https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md
-                        1.5.x 版本适用于 Spring Boot 1.5.x
-                        2.0.x 版本适用于 Spring Boot 2.0.x
-                        2.1.x 版本适用于 Spring Boot 2.1.x
-                        2.2.x 版本适用于 Spring Boot 2.2.x
-            -->
+
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${springcloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
