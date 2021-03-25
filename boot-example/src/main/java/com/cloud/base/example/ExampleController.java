@@ -26,6 +26,8 @@ public class ExampleController {
 
     @GetMapping("/exception")
     public String exception() throws Exception {
+//        int a = 1/0;  打开就走全局异常 不打开就走自定义统一异常
+
         throw CommonException.create(ServerResponse.createByError("测试统一异常处理"));
     }
 

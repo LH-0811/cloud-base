@@ -18,6 +18,7 @@
         <module>cloud-example-provider</module>
         <module>cloud-example-consumer</module>
         <module>cloud-gateway</module>
+        <module>cloud-example</module>
     </modules>
     <packaging>pom</packaging>
 
