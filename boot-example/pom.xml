@@ -12,6 +12,10 @@
     <groupId>com.cloud.base</groupId>
     <artifactId>boot-example</artifactId>
 
+    <description>
+        集成了 sercurity logger  多数据源 的功能模块并测试
+    </description>
+
     <dependencies>
         <dependency>
             <groupId>com.cloud.base.core</groupId>

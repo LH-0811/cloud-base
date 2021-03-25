@@ -19,6 +19,7 @@
         <module>cloud-example-consumer</module>
         <module>cloud-gateway</module>
         <module>cloud-example</module>
+        <module>core-common-sentinel</module>
     </modules>
     <packaging>pom</packaging>
 
