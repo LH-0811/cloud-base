@@ -20,6 +20,7 @@
         <module>cloud-gateway</module>
         <module>cloud-example</module>
         <module>core-common-sentinel</module>
+        <module>dependency-seata</module>
     </modules>
     <packaging>pom</packaging>
 
