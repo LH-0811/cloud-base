@@ -3,18 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>cloud-example</artifactId>
+        <artifactId>storage</artifactId>
         <groupId>com.cloud.base</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>storage</artifactId>
-    <packaging>pom</packaging>
-    <description>库存模块</description>
-    <modules>
-        <module>example-storage-api</module>
-        <module>example-storage-impl</module>
-    </modules>
+    <artifactId>example-storage-impl</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.cloud.base</groupId>
+            <artifactId>example-storage-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>
