@@ -18,6 +18,13 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <!-- 引入mysql mybatis 相关orm-->
+        <dependency>
+            <groupId>com.cloud.base.core</groupId>
+            <artifactId>dependency-mybatis-tk</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- 引入微服务相关依赖 -->
         <dependency>
             <groupId>com.cloud.base.core</groupId>
