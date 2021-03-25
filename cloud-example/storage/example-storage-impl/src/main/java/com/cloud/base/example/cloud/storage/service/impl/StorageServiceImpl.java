@@ -55,10 +55,10 @@ public class StorageServiceImpl implements StorageService {
 
         // 扣减库存
         try {
-            TStorage storageUpdate = new TStorage();
-            storageUpdate.setId(storage.getId());
-            storageUpdate.setResidue(storage.getResidue() - param.getCount());
-            storageDao.updateByPrimaryKeySelective(storageUpdate);
+            storage.setId(storage.getId());
+            storage.setUsed(storage.getUsed()+param.getCount());
+            storage.setResidue(storage.getResidue() - param.getCount());
+            storageDao.updateByPrimaryKeySelective(storage);
         } catch (Exception e) {
             throw CommonException.create(e,ServerResponse.createByError("系统错误,扣减库存失败"));
         }

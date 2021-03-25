@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-public interface StorageApi {
+public interface ExampleStorageApi {
 
     @PostMapping("/storage/subtraction")
     @ApiOperation("扣减库存")

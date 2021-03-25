@@ -13,6 +13,8 @@ spring:
   application:
     name: cloud-example-account
   jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
     time-zone: GMT+8
     generator:
       # 避免Long类型丢失经度

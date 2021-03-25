@@ -12,4 +12,8 @@
     <artifactId>order</artifactId>
     <packaging>pom</packaging>
     <description>订单模块</description>
+    <modules>
+        <module>example-order-api</module>
+        <module>example-order-impl</module>
+    </modules>
 </project>

@@ -8,10 +8,11 @@ feign:
         readTimeout: 10000  #请求处理超时
         loggerLevel: none  # full | basic | none | headers
 server:
-  port: 9102
+  port: 9103
+
 spring:
   application:
-    name: cloud-example-storage
+    name: cloud-example-order
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
@@ -28,7 +29,7 @@ spring:
     # 使用多数据源时 这个配置便是 默认数据源
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/example-storage?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://localhost:3306/example-order?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
       username: root
       password: 123456
       initial-size: 10
@@ -60,7 +61,7 @@ spring:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-  type-aliases-package: com.cloud.base.example.cloud.storage.repository.entity
+  type-aliases-package: com.cloud.base.example.cloud.order.repository.entity
 mapper:
   not-empty: false
   identity: MYSQL

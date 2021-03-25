@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 80022
  Source Host           : localhost:3306
- Source Schema         : test1
+ Source Schema         : example-order
 
  Target Server Type    : MySQL
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 25/03/2021 17:21:21
+ Date: 25/03/2021 21:51:02
 */
 
 SET NAMES utf8mb4;
@@ -29,6 +29,6 @@ CREATE TABLE `t_order` (
   `money` decimal(11,0) DEFAULT NULL COMMENT '金额',
   `status` int DEFAULT NULL COMMENT '订单状态：0创建中，1已完结',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1375082607309103105 DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;

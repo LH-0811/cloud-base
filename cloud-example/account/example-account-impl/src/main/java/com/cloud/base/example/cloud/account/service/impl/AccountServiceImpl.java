@@ -50,6 +50,7 @@ public class AccountServiceImpl implements AccountService {
         }
         // 扣减余额
         try {
+            account.setUsed(account.getUsed().add(param.getAmt()));
             account.setResidue(account.getResidue().subtract(param.getAmt()));
             accountDao.updateByPrimaryKeySelective(account);
         }catch (Exception e){

@@ -11,7 +11,7 @@
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 25/03/2021 20:33:18
+ Date: 25/03/2021 21:51:10
 */
 
 SET NAMES utf8mb4;
@@ -35,7 +35,7 @@ CREATE TABLE `t_storage` (
 -- Records of t_storage
 -- ----------------------------
 BEGIN;
-INSERT INTO `t_storage` VALUES (1, 1, 100, 0, 100, 10.00);
+INSERT INTO `t_storage` VALUES (1, 1, 1000, 0, 1000, 100.00);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
