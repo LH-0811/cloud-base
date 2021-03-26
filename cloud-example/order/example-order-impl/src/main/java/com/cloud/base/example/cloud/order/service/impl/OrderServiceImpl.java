@@ -14,6 +14,7 @@ import com.cloud.base.example.cloud.order.service.OrderService;
 import com.cloud.base.example.cloud.order.vo.OrderVo;
 import com.cloud.base.example.cloud.storage.param.SubtractionStorageParam;
 import com.cloud.base.example.cloud.storage.vo.SubtractionStorageVo;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
     // 创建订单
     @Override
     // 添加seata 全局事务注解 name 唯一
-//    @GlobalTransactional(name = "create_order",rollbackFor = Exception.class)
+    @GlobalTransactional(name = "create_order",rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     public OrderVo createOrder(OrderCreateParam param) throws Exception {
         // 检查参数

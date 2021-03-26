@@ -18,6 +18,13 @@
             <artifactId>example-account-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <!-- 引入分布式事务-->
+        <dependency>
+            <groupId>com.cloud.base.core</groupId>
+            <artifactId>dependency-seata</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 
