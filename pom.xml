@@ -15,8 +15,6 @@
         <module>modules-security</module>
         <module>moudles-logger</module>
         <module>modules-multi-datasource</module>
-        <module>cloud-example-provider</module>
-        <module>cloud-example-consumer</module>
         <module>cloud-gateway</module>
         <module>cloud-example</module>
         <module>core-common-sentinel</module>

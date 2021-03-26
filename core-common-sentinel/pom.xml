@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cloud.base.core</groupId>
-    <artifactId>core-common-seata</artifactId>
+    <artifactId>core-common-sentinel</artifactId>
 
 
     <packaging>jar</packaging>
