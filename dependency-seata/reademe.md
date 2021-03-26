@@ -326,3 +326,17 @@ seata:
     vgroup-mapping.my_test_tx_group: default
     grouplist: 49.232.166.94:8091
 ```
+
+## 3. 使用示例
+在需要控制分布式事务的service方法上添加注解
+```
+    // 添加seata 全局事务注解 name 自定义唯一
+    @GlobalTransactional(name = "create_order",rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
+    public OrderVo createOrder(OrderCreateParam param) throws Exception {
+        1. 创建订单  （order 库）
+        2. 扣库存得到总价格 （storage库）
+        3. 扣用户余额（account库）
+        4. 更新订单状态，完成创建订单 （order 库）
+    }
+```
