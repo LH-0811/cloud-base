@@ -37,6 +37,14 @@
             <artifactId>dependency-seata</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <!-- 引入流控 sentinel-->
+        <dependency>
+            <groupId>com.cloud.core</groupId>
+            <artifactId>dependency-sentinel</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

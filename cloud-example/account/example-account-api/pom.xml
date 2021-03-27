@@ -14,7 +14,7 @@
         <!-- 通用包 -->
         <dependency>
             <groupId>com.cloud.base.core</groupId>
-            <artifactId>core-common</artifactId>
+            <artifactId>core-common-sentinel</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

@@ -24,6 +24,12 @@ spring:
     nacos: # 配置nacos
       discovery: # 服务发现地址
         server-addr: 49.232.166.94:8848 # nacos 启动地址
+    sentinel: # 配置sentinel
+      transport:
+        dashboard: localhost:9000 # 配置sentinel dashboard 启动地址
+        port: 8719 # 直接写8719 端口号默认是8719 如果被占用就是+1 直到找到未被占用端口
+      filter:
+        url-patterns: /** # 默认是/* 这里改成/** 则会监控所有的请求
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     # 使用多数据源时 这个配置便是 默认数据源

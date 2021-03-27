@@ -1,6 +1,8 @@
 package com.cloud.base.example.cloud.order.controller;
 
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.example.cloud.order.param.OrderCreateParam;
 import com.cloud.base.example.cloud.order.repository.entity.TOrder;
@@ -13,10 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Api(tags = "订单接口")
@@ -27,6 +26,19 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+
+    // value 资源名称 ， 降级后的处理
+    @SentinelResource(value = "res_hello", blockHandler = "blockHandler")
+    @GetMapping("/hello")
+    @ApiOperation("hello测试流控接口")
+    public ServerResponse<OrderVo> hello() throws Exception {
+        return ServerResponse.createBySuccess("hello");
+    }
+
+
+
+    // value 资源名称 ， 降级后的处理
+    @SentinelResource(value = "/order/create", blockHandler = "blockHandler")
     @PostMapping("/create")
     @ApiOperation("创建订单")
     @ApiImplicitParams({
@@ -35,7 +47,12 @@ public class OrderController {
     public ServerResponse<OrderVo> createOrder(@RequestBody OrderCreateParam param) throws Exception {
         log.info(">>>>>>>>>>>进入创建订单接口OrderController.createOrder>>>>>>>>>>>>>>>>>>>>>>");
         OrderVo order = orderService.createOrder(param);
-        return ServerResponse.createBySuccess("创建成功",order);
+        return ServerResponse.createBySuccess("创建成功", order);
     }
 
+
+    // 降级后的自定义返回
+    public ServerResponse blockHandler(BlockException e) {
+        return ServerResponse.createByError("创建订单：系统繁忙，请稍后再试");
+    }
 }

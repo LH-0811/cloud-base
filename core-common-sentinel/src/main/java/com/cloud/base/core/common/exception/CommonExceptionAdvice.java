@@ -1,6 +1,7 @@
 package com.cloud.base.core.common.exception;
 
 import com.alibaba.csp.sentinel.Tracer;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
 import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.entity.ServerResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,17 @@ public class CommonExceptionAdvice {
         return e.getServerResponse();
     }
 
+
+
+    @ResponseBody
+    @ExceptionHandler(value = {FlowException.class})
+    public ServerResponse flowException(HttpServletRequest request, FlowException e) {
+        if (userSentinel) {
+            Tracer.trace(e);
+        }
+        log.error(CommonMethod.getTrace(e));
+        return ServerResponse.createByError(500, "系统繁忙请稍后");
+    }
 
     @ResponseBody
     @ExceptionHandler(value = {Exception.class})
