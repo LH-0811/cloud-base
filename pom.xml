@@ -30,9 +30,9 @@
 
 
         <!--  三方库 版本管理  -->
-        <springboot.version>2.2.10.RELEASE</springboot.version>
+        <springboot.version>2.3.9.RELEASE</springboot.version>
         <springcloud.version>Hoxton.SR8</springcloud.version>
-        <springcloud-alibaba.version>2.2.0.RELEASE</springcloud-alibaba.version>
+        <springcloud-alibaba.version>2.2.1.RELEASE</springcloud-alibaba.version>
 
 
         <druid.version>1.1.21</druid.version>
@@ -44,7 +44,6 @@
         <fastjson.version>1.2.60</fastjson.version>
         <security-jwt.version>1.0.10.RELEASE</security-jwt.version>
         <cloud-security.version>2.2.2.RELEASE</cloud-security.version>
-        <security-oauth2.version>2.2.2.RELEASE</security-oauth2.version>
         <servlet-api.version>9.0.38</servlet-api.version>
         <commons-collections4.version>4.4</commons-collections4.version>
 
@@ -84,11 +83,6 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-security</artifactId>
                 <version>${cloud-security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-oauth2</artifactId>
-                <version>${security-oauth2.version}</version>
             </dependency>
 
             <dependency>

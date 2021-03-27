@@ -7,6 +7,8 @@ feign:
         connectTimeout: 10000  #请求连接超时
         readTimeout: 10000  #请求处理超时
         loggerLevel: none  # full | basic | none | headers
+  sentinel:
+    enabled: true
 server:
   port: 9103
 
@@ -86,5 +88,5 @@ seata:
   application-id: cloud-example-order
   tx-service-group: my_test_tx_group
   service:
-    vgroup-mapping.my_test_tx_group: default
-    grouplist: 49.232.166.94:8091
+#    vgroup-mapping.my_test_tx_group: default
+    grouplist: { "default": "49.232.166.94:8091" }

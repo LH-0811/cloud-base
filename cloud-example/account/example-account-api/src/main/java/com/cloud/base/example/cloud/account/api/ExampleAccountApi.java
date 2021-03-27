@@ -5,6 +5,7 @@ import com.cloud.base.example.cloud.account.param.AccountSubtractionParam;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -20,4 +21,9 @@ public interface ExampleAccountApi {
             @ApiImplicitParam(paramType = "body", dataType = "AccountSubtractionParam", dataTypeClass = AccountSubtractionParam.class, name = "param", value = "参数"),
     })
     ServerResponse accountSubtraction(@RequestBody AccountSubtractionParam param) throws Exception;
+
+
+    @GetMapping("/account/hello")
+    @ApiOperation("hello测试流控接口")
+    ServerResponse hello() throws Exception ;
 }

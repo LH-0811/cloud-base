@@ -73,3 +73,11 @@ public ServerResponse flowException(HttpServletRequest request, FlowException e)
 }
 ```
 所以默认有这个同一异常处理来兜底
+
+## 6. feign 整合 sentinel
+在应用的配置文件中打开feign对sentinel的支持配置
+```
+feign:
+  sentinel:
+    enabled: true
+``` 

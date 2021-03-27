@@ -323,8 +323,7 @@ seata:
   application-id: cloud-example-storage
   tx-service-group: my_test_tx_group
   service:
-    vgroup-mapping.my_test_tx_group: default
-    grouplist: 49.232.166.94:8091
+    grouplist: { "default": "49.232.166.94:8091" }
 ```
 
 ## 3. 使用示例

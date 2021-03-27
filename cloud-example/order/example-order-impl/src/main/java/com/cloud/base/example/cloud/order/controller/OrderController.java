@@ -6,6 +6,7 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.example.cloud.order.param.OrderCreateParam;
 import com.cloud.base.example.cloud.order.repository.entity.TOrder;
+import com.cloud.base.example.cloud.order.service.ExampleAccountService;
 import com.cloud.base.example.cloud.order.service.OrderService;
 import com.cloud.base.example.cloud.order.vo.OrderVo;
 import io.swagger.annotations.Api;
@@ -26,19 +27,26 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+//    @Autowired
+//    private ExampleAccountService accountService;
+
+
 
     // value 资源名称 ， 降级后的处理
-    @SentinelResource(value = "res_hello", blockHandler = "blockHandler")
+    @SentinelResource(value = "res_order_hello", blockHandler = "blockHandler")
     @GetMapping("/hello")
     @ApiOperation("hello测试流控接口")
-    public ServerResponse<OrderVo> hello() throws Exception {
-        return ServerResponse.createBySuccess("hello");
+    public ServerResponse hello() throws Exception {
+//        ServerResponse serverResponse = accountService.hello();
+//        if (serverResponse.isSuccess()){
+//            log.info(serverResponse.getMsg());
+//        }
+        return ServerResponse.createBySuccess("hello order");
     }
 
 
 
     // value 资源名称 ， 降级后的处理
-    @SentinelResource(value = "/order/create", blockHandler = "blockHandler")
     @PostMapping("/create")
     @ApiOperation("创建订单")
     @ApiImplicitParams({
@@ -53,6 +61,6 @@ public class OrderController {
 
     // 降级后的自定义返回
     public ServerResponse blockHandler(BlockException e) {
-        return ServerResponse.createByError("创建订单：系统繁忙，请稍后再试");
+        return ServerResponse.createByError("账户系统hello：系统繁忙，请稍后再试");
     }
 }
