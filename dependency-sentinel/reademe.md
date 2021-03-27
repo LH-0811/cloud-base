@@ -35,6 +35,8 @@ spring:
 ## 5. 在本地服务中为资源做流控处理
 首先 如果服务中使用了sentinel做流控，那core-common包引用就改为core-common-sentinel
 使用SentinelResource 注解自定义资源 并可以指定降级后的异常处理方法
+
+###### 对于需要流控的资源最好是自定义资源名称并在sentinel中跟踪自定义资源的名称设置流控规则
 ```
 // value 资源名称 ， 降级后的处理
 @SentinelResource(value = "res_hello", blockHandler = "blockHandler")
@@ -60,6 +62,7 @@ public ServerResponse blockHandler(BlockException e) {
      return ServerResponse.createBySuccess("hello");
  }
  ```
+
 在该方法会跑出FlowException异常,在同一异常处理里面已经加了相关的处理
 ```
 @ResponseBody

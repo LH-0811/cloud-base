@@ -3,7 +3,9 @@ package com.cloud.base.example.cloud.order.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.entity.ServerResponse;
+import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.example.cloud.order.param.OrderCreateParam;
 import com.cloud.base.example.cloud.order.repository.entity.TOrder;
 import com.cloud.base.example.cloud.order.service.ExampleAccountService;
@@ -27,8 +29,8 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-//    @Autowired
-//    private ExampleAccountService accountService;
+    @Autowired
+    private ExampleAccountService accountService;
 
 
 
@@ -37,11 +39,12 @@ public class OrderController {
     @GetMapping("/hello")
     @ApiOperation("hello测试流控接口")
     public ServerResponse hello() throws Exception {
-//        ServerResponse serverResponse = accountService.hello();
-//        if (serverResponse.isSuccess()){
-//            log.info(serverResponse.getMsg());
-//        }
-        return ServerResponse.createBySuccess("hello order");
+        ServerResponse serverResponse = accountService.hello();
+        if (serverResponse.isSuccess()){
+            return ServerResponse.createBySuccess("hello order success");
+        }else {
+            throw CommonException.create(serverResponse);
+        }
     }
 
 
