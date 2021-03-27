@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cloud.core</groupId>
+    <groupId>com.cloud.dependency</groupId>
     <artifactId>dependency-sentinel</artifactId>
 
 

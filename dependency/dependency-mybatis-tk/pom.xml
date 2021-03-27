@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cloud.base.core</groupId>
+    <groupId>com.cloud.dependency</groupId>
     <artifactId>dependency-mybatis-tk</artifactId>
 
     <!--数据库 orm-->

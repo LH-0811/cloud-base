@@ -19,26 +19,26 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.cloud.base.core</groupId>
+            <groupId>com.cloud.common</groupId>
             <artifactId>core-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!--   security     -->
         <dependency>
-            <groupId>com.cloud.base.code.modules</groupId>
+            <groupId>com.cloud.modules</groupId>
             <artifactId>modules-security</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!--  logger      -->
         <dependency>
-            <groupId>com.cloud.base.code.modules</groupId>
+            <groupId>com.cloud.modules</groupId>
             <artifactId>modules-logger</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- 多数据源 -->
         <dependency>
-            <groupId>com.cloud.base.code.modules</groupId>
+            <groupId>com.cloud.modules</groupId>
             <artifactId>modules-multi-datasource</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

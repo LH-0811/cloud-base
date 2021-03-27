@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cloud.base.core</groupId>
+    <groupId>com.cloud.common</groupId>
     <artifactId>core-common</artifactId>
 
     <dependencies>

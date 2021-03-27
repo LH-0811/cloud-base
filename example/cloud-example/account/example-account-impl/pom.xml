@@ -21,13 +21,13 @@
 
         <!-- 引入分布式事务-->
         <dependency>
-            <groupId>com.cloud.base.core</groupId>
+            <groupId>com.cloud.dependency</groupId>
             <artifactId>dependency-seata</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- 引入流控 sentinel-->
         <dependency>
-            <groupId>com.cloud.core</groupId>
+            <groupId>com.cloud.dependency</groupId>
             <artifactId>dependency-sentinel</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

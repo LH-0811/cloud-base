@@ -15,12 +15,10 @@
     <dependencies>
         <!--引入sentinel-->
         <dependency>
-            <groupId>com.cloud.base</groupId>
+            <groupId>com.cloud.dependency</groupId>
             <artifactId>dependency-sentinel-gateway</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-
 
         <!-- 微服务 -->
         <!--springboot-->

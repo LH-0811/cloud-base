@@ -9,17 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cloud.base.code.modules</groupId>
+    <groupId>com.cloud.modules</groupId>
     <artifactId>modules-multi-datasource</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.cloud.base.core</groupId>
+            <groupId>com.cloud.common</groupId>
             <artifactId>core-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.cloud.base.core</groupId>
+            <groupId>com.cloud.dependency</groupId>
             <artifactId>dependency-mybatis-tk</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

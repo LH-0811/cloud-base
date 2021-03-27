@@ -13,21 +13,21 @@
     <dependencies>
         <!-- 通用包 -->
         <dependency>
-            <groupId>com.cloud.base.core</groupId>
+            <groupId>com.cloud.common</groupId>
             <artifactId>core-common-sentinel</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!-- 引入mysql mybatis 相关orm-->
         <dependency>
-            <groupId>com.cloud.base.core</groupId>
+            <groupId>com.cloud.dependency</groupId>
             <artifactId>dependency-mybatis-tk</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!-- 引入微服务相关依赖 -->
         <dependency>
-            <groupId>com.cloud.base.core</groupId>
+            <groupId>com.cloud.dependency</groupId>
             <artifactId>dependency-alibaba-cloud</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
