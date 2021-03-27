@@ -3,14 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>cloud-base</artifactId>
+        <artifactId>modules</artifactId>
         <groupId>com.cloud</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cloud.base.code.modules</groupId>
-    <artifactId>moudles-logger</artifactId>
+    <artifactId>modules-multi-datasource</artifactId>
 
     <dependencies>
         <dependency>
@@ -18,8 +18,12 @@
             <artifactId>core-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-        <!--引入AOP依赖-->
+        <dependency>
+            <groupId>com.cloud.base.core</groupId>
+            <artifactId>dependency-mybatis-tk</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <!--  切面-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>

@@ -7,22 +7,15 @@
     <groupId>com.cloud</groupId>
     <artifactId>cloud-base</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <modules>
-        <module>core-common</module>
-        <module>boot-example</module>
-        <module>dependency-mybatis-tk</module>
-        <module>dependency-alibaba-cloud</module>
-        <module>modules-security</module>
-        <module>moudles-logger</module>
-        <module>modules-multi-datasource</module>
-        <module>cloud-gateway</module>
-        <module>cloud-example</module>
-        <module>core-common-sentinel</module>
-        <module>dependency-seata</module>
-        <module>dependency-sentinel</module>
-        <module>dependency-sentinel-gateway</module>
-    </modules>
     <packaging>pom</packaging>
+
+    <modules>
+        <module>cloud-gateway</module>
+        <module>example</module>
+        <module>common</module>
+        <module>dependency</module>
+        <module>modules</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>cloud-base</artifactId>
+        <groupId>com.cloud</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>dependency</artifactId>
+    <packaging>pom</packaging>
+
+    <description>功能能力依赖管理模块</description>
+
+    <modules>
+        <module>dependency-mybatis-tk</module>
+        <module>dependency-alibaba-cloud</module>
+        <module>dependency-seata</module>
+        <module>dependency-sentinel</module>
+        <module>dependency-sentinel-gateway</module>
+    </modules>
+
+
+</project>

@@ -9,16 +9,15 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cloud.base.core</groupId>
-    <artifactId>dependency-seata</artifactId>
+    <artifactId>example</artifactId>
+    <packaging>pom</packaging>
 
+    <description>代码应用示例模块</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>boot-example</module>
+        <module>cloud-example</module>
+    </modules>
 
 
 
