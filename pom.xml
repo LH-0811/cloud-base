@@ -20,6 +20,7 @@
         <module>core-common-sentinel</module>
         <module>dependency-seata</module>
         <module>dependency-sentinel</module>
+        <module>dependency-sentinel-gateway</module>
     </modules>
     <packaging>pom</packaging>
 
