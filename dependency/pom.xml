@@ -20,6 +20,7 @@
         <module>dependency-seata</module>
         <module>dependency-sentinel</module>
         <module>dependency-sentinel-gateway</module>
+        <module>dependency-sleuth-zipkin</module>
     </modules>
 
 
