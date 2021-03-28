@@ -31,6 +31,13 @@ spring:
         port: 8719 # 直接写8719 端口号默认是8719 如果被占用就是+1 直到找到未被占用端口
       filter:
         url-patterns: /** # 默认是/* 这里改成/** 则会监控所有的请求
+  zipkin:
+    base-url: http://49.232.166.94:9411/ # 服务端地址
+    sender:
+      type: web # 数据传输方式，web 表示以 HTTP 报文的形式向服务端发送数据
+  sleuth:
+    sampler:
+      probability: 1.0 # 收集数据百分比，默认 0.1（10%） 生成中最好不要配置1 影响性能。
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     # 使用多数据源时 这个配置便是 默认数据源

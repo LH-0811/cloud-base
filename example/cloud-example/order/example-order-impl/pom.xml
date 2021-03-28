@@ -45,6 +45,13 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <!-- 引入链路跟踪 -->
+        <dependency>
+            <groupId>com.cloud.dependency</groupId>
+            <artifactId>dependency-sleuth-zipkin</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
