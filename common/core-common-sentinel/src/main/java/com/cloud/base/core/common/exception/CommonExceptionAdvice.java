@@ -5,6 +5,7 @@ import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
 import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.entity.ServerResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,6 +50,14 @@ public class CommonExceptionAdvice {
         }
         log.error(CommonMethod.getTrace(e));
         return ServerResponse.createByError(500, "未知错误！");
+    }
+
+
+    @ResponseBody
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ServerResponse throwCustomException(MethodArgumentNotValidException methodArgumentNotValidException){
+        // 这个不假sentinel的异常统计 这个不是系统异常
+        return ServerResponse.createByError("非法参数",methodArgumentNotValidException.getBindingResult().getFieldError().getDefaultMessage());
     }
 
 

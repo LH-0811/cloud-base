@@ -2,9 +2,8 @@ package com.cloud.base.core.common.exception;
 
 import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.entity.ServerResponse;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,6 +38,13 @@ public class CommonExceptionAdvice {
         //        }
         log.error(CommonMethod.getTrace(e));
         return ServerResponse.createByError(500, "未知错误！");
+    }
+
+
+    @ResponseBody
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ServerResponse throwCustomException(MethodArgumentNotValidException methodArgumentNotValidException){
+        return ServerResponse.createByError("非法参数",methodArgumentNotValidException.getBindingResult().getFieldError().getDefaultMessage());
     }
 
 
