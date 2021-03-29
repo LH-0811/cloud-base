@@ -3,16 +3,12 @@ package com.cloud.base.core.common.entity;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.cloud.base.core.common.exception.CommonException;
-import com.cloud.base.core.common.util.BeanValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 public class CommonMethod {
@@ -23,19 +19,6 @@ public class CommonMethod {
         t.printStackTrace(writer);
         StringBuffer buffer = stringWriter.getBuffer();
         return buffer.toString();
-    }
-
-    public static void checkParam(String className, String methodName, Object param) throws Exception {
-        log.info("开始执行{}.{},参数:{}", className, methodName, JSONObject.toJSONString(param));
-        if (param == null) {
-            return;
-        }
-        Map<String, String> err = BeanValidator.validate(param);
-        if (!CollectionUtils.isEmpty(err)) {
-            log.info("{}.{},参数不合法:{}", className, methodName, JSONObject.toJSONString(err));
-            ServerResponse serverResponse = ServerResponse.createByError(ResponseCode.ERROR.getCode(), "参数不合法");
-            throw CommonException.create(serverResponse);
-        }
     }
 
     public static JSONArray listToTree(List objList, String rootKey, String pidKey, String idKey,String childKey) {

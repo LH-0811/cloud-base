@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -47,7 +48,7 @@ public class TestController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "PeopleCreateParam", name = "param", value = "参数")
     })
-    public ServerResponse peopleCreate(@RequestBody PeopleCreateParam param) throws Exception {
+    public ServerResponse peopleCreate(@Validated @RequestBody PeopleCreateParam param) throws Exception {
         log.info(">>>> 进入 TestController.peopleCreate:{}", JSON.toJSONString(param));
         peopleService.peopleCreate(param);
         log.info(">>>> 完成 TestController.peopleCreate");

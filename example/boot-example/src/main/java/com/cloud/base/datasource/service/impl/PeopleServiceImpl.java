@@ -2,7 +2,6 @@ package com.cloud.base.datasource.service.impl;
 
 import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
-import com.cloud.base.core.common.util.BeanValidator;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.modules.datasource.annotation.DataSource;
 import com.cloud.base.datasource.dao.PeopleDao;
@@ -18,11 +17,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author lh0811
@@ -49,10 +46,7 @@ public class PeopleServiceImpl implements PeopleService {
     @Transactional(rollbackFor = Exception.class)
     public void peopleCreate(PeopleCreateParam param) throws Exception {
         log.info(">>>开始 创建人员信息");
-        Map<String, String> validate = BeanValidator.validate(param);
-        if (!CollectionUtils.isEmpty(validate)) {
-            throw CommonException.create(ServerResponse.createByError("参数不合法", validate));
-        }
+
         try {
             People people = new People();
             // 设置参数中未传递 并且必要的属性
