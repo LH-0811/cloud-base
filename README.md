@@ -36,6 +36,94 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 ```
 
 
+## 多环境打包说明
+在需要独立打包的模块resources资源目录下增加不同环境的配置文件
+```
+application-dev.yml
+application-test.yml
+application-prod.yml
+```
+修改application.yml
+```
+spring:
+  profiles:
+    active: @profileActive@
+```
+在需要独立打包的模块下的pom文件中添加一下打包配置。
+```
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>${springboot.version}</version>
+            <configuration>
+                <fork>true</fork>
+                <addResources>true</addResources>
+            </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>repackage</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <configuration>
+                <delimiters>
+                    <delimiter>@</delimiter>
+                </delimiters>
+                <useDefaultDelimiters>false</useDefaultDelimiters>
+            </configuration>
+        </plugin>
+    </plugins>
+    <resources>
+        <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering>
+        </resource>
+    </resources>
+</build>
+
+<profiles>
+    <profile>
+        <id>dev</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+            <profileActive>dev</profileActive>
+        </properties>
+    </profile>
+    <profile>
+        <id>test</id>
+        <properties>
+            <profileActive>test</profileActive>
+        </properties>
+    </profile>
+    <profile>
+        <id>prod</id>
+        <properties>
+            <profileActive>prod</profileActive>
+        </properties>
+    </profile>
+</profiles>
+```
+
+mvn打包命令
+```
+# 打开发环境
+mvn clean package -P dev -Dmaven.test.skip=ture
+# 打测试环境
+mvn clean package -P test -Dmaven.test.skip=ture
+# 打生产环境
+mvn clean package -P prod -Dmaven.test.skip=ture
+```
+
+
 
 
 
