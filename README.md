@@ -20,13 +20,39 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |
 |-common - 通用工具类和包  <groupId>com.cloud.common</groupId>
 |
-|-dependency - 三方功能依赖管理包 <groupId>com.cloud.dependency</groupId>
+|--core-common  通用包
+|
+|--core-common-sentinel 通用包sentinel版（如果项目中使用了sentinel需要使用这个包，用来帮助sentinel统计接口异常数）
+|
+|-dependency - 三方功能依赖集合 无任何实现 <groupId>com.cloud.dependency</groupId>
+|
+|--dependency-alibaba-cloud 关于alibaba-cloud的依赖集合
+|
+|--dependency-mybatis-tk 关于ORM mybatis+tk.mybatis+pagehelper的依赖集合
+|
+|--dependency-seata 关于分布式事务seata的依赖集合
+|
+|--dependency-sentinel 关于流控组件sentinel的依赖集合
+|
+|--dependency-sentinel-gateway 关于网关集成流控组件sentinel的依赖集合（仅仅gateway网关使用该依赖）
+|
+|--dependency-sleuth-zipkin 关于链路跟踪sleuth-zipkin的依赖集合
 |
 |-modules - 自定义自实现的功能组件模块 <groupId>com.cloud.modules</groupId>
+|
+|--modules-logger 日志功能封装
+|
+|--modules-multi-datasource 多数据功能封装
+|
+|--modules-security 安全授权鉴权框架封装
 |
 |-cloud-gateway - spring cloud gateway 应用 <groupId>com.cloud.base</groupId>
 |
 |-example - 示例项目 <groupId>com.cloud.base</groupId>
+|
+|--boot-example springboot单体应用集成示例
+|
+|--cloud-example springcloud应用集成示例
 ```
 ## 版本使用说明
 ```
