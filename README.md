@@ -16,3 +16,11 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |
 |-example - 示例项目 <groupId>com.cloud.base</groupId>
 ```
+## 版本使用说明
+```
+<springboot.version>2.3.9.RELEASE</springboot.version>
+<springcloud.version>Hoxton.SR8</springcloud.version>
+<springcloud-alibaba.version>2.2.1.RELEASE</springcloud-alibaba.version>
+```
+
+
