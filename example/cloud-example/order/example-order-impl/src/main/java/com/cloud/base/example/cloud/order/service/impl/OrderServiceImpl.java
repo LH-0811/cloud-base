@@ -43,8 +43,7 @@ public class OrderServiceImpl implements OrderService {
     @GlobalTransactional(name = "create_order",rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
     public OrderVo createOrder(OrderCreateParam param) throws Exception {
-        // 检查参数
-        CommonMethod.checkParam("进入OrderServiceImpl", "createOrder", param);
+
         // 拼接实体类
         TOrder order = new TOrder();
         BeanUtils.copyProperties(param, order);

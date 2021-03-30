@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,7 @@ public class StorageController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "SubtractionStorageParam", dataTypeClass = SubtractionStorageParam.class, name = "param", value = "参数"),
     })
-    public ServerResponse<SubtractionStorageVo> subtractionStorage(@RequestBody SubtractionStorageParam param) throws Exception {
+    public ServerResponse<SubtractionStorageVo> subtractionStorage(@Validated @RequestBody SubtractionStorageParam param) throws Exception {
         log.info(">>>>>>>>>>>进入扣减库存接口OrderController.subtractionStorage>>>>>>>>>>>>>>>>>>>>>>");
         SubtractionStorageVo vo = storageService.subtractionStorageVo(param);
         return ServerResponse.createBySuccess("扣减成功",vo);

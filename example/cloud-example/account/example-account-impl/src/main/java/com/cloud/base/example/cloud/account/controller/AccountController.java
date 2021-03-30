@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -44,7 +45,7 @@ public class AccountController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "AccountSubtractionParam", dataTypeClass = AccountSubtractionParam.class, name = "param", value = "参数"),
     })
-    public ServerResponse accountSubtraction(@RequestBody AccountSubtractionParam param) throws Exception {
+    public ServerResponse accountSubtraction(@Validated @RequestBody AccountSubtractionParam param) throws Exception {
         log.info(">>>>>>>>>>>扣减余额接口AccountController.accountSubtraction >>>>>>>>>>>>>>>>>>>>>>");
         accountService.accountSubtraction(param);
         return ServerResponse.createBySuccess("扣减成功");

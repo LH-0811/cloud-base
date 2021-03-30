@@ -29,8 +29,7 @@ public class AccountServiceImpl implements AccountService {
     @Transactional(rollbackFor = Exception.class)
     public void accountSubtraction(AccountSubtractionParam param) throws Exception {
         log.info("开始 扣减余额");
-        // 检查参数
-        CommonMethod.checkParam("AccountServiceImpl", "accountSubtraction", param);
+
         // 检查参数有效性
         TAccount account = null;
         try {

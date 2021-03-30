@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -55,7 +56,7 @@ public class OrderController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "OrderCreateParam", dataTypeClass = OrderCreateParam.class, name = "param", value = "参数"),
     })
-    public ServerResponse<OrderVo> createOrder(@RequestBody OrderCreateParam param) throws Exception {
+    public ServerResponse<OrderVo> createOrder(@Validated @RequestBody OrderCreateParam param) throws Exception {
         log.info(">>>>>>>>>>>进入创建订单接口OrderController.createOrder>>>>>>>>>>>>>>>>>>>>>>");
         OrderVo order = orderService.createOrder(param);
         return ServerResponse.createBySuccess("创建成功", order);

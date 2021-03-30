@@ -32,8 +32,6 @@ public class StorageServiceImpl implements StorageService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public SubtractionStorageVo subtractionStorageVo(SubtractionStorageParam param) throws Exception {
-        // 检查参数
-        CommonMethod.checkParam("StorageServiceImpl", "subtractionStorageVo", param);
 
         // 查询数据合法性
         TStorage storage = null;
