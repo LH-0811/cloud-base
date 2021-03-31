@@ -3,22 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>cloud-base</artifactId>
+        <artifactId>modules</artifactId>
         <groupId>com.cloud</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>modules</artifactId>
-    <packaging>pom</packaging>
+    <groupId>com.cloud.modules</groupId>
+    <artifactId>modules-zk-distributed-util</artifactId>
 
-    <description>自实现功能模块</description>
-
-    <modules>
-        <module>modules-multi-datasource</module>
-        <module>modules-security</module>
-        <module>modules-logger</module>
-        <module>modules-zk-distributed-util</module>
-    </modules>
 
 </project>
