@@ -12,5 +12,28 @@
     <groupId>com.cloud.modules</groupId>
     <artifactId>modules-zk-distributed-util</artifactId>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>com.cloud.common</groupId>
+            <artifactId>core-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+        </dependency>
+
+        <!-- 各个项目所 实现的功能 -->
+        <!--org.apache.curator	curator-recipes （大部分情况下使用这个就够了）	所有典型应用场景。需要依赖client和framework，需设置自动获取依赖。-->
+        <!--org.apache.curator	curator-framework	同组件中framework介绍。-->
+        <!--org.apache.curator	curator-client	同组件中client介绍。-->
+        <!--org.apache.curator	curator-test	包含TestingServer、TestingCluster和一些测试工具。-->
+        <!--org.apache.curator	curator-examples	各种使用Curator特性的案例。-->
+        <!--org.apache.curator	curator-x-discovery	在framework上构建的服务发现实现。-->
+        <!--org.apache.curator	curator-x-discoveryserver	可以喝Curator Discovery一起使用的RESTful服务器。-->
+        <!--org.apache.curator	curator-x-rpc	Curator framework和recipes非java环境的桥接。-->
+    </dependencies>
 
 </project>
