@@ -44,9 +44,9 @@ dynamic:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://49.232.166.94:3306/test1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
       username: root
-      password: QQliuhe951
+      password: QQliuhe951@@
     slave2:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://49.232.166.94:3306/test2?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
       username: root
-      password: QQliuhe951
+      password: QQliuhe951@@
