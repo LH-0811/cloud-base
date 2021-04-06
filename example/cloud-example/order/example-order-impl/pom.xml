@@ -83,6 +83,30 @@
                     <useDefaultDelimiters>false</useDefaultDelimiters>
                 </configuration>
             </plugin>
+            <!-- docker image build -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.10</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <repository>registry.cn-hangzhou.aliyuncs.com/lh0811/lh0811-docer</repository>
+                    <tag>${profileActive}-${project.artifactId}-${project.version}</tag>
+                    <username>2329385085@qq.com</username>
+                    <password>QQliuhe951@@</password>
+                    <buildArgs>
+                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
+            </plugin>
         </plugins>
 
         <resources>
