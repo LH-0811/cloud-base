@@ -3,13 +3,16 @@ package com.cloud.base.zk;
 import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.modules.zk.distributed.client.ZkDistributedClient;
-import com.cloud.base.zk.service.ZkLockTestService;
+import com.cloud.base.core.modules.zk.distributed.function.subscribe.ZkStoryboardEngine;
+import com.cloud.base.zk.service.lock.ZkLockTestService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.curator.framework.api.GetChildrenBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,6 +33,22 @@ public class ZkController {
     @Autowired
     private ZkLockTestService zkLockTestService;
 
+    @Autowired
+    private ZkStoryboardEngine zkStoryboardEngine;
+
+    //////////////////////////测试订阅者模式//////////////////////////////
+
+    @GetMapping("/storyboard/{msg}")
+    @ApiOperation("测试订阅者模式")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", dataType = "String", dataTypeClass = String.class, name = "msg", value = "信息"),
+    })
+    public ServerResponse storyboard(@PathVariable("msg") String msg) throws Exception {
+        zkStoryboardEngine.sendMsy("/cloud_base/zk_storyboard_default",msg);
+        return ServerResponse.createBySuccess("测试完成");
+    }
+
+    //////////////////////////测试分布式锁//////////////////////////////
     @GetMapping("/start_and_close")
     @ApiOperation("测试获取 关闭 重开zk客户端连接")
     public ServerResponse testStartOrClose() throws Exception {
@@ -56,28 +75,27 @@ public class ZkController {
         return ServerResponse.createBySuccess("测试完成", strings);
     }
 
-
     @GetMapping("/lock_default_test")
     @ApiOperation("测试获取 zk 分布式锁使用")
     public ServerResponse testDefaultLock() throws Exception {
 
-        Thread threadA = new Thread(()->{
+        Thread threadA = new Thread(() -> {
             log.info("线程A开始执行");
             try {
                 zkLockTestService.testZkClient("A");
             } catch (Exception e) {
-                log.error( CommonMethod.getTrace(e));
+                log.error(CommonMethod.getTrace(e));
             }
             log.info("线程A执行完成");
         });
         threadA.start();
 
-        Thread threadB = new Thread(()->{
+        Thread threadB = new Thread(() -> {
             log.info("线程B开始执行");
             try {
                 zkLockTestService.testZkClient("B");
             } catch (Exception e) {
-                log.error( CommonMethod.getTrace(e));
+                log.error(CommonMethod.getTrace(e));
             }
             log.info("线程B执行完成");
         });
@@ -91,23 +109,23 @@ public class ZkController {
     @ApiOperation("测试获取两个方法 使用同一个资源锁 zk 分布式锁使用")
     public ServerResponse testOneResLock() throws Exception {
 
-        Thread threadA = new Thread(()->{
+        Thread threadA = new Thread(() -> {
             log.info("线程A开始执行");
             try {
                 zkLockTestService.testZkClient1("A");
             } catch (Exception e) {
-                log.error( CommonMethod.getTrace(e));
+                log.error(CommonMethod.getTrace(e));
             }
             log.info("线程A执行完成");
         });
         threadA.start();
 
-        Thread threadB = new Thread(()->{
+        Thread threadB = new Thread(() -> {
             log.info("线程B开始执行");
             try {
                 zkLockTestService.testZkClient2("B");
             } catch (Exception e) {
-                log.error( CommonMethod.getTrace(e));
+                log.error(CommonMethod.getTrace(e));
             }
             log.info("线程B执行完成");
         });
@@ -121,23 +139,23 @@ public class ZkController {
     @ApiOperation("测试获取两个方法 使用同不同资源锁 zk 分布式锁使用")
     public ServerResponse testDiffResLock() throws Exception {
 
-        Thread threadA = new Thread(()->{
+        Thread threadA = new Thread(() -> {
             log.info("线程A开始执行");
             try {
                 zkLockTestService.testZkClient3("A");
             } catch (Exception e) {
-                log.error( CommonMethod.getTrace(e));
+                log.error(CommonMethod.getTrace(e));
             }
             log.info("线程A执行完成");
         });
         threadA.start();
 
-        Thread threadB = new Thread(()->{
+        Thread threadB = new Thread(() -> {
             log.info("线程B开始执行");
             try {
                 zkLockTestService.testZkClient4("B");
             } catch (Exception e) {
-                log.error( CommonMethod.getTrace(e));
+                log.error(CommonMethod.getTrace(e));
             }
             log.info("线程B执行完成");
         });
@@ -146,8 +164,6 @@ public class ZkController {
 
         return ServerResponse.createBySuccess("测试完成");
     }
-
-
 
 
 }

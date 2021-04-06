@@ -1,4 +1,4 @@
-package com.cloud.base.zk.service;
+package com.cloud.base.zk.service.lock;
 
 import com.cloud.base.core.modules.zk.distributed.function.lock.ZkDistributedLock;
 
