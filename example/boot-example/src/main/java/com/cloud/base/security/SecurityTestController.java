@@ -21,7 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/security")
 @Api(tags = "security 授权鉴权测试接口")
-public class DemoAuthenticationController {
+public class SecurityTestController {
 
     @Autowired
     private LhitSecurityUserAuthenticationLoginAdapter userAuthenticationLoginAdapter;
@@ -66,5 +66,17 @@ public class DemoAuthenticationController {
         return JSONObject.toJSONString(map);
     }
 
+
+    //////////以下两个方法用于测试 用户权限///////////////
+
+    @GetMapping("/res/res1")
+    public String res1() {
+        return "res1 success";
+    }
+
+    @GetMapping("/res/res2")
+    public String res2() {
+        return "res2 success";
+    }
 
 }
