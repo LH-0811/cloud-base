@@ -46,6 +46,16 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |
 |--modules-security 安全授权鉴权框架封装
 |
+|--modules-zk-distributed-util 基于ZooKeeper的分布式环境下数据一致性工具包（未完成）
+|
+|--modules-es-util es能力快速集成功能模块（计划开发）
+|
+|--modules-reids-util redis能力快速集成功能模块（计划开发）
+|
+|--modules-mq-util mq能力快速集成功能模块(计划开发：计划支持多种mq中间件:ActiveMQ、RabbitMq、RocketMq)
+|
+|--modules-kafuka kafuka能力快速集成功能模块(计划开发)
+|
 |-cloud-gateway - spring cloud gateway 应用 <groupId>com.cloud.base</groupId>
 |
 |-example - 示例项目 <groupId>com.cloud.base</groupId>
