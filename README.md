@@ -159,7 +159,42 @@ mvn clean package -P test -Dmaven.test.skip=ture
 mvn clean package -P prod -Dmaven.test.skip=ture
 ```
 
-
+## 整合dockerfile插件，可直接将jar包构建为docker image 并推送到远程仓库
+增加插件依赖
+```
+ <!-- docker image build -->
+<plugin>
+    <groupId>com.spotify</groupId>
+    <artifactId>dockerfile-maven-plugin</artifactId>
+    <version>1.4.10</version>
+    <executions>
+        <execution>
+            <id>default</id>
+            <goals>
+                <goal>build</goal>
+                <goal>push</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>
+        <repository>registry.cn-hangzhou.aliyuncs.com/lh0811/lh0811-docer</repository>
+        <tag>${profileActive}-${project.artifactId}-${project.version}</tag>
+        <username>2329385085@qq.com</username>
+        <password>QQliuhe951@@</password>
+        <buildArgs>
+            <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+        </buildArgs>
+    </configuration>
+</plugin>
+```
+在pom.xml同级目录下增加Dockerfile
+```
+FROM registry.cn-hangzhou.aliyuncs.com/lh0811/lh0811-docer:lh-jdk1.8-0.0.1
+MAINTAINER lh0811
+ADD  ./target/${JAR_FILE} /opt/app.jar
+RUN chmod +x /opt/app.jar
+CMD java -jar /opt/app.jar
+```
 
 
 
