@@ -57,9 +57,9 @@ public class ZkController {
     }
 
 
-    @GetMapping("/lock_test")
+    @GetMapping("/lock_default_test")
     @ApiOperation("测试获取 zk 分布式锁使用")
-    public ServerResponse testLock() throws Exception {
+    public ServerResponse testDefaultLock() throws Exception {
 
         Thread threadA = new Thread(()->{
             log.info("线程A开始执行");
@@ -86,6 +86,68 @@ public class ZkController {
 
         return ServerResponse.createBySuccess("测试完成");
     }
+
+    @GetMapping("/lock_one_res_test")
+    @ApiOperation("测试获取两个方法 使用同一个资源锁 zk 分布式锁使用")
+    public ServerResponse testOneResLock() throws Exception {
+
+        Thread threadA = new Thread(()->{
+            log.info("线程A开始执行");
+            try {
+                zkLockTestService.testZkClient1("A");
+            } catch (Exception e) {
+                log.error( CommonMethod.getTrace(e));
+            }
+            log.info("线程A执行完成");
+        });
+        threadA.start();
+
+        Thread threadB = new Thread(()->{
+            log.info("线程B开始执行");
+            try {
+                zkLockTestService.testZkClient2("B");
+            } catch (Exception e) {
+                log.error( CommonMethod.getTrace(e));
+            }
+            log.info("线程B执行完成");
+        });
+        threadB.start();
+
+
+        return ServerResponse.createBySuccess("测试完成");
+    }
+
+    @GetMapping("/lock_diff_res_test")
+    @ApiOperation("测试获取两个方法 使用同不同资源锁 zk 分布式锁使用")
+    public ServerResponse testDiffResLock() throws Exception {
+
+        Thread threadA = new Thread(()->{
+            log.info("线程A开始执行");
+            try {
+                zkLockTestService.testZkClient3("A");
+            } catch (Exception e) {
+                log.error( CommonMethod.getTrace(e));
+            }
+            log.info("线程A执行完成");
+        });
+        threadA.start();
+
+        Thread threadB = new Thread(()->{
+            log.info("线程B开始执行");
+            try {
+                zkLockTestService.testZkClient4("B");
+            } catch (Exception e) {
+                log.error( CommonMethod.getTrace(e));
+            }
+            log.info("线程B执行完成");
+        });
+        threadB.start();
+
+
+        return ServerResponse.createBySuccess("测试完成");
+    }
+
+
 
 
 }
