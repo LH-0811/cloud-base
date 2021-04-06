@@ -8,6 +8,7 @@ import com.cloud.base.datasource.param.PeopleQueryParam;
 import com.cloud.base.datasource.pojo.People;
 import com.cloud.base.datasource.service.PeopleService;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
  */
 @Slf4j
 @RestController
-public class TestController {
+@RequestMapping("/db")
+@Api(tags = "测试多数据源")
+public class DbController {
 
 
     @Autowired

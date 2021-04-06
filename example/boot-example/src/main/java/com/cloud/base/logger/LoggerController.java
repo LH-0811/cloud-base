@@ -1,11 +1,11 @@
-package com.cloud.base.example;
+package com.cloud.base.logger;
 
 import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.modules.logger.annotation.LhitLogger;
 import com.cloud.base.core.modules.logger.entity.LoggerBusinessType;
-import com.cloud.base.example.param.ExampleParam;
-import io.swagger.annotations.ApiModelProperty;
+import com.cloud.base.logger.param.ExampleParam;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.*;
  * @date 2021/3/21
  */
 @RestController
-@RequestMapping("/example")
-public class ExampleController {
+@RequestMapping("/logger")
+@Api(tags = "测试基础功能和日志功能")
+public class LoggerController {
 
     @LhitLogger(title = "测试hello", businessType = LoggerBusinessType.QUERY)
     @GetMapping("/hello")

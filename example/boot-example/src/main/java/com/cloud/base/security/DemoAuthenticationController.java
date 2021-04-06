@@ -10,17 +10,17 @@ import com.cloud.base.core.modules.sercurity.defense.pojo.user.LhitSecurityUser;
 import com.cloud.base.core.modules.sercurity.defense.pojo.verification.DefaultUsernamePasswordUserVerification;
 import com.cloud.base.security.customer_login.phone_code.PhoneUserVerification;
 import com.cloud.base.security.customer_login.username_pwd.UsernamePasswordUserVerification;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/security")
+@Api(tags = "security 授权鉴权测试接口")
 public class DemoAuthenticationController {
 
     @Autowired

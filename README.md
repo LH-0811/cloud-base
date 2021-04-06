@@ -46,7 +46,7 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |
 |--modules-security 安全授权鉴权框架封装
 |
-|--modules-zk-distributed-util 基于ZooKeeper的分布式环境下数据一致性工具包（未完成）
+|--modules-zk-distributed-util 基于ZooKeeper的分布式环境下数据一致性工具包（开发中）
 |
 |--modules-es-util es能力快速集成功能模块（计划开发）
 |

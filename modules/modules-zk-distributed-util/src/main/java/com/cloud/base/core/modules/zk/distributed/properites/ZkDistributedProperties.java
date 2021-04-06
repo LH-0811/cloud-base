@@ -14,18 +14,25 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ZkDistributedProperties {
     // 开启标志
     private Boolean enabled = true;
-    // 服务器地址
+
+    // 服务器地址（集群地址使用,分隔）
     private String server = "127.0.0.1:2181";
+
     // 命名空间，被称为ZNode
-    private String namespace; //cicada
+    private String namespace;
+
     // 权限控制，加密
-    private String digest; //:smile:123456
+    private String digest;
+
     // 会话超时时间
-    private Integer sessionTimeoutMs = 3000;
+    private Integer sessionTimeoutMs = 60000;
+
     // 连接超时时间
     private Integer connectionTimeoutMs = 60000;
+
     // 最大重试次数
     private Integer maxRetries = 2;
+
     // 初始休眠时间
     private Integer baseSleepTimeMs = 1000;
 }

@@ -1,4 +1,4 @@
-package com.cloud.base.example.param;
+package com.cloud.base.logger.param;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
