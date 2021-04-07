@@ -2,6 +2,47 @@
 
 > 刚刚开始构建这个模块，想到哪里就写到哪里
 
+
+## 配置项
+详见ZkDistributedProperties
+```
+
+/**
+ * @author lh0811
+ * @date 2021/3/31
+ */
+@Getter
+@Setter
+@ConfigurationProperties(prefix = "zk.distributed")
+public class ZkDistributedProperties {
+    // 开启标志
+    private Boolean enabled = true;
+
+    // 服务器地址（集群地址使用,分隔）
+    private String server = "127.0.0.1:2181";
+
+    // 命名空间，被称为ZNode
+    private String namespace;
+
+    // 权限控制，加密
+    private String digest;
+
+    // 会话超时时间
+    private Integer sessionTimeoutMs = 60000;
+
+    // 连接超时时间
+    private Integer connectionTimeoutMs = 60000;
+
+    // 最大重试次数
+    private Integer maxRetries = 2;
+
+    // 初始休眠时间
+    private Integer baseSleepTimeMs = 1000;
+}
+```
+
+
+
 ## 场景一: 分布式锁实现
 使用自定义注解的方式实现动态的加锁和释放锁。
 具体使用方式如下
@@ -23,6 +64,70 @@ public class ZkLockTestServiceImpl implements ZkLockTestService {
 }
 ```
 
+## 场景二: 订阅者模式实现
+构建一个故事板，订阅该故事板的订阅者可以获取到故事板发布的信息。
+
+#### 构建故事板
+实现ZkStoryboard接口，并通过@Component托管到spring容器中
+
+getSubjectName()方法返回则为故事板的主题。建议以：/项目名/业务名/主题名 为zkNode的路径
+```
+/**
+ * @author lh0811
+ * @date 2021/4/6
+ */
+@Component
+public class ZkStoryboardForDefault  implements ZkStoryboard{
+    @Override
+    public String getSubjectName() {
+        return "/cloud_base/zk_storyboard_default";
+    }
+}
+```
+
+#### 构建订阅者
+实现ZkSubscriber接口，并通过@Component托管到spring容器中
+
+getSubjectName()方法返回的为订阅主题名。建议以：/项目名/业务名/主题名 为zkNode的路径
+```
+/**
+ * @author lh0811
+ * @date 2021/4/6
+ */
+@Slf4j
+@Component
+public class ZkSubscribeForDefault implements ZkSubscriber {
+
+    @Override
+    public String getSubjectName() {
+        return "/cloud_base/zk_storyboard_default";
+    }
+
+    @Override
+    public void getInfo(String info) {
+        log.info("ZkSubscribeForDefault获取到订阅信息:{}", info);
+    }
+}
+```
+
+#### 发布信息
+使用ZkStoryboardEngine类，向故事板发送信息
+```
+@GetMapping("/storyboard/{msg}")
+@ApiOperation("测试订阅者模式")
+@ApiImplicitParams({
+        @ApiImplicitParam(paramType = "path", dataType = "String", dataTypeClass = String.class, name = "msg", value = "信息"),
+})
+public ServerResponse storyboard(@PathVariable("msg") String msg) throws Exception {
+    zkStoryboardEngine.sendMsy("/cloud_base/zk_storyboard_default",msg);
+    return ServerResponse.createBySuccess("测试完成");
+}
+```
+#### 使用建议
+StoryBoard发布的消息传递到订阅者后。如果该消息比较重要，建议订阅者在本地创建一个内存队列存储消息。当消息处理成功后移除队列，若失败则放到队列尾部待重试。
+
+
+
 
 ## 场景一: 假设有工单池。产生工单后将工单丢到工单池中，此时分布式系统中有工单执行服务10个实例。保证每个工单只能被执行一次，不会被重复消费
 
@@ -32,7 +137,7 @@ public class ZkLockTestServiceImpl implements ZkLockTestService {
 
 ## 场景四: 分布式计数器实现
 
-## 场景五: 订阅者模式实现
+
 
 ## 场景六: 基本节点数据监听
 

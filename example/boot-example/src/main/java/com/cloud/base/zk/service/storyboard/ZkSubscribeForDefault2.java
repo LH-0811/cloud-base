@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class ZkSubscribeForDefault implements ZkSubscriber {
+public class ZkSubscribeForDefault2 implements ZkSubscriber {
 
     @Override
     public String getSubjectName() {
@@ -19,7 +19,7 @@ public class ZkSubscribeForDefault implements ZkSubscriber {
 
     @Override
     public void getInfo(String info) {
-        log.info("ZkSubscribeForDefault获取到订阅信息:{}", info);
+        log.info("ZkSubscribeForDefault2获取到订阅信息:{}", info);
     }
 
 
