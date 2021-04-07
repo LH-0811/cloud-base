@@ -1,6 +1,29 @@
 # springcloud 脚手架项目
 
 ## 项目概述
+
+springboot+springcloud
+
+注册中心：nacos
+
+网关:gateway
+
+RPC:feign
+
+以下是可插拔功能组件
+
+流控熔断降级:sentinel
+
+全链路跟踪:sleth+zipkin
+
+分布式事务:seata
+
+封装功能模块：全局异常处理、日志输出打印持久化、多数据源、鉴权授权模块、zk（分布式锁和订阅者模式）
+
+maven：实现多环境打包、直推镜像到docker私服。
+
+<hr/>
+
 这个项目整合了springcloud体系中的各种组件。以及集成配置说明。
 
 同时将自己平时使用的功能性的封装以及工具包都最为模块整合进来。
