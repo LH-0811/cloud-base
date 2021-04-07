@@ -23,6 +23,7 @@ public class MyResProtectAdapter implements LhitSecurityResourceProtectAdapter {
     @Override
     public List<String> getProtectUrlPatterns() {
 
+        // 这里表示 /res/res1 这个资源是需要被保护的
         return Lists.newArrayList("/res/res1");
     }
 
