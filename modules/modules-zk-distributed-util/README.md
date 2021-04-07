@@ -44,7 +44,8 @@ public class ZkDistributedProperties {
 
 
 ## 场景一: 分布式锁实现
-使用自定义注解的方式实现动态的加锁和释放锁。
+
+使用自定义注解的方式实现动态的加锁和释放锁(可重入互斥锁)。
 具体使用方式如下
 在需要被分布式锁控制的方法上增加@ZkDistributedLock注解，该注解默认以 "/cloud_base/zk_distributed_lock_default" 为锁资源路径
 ```
