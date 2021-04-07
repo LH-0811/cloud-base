@@ -126,18 +126,6 @@ public ServerResponse storyboard(@PathVariable("msg") String msg) throws Excepti
 #### 使用建议
 StoryBoard发布的消息传递到订阅者后。如果该消息比较重要，建议订阅者在本地创建一个内存队列存储消息。当消息处理成功后移除队列，若失败则放到队列尾部待重试。
 
-
-
-
-## 场景一: 假设有工单池。产生工单后将工单丢到工单池中，此时分布式系统中有工单执行服务10个实例。保证每个工单只能被执行一次，不会被重复消费
-
-## 场景二: 假设有业务A，开始执行A业务时需通知B，C业务完成数据准备，在B，C业务执行完成后，A业务才能继续执行。
-
-
-
-## 场景四: 分布式计数器实现
-
-
-
-## 场景六: 基本节点数据监听
+## 场景三: 分布式计数器实现
+使用 ZkDistributedCounter.getAtomicInteger(String path) 方法来获取一个分布式计数器
 
