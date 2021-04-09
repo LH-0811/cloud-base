@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.recipes.cache.NodeCache;
 import org.apache.curator.framework.recipes.cache.NodeCacheListener;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.data.Stat;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -63,12 +64,16 @@ public class ZkStoryboardCollection implements ApplicationListener<ContextRefres
             }
         }
 
+
         // 为故事板创建zknode节点
         for (Map.Entry<String, ZkStoryboard> entry : storyboardMap.entrySet()) {
             // 创建节点
-            zkClient.getClient().create().creatingParentsIfNeeded()
-                    .withMode(CreateMode.EPHEMERAL)
-                    .forPath(entry.getKey());
+            Stat stat = zkClient.getClient().checkExists().forPath(entry.getKey());
+            if (stat == null){
+                zkClient.getClient().create().creatingParentsIfNeeded()
+                        .withMode(CreateMode.EPHEMERAL)
+                        .forPath(entry.getKey());
+            }
         }
 
         // 为订阅者开启监听

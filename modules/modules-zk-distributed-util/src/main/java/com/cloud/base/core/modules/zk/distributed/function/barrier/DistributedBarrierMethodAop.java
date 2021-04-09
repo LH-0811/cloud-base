@@ -98,7 +98,7 @@ public class DistributedBarrierMethodAop {
             throw CommonException.create(ServerResponse.createByError("DistributedBarrier 切点异常:{}", CommonMethod.getTrace(e)));
         }
         // 后置通知
-        log.info("后置通知方法 释放栅栏:{}>目标方法名{}", lockPath, methodName);
+        log.info("执行完成:{}>目标方法名{}", lockPath, methodName);
         // 返回最终结果
         return result;
     }

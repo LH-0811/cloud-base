@@ -3,7 +3,9 @@ package com.cloud.base.zk;
 import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.modules.zk.distributed.client.ZkDistributedClient;
+import com.cloud.base.core.modules.zk.distributed.function.barrier.DistributedBarrierEngine;
 import com.cloud.base.core.modules.zk.distributed.function.subscribe.ZkStoryboardEngine;
+import com.cloud.base.zk.service.barrier.BarrierService;
 import com.cloud.base.zk.service.lock.ZkLockTestService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -36,6 +38,12 @@ public class ZkController {
     @Autowired
     private ZkStoryboardEngine zkStoryboardEngine;
 
+    @Autowired
+    private BarrierService barrierService;
+
+    @Autowired
+    private DistributedBarrierEngine barrierEngine;
+
     //////////////////////////测试订阅者模式//////////////////////////////
 
     @GetMapping("/storyboard/{msg}")
@@ -44,7 +52,7 @@ public class ZkController {
             @ApiImplicitParam(paramType = "path", dataType = "String", dataTypeClass = String.class, name = "msg", value = "信息"),
     })
     public ServerResponse storyboard(@PathVariable("msg") String msg) throws Exception {
-        zkStoryboardEngine.sendMsy("/cloud_base/zk_storyboard_default",msg);
+        zkStoryboardEngine.sendMsy("/cloud_base/zk_storyboard_default", msg);
         return ServerResponse.createBySuccess("测试完成");
     }
 
@@ -165,5 +173,53 @@ public class ZkController {
         return ServerResponse.createBySuccess("测试完成");
     }
 
+    //////////////////////////测试分布式栅栏//////////////////////////////
+    @GetMapping("/barrier")
+    @ApiOperation("测试分布式栅栏barrier")
+    public ServerResponse barrier() throws Exception {
+        log.info("开始准备线程");
+        for (int i = 0; i < 3; i++) {
+            int finalI = i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        barrierService.barrier((finalI + ""));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+        log.info("线程准备完成，准备执行方法");
+        // 移除栅栏
+        Thread.sleep(5000);
+        barrierEngine.removeBarrier("/cloud_base/zk_distributed_barrier_default");
+        return ServerResponse.createBySuccess("测试成功");
+    }
+
+
+    @GetMapping("/double_barrier")
+    @ApiOperation("测试分布式栅栏doubleBarrier")
+    public ServerResponse doubleBarrier() throws Exception {
+        log.info("开始准备线程");
+        for (int i = 0; i < 3; i++) {
+            Thread.sleep(1000);
+            log.info("{}个线程准备好了",i);
+            int finalI = i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        barrierService.doubleBarrier(String.valueOf(finalI));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+        log.info("线程准备完成，准备执行方法");
+        return ServerResponse.createBySuccess("测试成功");
+    }
 
 }
