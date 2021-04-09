@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 @ControllerAdvice
 public class CommonException extends Exception {
 
-    private Exception error;
+    private Throwable error;
 
     private ServerResponse serverResponse;
 
@@ -31,11 +31,13 @@ public class CommonException extends Exception {
         return exception;
     }
 
-    public static CommonException create(Exception error, ServerResponse responseEntity) {
+    public static CommonException create(Throwable error, ServerResponse responseEntity) {
         log.error(CommonMethod.getTrace(error));
         CommonException exception = new CommonException();
         exception.serverResponse = responseEntity;
         exception.error = error;
         return exception;
     }
+
+
 }
