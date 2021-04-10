@@ -130,3 +130,83 @@ StoryBoard发布的消息传递到订阅者后。如果该消息比较重要，�
 ## 场景三: 分布式计数器实现
 使用 ZkDistributedCounter.getAtomicInteger(String path) 方法来获取一个分布式计数器
 
+## 场景四： 分布式栅栏
+
+#### 公共service
+
+```
+@Slf4j
+@Component("barrierService")
+public class BarrierServiceImpl implements BarrierService {
+
+    @Override
+    // 使用该注解标记的方法 需要等到吹哨人统一发送指令后才可以执行
+    @DistributedBarrier 
+    public void barrier(String str) throws Exception {
+        log.info("进入barrier方法:{}",str);
+    }
+
+    @Override
+    // 使用该注解标记的方法 需要等到线程数达到指定的数量后才可以执行
+    @DistributedDoubleBarrier(threadNum = 3)
+    public void doubleBarrier(String str) throws Exception {
+        log.info("进入doubleBarrier方法:{}",str);
+    }
+
+}
+```
+
+#### 4.1 线程等待后 统一通过吹哨人发起工作
+```
+@GetMapping("/barrier")
+@ApiOperation("测试分布式栅栏barrier")
+public ServerResponse barrier() throws Exception {
+    log.info("开始准备线程");
+    for (int i = 0; i < 3; i++) {
+        int finalI = i;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    barrierService.barrier((finalI + ""));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    log.info("线程准备完成，准备执行方法");
+    // 移除栅栏
+    Thread.sleep(5000);
+    barrierEngine.removeBarrier("/cloud_base/zk_distributed_barrier_default");
+    return ServerResponse.createBySuccess("测试成功");
+}
+```
+
+#### 4.2 线程达到执行数量后 开始执行
+
+```
+@GetMapping("/double_barrier")
+@ApiOperation("测试分布式栅栏doubleBarrier")
+public ServerResponse doubleBarrier() throws Exception {
+    log.info("开始准备线程");
+    for (int i = 0; i < 3; i++) {
+        Thread.sleep(1000);
+        log.info("{}个线程准备好了",i);
+        int finalI = i;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    barrierService.doubleBarrier(String.valueOf(finalI));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+    log.info("线程准备完成，准备执行方法");
+    return ServerResponse.createBySuccess("测试成功");
+}
+```
+
