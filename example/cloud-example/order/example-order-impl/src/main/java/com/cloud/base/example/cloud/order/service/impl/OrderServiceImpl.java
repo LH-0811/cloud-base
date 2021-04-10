@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
     // 添加seata 全局事务注解 name 唯一
     @GlobalTransactional(name = "create_order",rollbackFor = Exception.class)
     @Transactional(rollbackFor = Exception.class)
-    public OrderVo createOrder(OrderCreateParam param) throws Exception {
+    public OrderVo createOrder(OrderCreateParam param,String token) throws Exception {
 
         // 拼接实体类
         TOrder order = new TOrder();
@@ -76,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
             AccountSubtractionParam accountSubtractionParam = new AccountSubtractionParam();
             accountSubtractionParam.setAmt(subtractionStorageVo.getTotalPrice());
             accountSubtractionParam.setUserId(param.getUserId());
-            accountSubtractionResponse = accountService.accountSubtraction(accountSubtractionParam);
+            accountSubtractionResponse = accountService.accountSubtraction(accountSubtractionParam, token);
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("扣减账户余额失败"));
         }

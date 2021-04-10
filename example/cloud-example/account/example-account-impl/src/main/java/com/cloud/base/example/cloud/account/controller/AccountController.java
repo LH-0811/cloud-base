@@ -43,9 +43,10 @@ public class AccountController {
     @PostMapping("/subtraction")
     @ApiOperation("扣减余额")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "MyToken", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "AccountSubtractionParam", dataTypeClass = AccountSubtractionParam.class, name = "param", value = "参数"),
     })
-    public ServerResponse accountSubtraction(@Validated @RequestBody AccountSubtractionParam param) throws Exception {
+    public ServerResponse accountSubtraction(@Validated @RequestBody AccountSubtractionParam param,@RequestHeader(value = "MyToken", defaultValue = "") String token) throws Exception {
         log.info(">>>>>>>>>>>扣减余额接口AccountController.accountSubtraction >>>>>>>>>>>>>>>>>>>>>>");
         accountService.accountSubtraction(param);
         return ServerResponse.createBySuccess("扣减成功");

@@ -49,6 +49,12 @@
             <artifactId>modules-zk-distributed-util</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!-- es -->
+        <dependency>
+            <groupId>com.cloud.modules</groupId>
+            <artifactId>modules-elasticsearch</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 

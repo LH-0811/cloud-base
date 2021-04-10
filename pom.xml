@@ -24,8 +24,8 @@
 
 
         <!--  三方库 版本管理  -->
-<!--        <springboot.version>2.3.9.RELEASE</springboot.version>-->
-        <springboot.version>2.4.0</springboot.version>
+        <springboot.version>2.3.9.RELEASE</springboot.version>
+<!--        <springboot.version>2.4.0</springboot.version>-->
         <springcloud.version>Hoxton.SR8</springcloud.version>
         <springcloud-alibaba.version>2.2.1.RELEASE</springcloud-alibaba.version>
 

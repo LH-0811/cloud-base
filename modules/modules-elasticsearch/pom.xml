@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.cloud.modules</groupId>
     <artifactId>modules-elasticsearch</artifactId>
 
     <dependencies>

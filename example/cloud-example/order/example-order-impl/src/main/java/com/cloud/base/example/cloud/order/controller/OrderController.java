@@ -54,11 +54,12 @@ public class OrderController {
     @PostMapping("/create")
     @ApiOperation("创建订单")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "MyToken", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "OrderCreateParam", dataTypeClass = OrderCreateParam.class, name = "param", value = "参数"),
     })
-    public ServerResponse<OrderVo> createOrder(@Validated @RequestBody OrderCreateParam param) throws Exception {
+    public ServerResponse<OrderVo> createOrder(@Validated @RequestBody OrderCreateParam param,@RequestHeader(value = "MyToken", defaultValue = "") String token) throws Exception {
         log.info(">>>>>>>>>>>进入创建订单接口OrderController.createOrder>>>>>>>>>>>>>>>>>>>>>>");
-        OrderVo order = orderService.createOrder(param);
+        OrderVo order = orderService.createOrder(param,token);
         return ServerResponse.createBySuccess("创建成功", order);
     }
 

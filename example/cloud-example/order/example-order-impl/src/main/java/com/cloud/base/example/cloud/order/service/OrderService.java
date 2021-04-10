@@ -8,6 +8,6 @@ import com.cloud.base.example.cloud.order.vo.OrderVo;
 
 public interface OrderService {
     // 创建订单
-    OrderVo createOrder(OrderCreateParam param) throws Exception;
+    OrderVo createOrder(OrderCreateParam param,String token) throws Exception;
 
 }
