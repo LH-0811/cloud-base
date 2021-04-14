@@ -69,11 +69,12 @@ public class ZkStoryboardCollection implements ApplicationListener<ContextRefres
         for (Map.Entry<String, ZkStoryboard> entry : storyboardMap.entrySet()) {
             // 创建节点
             Stat stat = zkClient.getClient().checkExists().forPath(entry.getKey());
-            if (stat == null){
-                zkClient.getClient().create().creatingParentsIfNeeded()
-                        .withMode(CreateMode.EPHEMERAL)
-                        .forPath(entry.getKey());
+            if (stat != null){
+                zkClient.getClient().delete().forPath(entry.getKey());
             }
+            zkClient.getClient().create().creatingParentsIfNeeded()
+                    .withMode(CreateMode.EPHEMERAL)
+                    .forPath(entry.getKey());
         }
 
         // 为订阅者开启监听

@@ -43,10 +43,13 @@ public class PeopleServiceImpl implements PeopleService {
      */
     @DataSource
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void peopleCreate(PeopleCreateParam param) throws Exception {
-        log.info(">>>开始 创建人员信息");
+        thePeopleCreate(param);
+    }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void thePeopleCreate(PeopleCreateParam param) throws Exception {
+        log.info(">>>开始 创建人员信息");
         try {
             People people = new People();
             // 设置参数中未传递 并且必要的属性
@@ -59,8 +62,8 @@ public class PeopleServiceImpl implements PeopleService {
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("创建人员信息失败，请联系管理员"));
         }
+        throw CommonException.create(ServerResponse.createByError("测试异常回滚"));
     }
-
 
 
     /**
@@ -88,7 +91,7 @@ public class PeopleServiceImpl implements PeopleService {
                 criteria.andEqualTo("age", param.getAge());
             }
             // 分页查询助手
-            PageHelper.startPage(param.getPageNum(),param.getPageSize());
+            PageHelper.startPage(param.getPageNum(), param.getPageSize());
             List<People> people = peopleDao.selectByExample(example);
             PageInfo<People> pageInfo = new PageInfo<>(people);
             // 清除分页信息
