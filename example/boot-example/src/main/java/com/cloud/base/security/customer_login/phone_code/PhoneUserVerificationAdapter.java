@@ -27,7 +27,7 @@ public class PhoneUserVerificationAdapter implements LhitSecurityUserVerificatio
             throw CommonException.create(ServerResponse.createByError("验证码不正确：默认密码123456"));
         } else {
             LhitSecurityRole role = new LhitSecurityRole("admin");
-            LhitSecurityPermission permission = new LhitSecurityPermission("/**","dept", "all");
+            LhitSecurityPermission permission = new LhitSecurityPermission("/**", "dept", "all", null);
             DefaultLhitSecurityUser user = DefaultLhitSecurityUser.builder().userId("default").password("user").username("user").build();
             return new LhitSecurityUserPerms(Lists.newArrayList(new LhitSecurityRole[]{role}), Lists.newArrayList(new LhitSecurityPermission[]{permission}), user.getUserId(), user);
         }

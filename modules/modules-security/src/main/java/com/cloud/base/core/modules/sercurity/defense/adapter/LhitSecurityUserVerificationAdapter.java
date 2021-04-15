@@ -13,11 +13,9 @@ import com.cloud.base.core.modules.sercurity.defense.pojo.verification.LhitSecur
  * 比如 默认的 用户名密码方式
  *
  * @param <T>
- * @see DefaultUsernamePasswordUserVerification
  * <p>
  * <p>
  * 提供默认的使用用户名密码 凭证来验证用户身份的实现 默认的用户名密码 是 user user
- * @see DefaultLhitSecurityUserVerificationImpl
  */
 public interface LhitSecurityUserVerificationAdapter<T extends LhitSecurityUserVerification> {
 

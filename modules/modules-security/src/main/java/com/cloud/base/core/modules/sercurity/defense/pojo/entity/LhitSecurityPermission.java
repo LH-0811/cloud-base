@@ -2,6 +2,8 @@ package com.cloud.base.core.modules.sercurity.defense.pojo.entity;
 
 import lombok.*;
 
+import java.util.List;
+
 /**
  * 权限封装类
  */
@@ -19,5 +21,7 @@ public class LhitSecurityPermission {
     private String dept;
     // permsCode 权限码
     private String permsCode;
+    // 数据限制
+    private List<LhitSecurityDataRule> dateRuleList;
 
 }

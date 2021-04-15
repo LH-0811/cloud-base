@@ -24,7 +24,7 @@ public class LhitSecurityProperties {
     @Getter
     @Setter
     // 请求头中token的key
-    private String tokenkey = "FTTOKEN";
+    private String tokenkey = "LHTOKEN";
 
     @Getter
     @Setter

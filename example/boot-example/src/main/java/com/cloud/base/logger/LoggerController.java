@@ -24,7 +24,7 @@ public class LoggerController {
     @LhitLogger(title = "测试hello", businessType = LoggerBusinessType.QUERY)
     @GetMapping("/hello")
     public String hello() throws Exception {
-        return "hello world";
+        return "hello world:"+Thread.currentThread().getId();
     }
 
     @GetMapping("/exception")

@@ -26,7 +26,7 @@ public class DefaultLhitSecurityUserVerificationImpl implements LhitSecurityUser
             throw CommonException.create(ServerResponse.createByError("密码不正确：默认密码user"));
         }
         LhitSecurityRole role = new LhitSecurityRole("admin");
-        LhitSecurityPermission permission = new LhitSecurityPermission("/**","default_dept", "all");
+        LhitSecurityPermission permission = new LhitSecurityPermission("/**", "default_dept", "all", null);
         DefaultLhitSecurityUser user = DefaultLhitSecurityUser.builder().userId("default").password("user").username("user").build();
         return new LhitSecurityUserPerms(Lists.newArrayList(role), Lists.newArrayList(permission), user.getUserId(), user);
     }
