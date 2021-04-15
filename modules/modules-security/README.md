@@ -60,3 +60,104 @@ lhit.security.defense.un_authorized_code="401"
 lhit.security.defense.un_enough_authorized_code="403"
 
 ```
+## 2021.4.15 增加数据权限配置
+思路：
+```
+客户端获取数据都是从后端的api接口中获取到的。
+所以想要控制用户的数据权限可以从api接口入手。
+在用户的权限信息中添加描述类： api接口地址、排除哪些字段。（这个封装为LhitSecurityDataRule类）
+然后只需要在controller方法返回值时将对应的字段移除掉就可以了。
+
+具体步骤
+1. 自定义注解 LhitDataIntercept ，凡是被这个注解标记的controller方法的返回值，都会做数据过滤
+2. 增加AOP切面操作，LhitSecurityReturnDataAop。在满足条件的方法的环绕通知中处理返回结果后在返回到controller方法。
+```
+
+具体使用:
+
+
+```
+1. 维护用户权限信息 ，即在用户登录成功后，将数据过滤规则加载到用户权限信息中
+@LhitUserVerification
+public class MyUserVerificationAdapter implements LhitSecurityUserVerificationAdapter<UsernamePasswordUserVerification> {
+
+
+    @Override
+    public LhitSecurityUserPerms verification(UsernamePasswordUserVerification verification) throws Exception {
+        if (!"user".equals(verification.getUsername())) {
+            throw CommonException.create(ServerResponse.createByError("用户名错误，默认用户：user"));
+        } else if (!"123456".equals(verification.getPassword())) {
+            throw CommonException.create(ServerResponse.createByError("密码不正确：默认密码123456"));
+        } else {
+            LhitSecurityRole role = new LhitSecurityRole("admin");
+
+            LhitSecurityDataRule dataRule1 = new LhitSecurityDataRule();
+            dataRule1.setApiPath("/data_intercept");
+            dataRule1.setRoleId("1");
+            dataRule1.setExcludeFields(Lists.newArrayList("score"));
+
+            LhitSecurityDataRule dataRule2 = new LhitSecurityDataRule();
+            dataRule2.setApiPath("/data_intercept/student");
+            dataRule2.setRoleId("1");
+            dataRule2.setExcludeFields(Lists.newArrayList("score"));
+
+            LhitSecurityPermission permission = new LhitSecurityPermission("/**", "dept", "all", Lists.newArrayList(dataRule1,dataRule2));
+            DefaultLhitSecurityUser user = DefaultLhitSecurityUser.builder().userId("default").password("user").username("user").build();
+            return new LhitSecurityUserPerms(Lists.newArrayList(new LhitSecurityRole[]{role}), Lists.newArrayList(new LhitSecurityPermission[]{permission}), user.getUserId(), user);
+        }
+
+    }
+}
+
+
+
+2. 标记需要过滤数据的接口
+@RestController
+@RequestMapping("/data_intercept")
+@Api(tags = "测试数据拦截")
+public class DataInterceptController {
+
+
+    @LhitDataIntercept
+    @GetMapping("/student")
+    @ApiOperation("测试数据拦截")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+    })
+    public ServerResponse<List<Room>> getStudentInfo(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+        ArrayList<Student> students = Lists.newArrayList();
+        students.add(new Student("1", "1", "1"));
+        students.add(new Student("2", "2", "2"));
+        students.add(new Student("3", "3", "3"));
+        students.add(new Student("3", "3", "3"));
+        students.add(new Student("3", "3", "3"));
+
+        Room room2 = new Room("12121",students);
+        Room room3 = new Room("122",students);
+        Room room4 = new Room("11122",students);
+
+        return ServerResponse.createBySuccess(Lists.newArrayList(room2,room3,room4));
+    }
+
+
+    @LhitDataIntercept
+    @GetMapping
+    @ApiOperation("测试数据拦截")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+    })
+    public ServerResponse<Room> getStudentInfo2(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+        ArrayList<Student> students = Lists.newArrayList();
+        students.add(new Student("1", "1", "1"));
+        students.add(new Student("2", "2", "2"));
+        students.add(new Student("3", "3", "3"));
+        students.add(new Student("3", "3", "3"));
+        students.add(new Student("3", "3", "3"));
+        Room room = new Room("12121",students);
+        return ServerResponse.createBySuccess(room);
+    }
+
+}
+
+```
+
