@@ -4,6 +4,16 @@ server:
 spring:
   application:
     name: boot-example
+  redis:
+    host: 49.232.166.94
+    port: 6379
+    #    password: 123456
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 500
+        min-idle: 0
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     # 使用多数据源时 这个配置便是 默认数据源
