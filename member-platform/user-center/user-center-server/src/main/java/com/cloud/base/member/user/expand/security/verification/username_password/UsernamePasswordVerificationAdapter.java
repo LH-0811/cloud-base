@@ -38,8 +38,12 @@ public class UsernamePasswordVerificationAdapter implements LhitSecurityUserVeri
         // 获取到等用户
         SysUser loginUser = sysUserService.getUserByUsernameAndPassword(verification.getUsername(), verification.getPassword());
 
-        if (loginUser == null){
+        if (loginUser == null) {
             throw CommonException.create(ServerResponse.createByError("用户名或密码错误"));
+        }
+
+        if (!loginUser.getActiveFlag()) {
+            throw CommonException.create(ServerResponse.createByError("用户不可用请联系管理员"));
         }
 
         // 获取用户角色列表
@@ -57,7 +61,7 @@ public class UsernamePasswordVerificationAdapter implements LhitSecurityUserVeri
             userPerms.setUserId(String.valueOf(loginUser.getId()));
             log.info("用户名密码 登录成功");
             return userPerms;
-        }else {
+        } else {
             List<SysRes> interfaceList = resListByUser.stream().filter(ele -> StringUtils.isNotEmpty(ele.getUrl())).collect(Collectors.toList());
             List<LhitSecurityPermission> perms = Lists.newArrayList();
             for (SysRes sysRes : interfaceList) {

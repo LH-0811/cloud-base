@@ -16,6 +16,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class SysAdminServiceImpl implements SysAdminService {
     public void createUser(SysUserCreateParam param, SysUser sysUser) throws Exception {
         log.info("开始 创建用户");
         SysUser nameCheckParam = new SysUser();
-        nameCheckParam.setUsername(param.getName());
+        nameCheckParam.setUsername(param.getUsername());
         nameCheckParam.setDelFlag(false);
         if (sysUserDao.selectCount(nameCheckParam) > 0) {
             throw CommonException.create(ServerResponse.createByError("用户名已经存在"));
@@ -88,9 +89,15 @@ public class SysAdminServiceImpl implements SysAdminService {
             SysUser sysUserNew = new SysUser();
             BeanUtils.copyProperties(param, sysUserNew);
             sysUserNew.setId(idWorker.nextId());
+            String salt = RandomStringUtils.random(4);
+            sysUserNew.setSalt(salt);
             sysUserNew.setCreateBy(sysUser.getId());
             sysUserNew.setCreateTime(new Date());
-            sysUserNew.setPassword(Md5Util.getMD5Str("123456"));
+            sysUserNew.setPassword(Md5Util.getMD5Str("123456", salt));
+            sysUserNew.setActiveFlag(true);
+            sysUserNew.setDelFlag(false);
+            sysUserNew.setCreateBy(sysUser.getId());
+            sysUserNew.setCreateTime(new Date());
             sysUserDao.insertSelective(sysUserNew);
             log.info("完成 创建用户");
         } catch (Exception e) {
@@ -134,16 +141,39 @@ public class SysAdminServiceImpl implements SysAdminService {
             Example example = new Example(SysUser.class);
             example.setOrderByClause(" create_time desc ");
             Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("delFlag",false);
-            if (StringUtils.isNotEmpty(param.getName())) {
-                criteria.andLike("name", "%" + param.getName() + "%");
+            criteria.andEqualTo("delFlag", false);
+
+            if (param.getUserType() != null) {
+                criteria.andEqualTo("userType", param.getUserType());
             }
-            if (StringUtils.isNotEmpty(param.getPhone())) {
-                criteria.andEqualTo("phone", param.getPhone());
+
+            if (StringUtils.isNotBlank(param.getUsername())) {
+                criteria.andLike("username","%"+param.getUsername()+"%");
             }
-            if (param.getDelFlag() != null) {
-                criteria.andEqualTo("delFlag", param.getDelFlag());
+
+            if (StringUtils.isNotBlank(param.getNickName())){
+                criteria.andLike("nickName","%"+param.getNickName()+"%");
             }
+            if (StringUtils.isNotBlank(param.getPhone())){
+                criteria.andLike("phone","%"+param.getPhone()+"%");
+            }
+            if (param.getActiveFlag()!=null){
+                criteria.andEqualTo("activeFlag",param.getActiveFlag());
+            }
+            if (param.getLastLoginLow()!=null){
+                criteria.andGreaterThanOrEqualTo("lastLogin",param.getLastLoginLow());
+            }
+            if (param.getLastLoginUp()!=null){
+                criteria.andLessThanOrEqualTo("lastLogin",param.getLastLoginUp());
+            }
+
+            if (param.getCreateTimeLow()!=null){
+                criteria.andGreaterThanOrEqualTo("createTime",param.getCreateTimeLow());
+            }
+            if (param.getCreateTimeUp()!=null){
+                criteria.andLessThanOrEqualTo("createTime",param.getCreateTimeUp());
+            }
+
             PageHelper.startPage(param.getPageNum(), param.getPageSize());
             List<SysUser> sysUsers = sysUserDao.selectByExample(example);
             PageInfo pageInfo = new PageInfo(sysUsers);

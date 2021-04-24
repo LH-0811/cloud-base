@@ -211,6 +211,7 @@ transport.threadFactory.clientWorkerThreadPrefix=NettyClientWorkerThread
 transport.threadFactory.bossThreadSize=1
 transport.threadFactory.workerThreadSize=default
 transport.shutdown.wait=3
+## 这里指定了事务分组的名称
 service.vgroupMapping.my_test_tx_group=default
 service.default.grouplist=127.0.0.1:8091
 service.enableDegrade=false

@@ -3,9 +3,12 @@ package com.cloud.base.member.user.controller;
 import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.modules.logger.annotation.LhitLogger;
 import com.cloud.base.core.modules.logger.entity.LoggerBusinessType;
+import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityTokenGenerateAdapter;
+import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityTokenManagerAdapter;
 import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityUserAuthenticationLoginAdapter;
 import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityRole;
 import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityUserPerms;
+import com.cloud.base.core.modules.sercurity.defense.pojo.user.DefaultLhitSecurityUser;
 import com.cloud.base.core.modules.sercurity.defense.pojo.user.LhitSecurityUser;
 import com.cloud.base.member.user.expand.security.verification.username_password.UsernamePasswordVerification;
 import com.cloud.base.member.user.repository.vo.LoginVo;
@@ -33,6 +36,9 @@ public class LoginController extends BaseController {
     @Autowired
     private LhitSecurityUserAuthenticationLoginAdapter userAuthenticationLoginAdapter;
 
+    @Autowired
+    private LhitSecurityTokenManagerAdapter<DefaultLhitSecurityUser, LhitSecurityRole> lhitSecurityTokenManagerAdapter;
+
     @PostMapping("/sys_user/username_password")
     @ApiOperation("系统用户登录")
     @ApiImplicitParams({
@@ -54,7 +60,6 @@ public class LoginController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    @LhitLogger(title = "用户登录",businessType = LoggerBusinessType.QUERY)
     public ServerResponse<LhitSecurityUserPerms<LhitSecurityRole, LhitSecurityUser>> getUesrInfo(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserController-getUesrInfo");
@@ -62,5 +67,17 @@ public class LoginController extends BaseController {
         return ServerResponse.createBySuccess("获取成功", perms);
     }
 
+    @GetMapping("/logout")
+    @ApiOperation("用户退出")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+    })
+    @LhitLogger(title = "用户退出",businessType = LoggerBusinessType.QUERY)
+    public ServerResponse logout(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 获取当前用户信息 接口 : SysUserController-logout");
+        lhitSecurityTokenManagerAdapter.removeToken(token);
+        return ServerResponse.createBySuccess("退出成功");
+    }
 
 }

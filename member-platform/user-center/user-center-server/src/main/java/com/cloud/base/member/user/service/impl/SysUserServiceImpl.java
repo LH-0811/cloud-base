@@ -291,6 +291,7 @@ public class SysUserServiceImpl implements SysUserService {
         SysUser currentUser = null;
         try {
             SysUser selectByUsername = new SysUser();
+            selectByUsername.setDelFlag(false);
             selectByUsername.setUsername(username);
             currentUser = sysUserDao.selectOne(selectByUsername);
         } catch (Exception e) {
@@ -301,7 +302,10 @@ public class SysUserServiceImpl implements SysUserService {
             throw CommonException.create(ServerResponse.createByError("当前用户不存在"));
         }
 
-        if (!currentUser.getPassword().equals(password)) {
+        // 用户输入密码
+        String md5Str = Md5Util.getMD5Str(password, currentUser.getSalt());
+
+        if (!currentUser.getPassword().equals(md5Str)) {
             throw CommonException.create(ServerResponse.createByError("密码错误"));
         }
         log.info("完成 通过用户名 密码获取用户信息");

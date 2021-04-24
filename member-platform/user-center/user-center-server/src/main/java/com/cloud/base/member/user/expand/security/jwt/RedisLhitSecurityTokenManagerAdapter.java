@@ -1,5 +1,6 @@
 package com.cloud.base.member.user.expand.security.jwt;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.cloud.base.core.common.entity.ServerResponse;
@@ -7,6 +8,8 @@ import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityTokenManagerAdapter;
 import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityUserPerms;
 import com.cloud.base.core.modules.sercurity.defense.properties.LhitSecurityProperties;
+import com.cloud.base.member.user.repository.entity.SysRole;
+import com.cloud.base.member.user.repository.entity.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-public class RedisLhitSecurityTokenManagerAdapter<U, R> implements LhitSecurityTokenManagerAdapter {
+public class RedisLhitSecurityTokenManagerAdapter<U, R> implements LhitSecurityTokenManagerAdapter<SysUser, SysRole> {
 
 
     @Autowired
@@ -58,11 +61,11 @@ public class RedisLhitSecurityTokenManagerAdapter<U, R> implements LhitSecurityT
     public void removeToken(String token) {
 
         // 获取到token对应的权限信息
-        String permsStr = reidsClient.opsForValue().get(token);
-        if (StringUtils.isEmpty(permsStr)){
+        LhitSecurityUserPerms<SysRole, SysUser> permsByToken = getPermsByToken(token);
+        if (permsByToken == null){
             return;
         }
-        LhitSecurityUserPerms perms = JSONObject.parseObject(permsStr, LhitSecurityUserPerms.class);
+        LhitSecurityUserPerms perms = JSONObject.parseObject(JSON.toJSONString(permsByToken), LhitSecurityUserPerms.class);
         if (perms == null) return;
         // 如果存在  移除token 与 perms的缓存
         reidsClient.delete(TokenPermsPrefix + token);
@@ -81,21 +84,21 @@ public class RedisLhitSecurityTokenManagerAdapter<U, R> implements LhitSecurityT
     }
 
     @Override
-    public LhitSecurityUserPerms<R, U> getPermsByToken(String token) {
+    public LhitSecurityUserPerms<SysRole, SysUser> getPermsByToken(String token) {
 
         String permsStr = reidsClient.opsForValue().get(TokenPermsPrefix + token);
         if (StringUtils.isEmpty(permsStr)){
             return null;
         }
         // 获取token 存在的有效权限信息
-        LhitSecurityUserPerms perms = JSONObject.parseObject(permsStr,new TypeReference<LhitSecurityUserPerms<R,U>>() {});
+        LhitSecurityUserPerms perms = JSONObject.parseObject(permsStr,new TypeReference<LhitSecurityUserPerms<SysRole, SysUser>>() {});
         if (perms == null) return null;
         // 完成验证后 返回权限信息
         return perms;
     }
 
     @Override
-    public U getUserInfoByToken(String token) {
+    public SysUser getUserInfoByToken(String token) {
 
         if (StringUtils.isEmpty(token)) return null;
 
@@ -104,7 +107,7 @@ public class RedisLhitSecurityTokenManagerAdapter<U, R> implements LhitSecurityT
         if (StringUtils.isEmpty(permsStr)){
             return null;
         }
-        LhitSecurityUserPerms<R,U> perms = JSONObject.parseObject(permsStr,new TypeReference<LhitSecurityUserPerms<R,U>>() {});
+        LhitSecurityUserPerms<SysRole, SysUser> perms = JSONObject.parseObject(permsStr,new TypeReference<LhitSecurityUserPerms<SysRole, SysUser>>() {});
 
         if (perms == null) return null;
 
@@ -122,7 +125,7 @@ public class RedisLhitSecurityTokenManagerAdapter<U, R> implements LhitSecurityT
         if (StringUtils.isEmpty(permsStr)){
             return;
         }
-        LhitSecurityUserPerms<R,U> perms = JSONObject.parseObject(permsStr,new TypeReference<LhitSecurityUserPerms<R,U>>() {});
+        LhitSecurityUserPerms<SysRole, SysUser> perms = JSONObject.parseObject(permsStr,new TypeReference<LhitSecurityUserPerms<SysRole, SysUser>>() {});
 
 
         // 保存token与权限的关系

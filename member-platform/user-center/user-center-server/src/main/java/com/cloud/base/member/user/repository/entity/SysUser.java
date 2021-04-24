@@ -1,6 +1,7 @@
 package com.cloud.base.member.user.repository.entity;
 
 import com.cloud.base.core.modules.sercurity.defense.pojo.user.LhitSecurityUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +37,7 @@ public class SysUser implements Serializable, LhitSecurityUser {
     private Long id;
 
     /**
-     * 微信openId
+     * 用户类型 1-系统管理员 2-商户 3-C端客户
      */
     @ApiModelProperty(value = "用户类型 1-系统管理员 2-商户 3-C端客户")
     private Integer userType;
@@ -47,9 +48,10 @@ public class SysUser implements Serializable, LhitSecurityUser {
     @ApiModelProperty(value = "用户名")
     private String username;
     /**
-     * 联系电话
+     * 用户密码
      */
-    @ApiModelProperty(value = "联系电话")
+    @JsonIgnore
+    @ApiModelProperty(value = "用户密码")
     private String password;
     /**
      * 密码盐

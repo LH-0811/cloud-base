@@ -170,7 +170,10 @@ public class SysAdminController extends BaseController {
      */
     @PostMapping("/sys_res/tree")
     @ApiOperation("获取全部资源树")
-    public ServerResponse<List<SysRes>> getAllResTree() throws Exception {
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+    })
+    public ServerResponse<List<SysRes>> getAllResTree(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取全部资源树 接口 : SysAdminController-getAllResTree ");
         List<SysRes> allResTree = sysAdminService.getAllResTree();

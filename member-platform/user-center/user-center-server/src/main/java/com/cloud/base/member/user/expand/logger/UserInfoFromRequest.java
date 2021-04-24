@@ -1,5 +1,6 @@
 package com.cloud.base.member.user.expand.logger;
 
+import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.modules.logger.adapter.LhitLoggerUserInfoFromRequestAdapter;
 import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityTokenManagerAdapter;
 import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityRole;
@@ -32,7 +33,8 @@ public class UserInfoFromRequest implements LhitLoggerUserInfoFromRequestAdapter
         if (StringUtils.isNotEmpty(lhtoken)) {
             LhitSecurityUserPerms<LhitSecurityRole, LhitSecurityUser> permsByToken = lhitSecurityTokenManagerAdapter.getPermsByToken(lhtoken);
             if (permsByToken != null && permsByToken.getUser() != null) {
-                return sysUserDao.selectByPrimaryKey(Long.parseLong(permsByToken.getUser().getUserId()));
+                SysUser sysUser = sysUserDao.selectByPrimaryKey(JSON.parseObject(JSON.toJSONString(permsByToken.getUser())).getLong("id"));
+                return sysUser;
             }
         }
         return new SysUser();

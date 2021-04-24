@@ -17,7 +17,7 @@ spring:
   redis:
     host: 49.232.166.94
     port: 6379
-    #    password: 123456
+    password: QQliuhe951@@
     jedis:
       pool:
         max-active: 8
@@ -37,7 +37,7 @@ spring:
         server-addr: 49.232.166.94:8848 # nacos 启动地址
     sentinel: # 配置sentinel
       transport:
-        dashboard: 49.232.166.94:9000 # 配置sentinel dashboard 启动地址
+        dashboard: 127.0.0.1:9000 # 配置sentinel dashboard 启动地址
         port: 8719 # 直接写8719 端口号默认是8719 如果被占用就是+1 直到找到未被占用端口
         client-ip: localhost #这个配置时告知sentinel通过哪个ip来ping服务。所以这个ip必须是sentinel所在服务器能ping通的
       filter:
