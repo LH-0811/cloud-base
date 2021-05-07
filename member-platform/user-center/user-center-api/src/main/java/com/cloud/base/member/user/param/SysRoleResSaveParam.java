@@ -1,4 +1,4 @@
-package com.cloud.base.member.user.repository.param;
+package com.cloud.base.member.user.param;
 
 import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModelProperty;

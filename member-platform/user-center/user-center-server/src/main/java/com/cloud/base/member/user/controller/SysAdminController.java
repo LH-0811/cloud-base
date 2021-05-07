@@ -1,11 +1,10 @@
 package com.cloud.base.member.user.controller;
 
 import com.cloud.base.core.common.entity.ServerResponse;
-import com.cloud.base.member.user.repository.entity.SysRegion;
 import com.cloud.base.member.user.repository.entity.SysRes;
 import com.cloud.base.member.user.repository.entity.SysRole;
 import com.cloud.base.member.user.repository.entity.SysUser;
-import com.cloud.base.member.user.repository.param.*;
+import com.cloud.base.member.user.param.*;
 import com.cloud.base.member.user.service.SysAdminService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;

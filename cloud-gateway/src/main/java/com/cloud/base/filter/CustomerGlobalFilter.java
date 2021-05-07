@@ -38,8 +38,8 @@ public class CustomerGlobalFilter implements GlobalFilter, Ordered {
         if (antPathMatcher.match("**/swagger-ui.html", request.getURI().getPath())) {
             return chain.filter(exchange);
         }
-        //1 uaa服务所有放行
-//        if (antPathMatcher.match("/**/auth-server/**", request.getURI().getPath())) {
+        //1 放行用户服务
+//        if (antPathMatcher.match("/**/user-center-server/**", request.getURI().getPath())) {
 //            return chain.filter(exchange);
 //        }
         //2 检查token是否存在

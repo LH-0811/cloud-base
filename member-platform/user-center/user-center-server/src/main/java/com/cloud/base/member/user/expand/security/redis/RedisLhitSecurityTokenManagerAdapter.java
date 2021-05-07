@@ -1,4 +1,4 @@
-package com.cloud.base.member.user.expand.security.jwt;
+package com.cloud.base.member.user.expand.security.redis;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

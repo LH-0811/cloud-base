@@ -1,4 +1,4 @@
-package com.cloud.base.member.user.repository.param;
+package com.cloud.base.member.user.param;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -9,27 +9,31 @@ import lombok.Setter;
 import javax.validation.constraints.NotNull;
 
 /**
- * 创建系统角色参数
+ * 系统角色修改 bean
  *
  * @auth lh0811
- * @date 2020/11/13
+ * @date 2020/11/2
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SysRoleCreateParam {
+public class SysRoleUpdateParam {
 
-    @NotNull(message = "角色名称不能为空")
-    @ApiModelProperty(value = "角色名称", required = true)
+    @NotNull(message = "角色id不能为空")
+    @ApiModelProperty(value = "主键id")
+    private Long id;
+
+    @ApiModelProperty(value = "角色名称")
     private String name;
 
     @ApiModelProperty(value = "角色编号")
     private String no;
 
-    @ApiModelProperty(value = "状态 是否可用默认可用", required = true)
-    private Boolean status = true;
+    @ApiModelProperty(value = "状态 是否可用")
+    private Boolean status;
 
     @ApiModelProperty(value = "备注")
     private String notes;
+
 }

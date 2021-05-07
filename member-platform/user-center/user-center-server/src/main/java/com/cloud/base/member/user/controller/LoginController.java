@@ -3,7 +3,6 @@ package com.cloud.base.member.user.controller;
 import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.modules.logger.annotation.LhitLogger;
 import com.cloud.base.core.modules.logger.entity.LoggerBusinessType;
-import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityTokenGenerateAdapter;
 import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityTokenManagerAdapter;
 import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityUserAuthenticationLoginAdapter;
 import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityRole;
@@ -11,7 +10,7 @@ import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityUse
 import com.cloud.base.core.modules.sercurity.defense.pojo.user.DefaultLhitSecurityUser;
 import com.cloud.base.core.modules.sercurity.defense.pojo.user.LhitSecurityUser;
 import com.cloud.base.member.user.expand.security.verification.username_password.UsernamePasswordVerification;
-import com.cloud.base.member.user.repository.vo.LoginVo;
+import com.cloud.base.member.user.vo.LoginVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

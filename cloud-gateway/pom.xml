@@ -13,6 +13,12 @@
     <artifactId>cloud-gateway</artifactId>
 
     <dependencies>
+        <!--   redis     -->
+        <dependency>
+            <groupId>com.cloud.dependency</groupId>
+            <artifactId>dependency-redis</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <!--引入sentinel-->
         <dependency>
             <groupId>com.cloud.dependency</groupId>

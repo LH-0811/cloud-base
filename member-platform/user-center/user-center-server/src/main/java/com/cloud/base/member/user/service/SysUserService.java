@@ -4,8 +4,8 @@ package com.cloud.base.member.user.service;
 import com.cloud.base.member.user.repository.entity.SysRes;
 import com.cloud.base.member.user.repository.entity.SysRole;
 import com.cloud.base.member.user.repository.entity.SysUser;
-import com.cloud.base.member.user.repository.param.SysUserUpdatePasswordParam;
-import com.cloud.base.member.user.repository.vo.MenuVo;
+import com.cloud.base.member.user.param.SysUserUpdatePasswordParam;
+import com.cloud.base.member.user.vo.MenuVo;
 
 import java.util.List;
 

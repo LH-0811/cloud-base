@@ -1,15 +1,14 @@
-package com.cloud.base.member.user.repository.param;
+package com.cloud.base.member.user.param;
 
+import com.cloud.base.core.common.entity.CommonEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
-
 /**
- * 系统角色修改 bean
+ * 系统角色查询 bean
  *
  * @auth lh0811
  * @date 2020/11/2
@@ -18,11 +17,8 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SysRoleUpdateParam {
+public class SysRoleQueryParam {
 
-    @NotNull(message = "角色id不能为空")
-    @ApiModelProperty(value = "主键id")
-    private Long id;
 
     @ApiModelProperty(value = "角色名称")
     private String name;
@@ -33,7 +29,10 @@ public class SysRoleUpdateParam {
     @ApiModelProperty(value = "状态 是否可用")
     private Boolean status;
 
-    @ApiModelProperty(value = "备注")
-    private String notes;
+    @ApiModelProperty(value = "页码 默认1")
+    private Integer pageNum= CommonEntity.pageNum;
+
+    @ApiModelProperty(value = "每页条数 默认15")
+    private Integer pageSize = CommonEntity.pageSize;
 
 }

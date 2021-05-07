@@ -6,8 +6,8 @@ import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityUse
 import com.cloud.base.core.modules.sercurity.defense.pojo.user.LhitSecurityUser;
 import com.cloud.base.member.user.repository.entity.SysRes;
 import com.cloud.base.member.user.repository.entity.SysRole;
-import com.cloud.base.member.user.repository.param.SysUserUpdatePasswordParam;
-import com.cloud.base.member.user.repository.vo.MenuVo;
+import com.cloud.base.member.user.param.SysUserUpdatePasswordParam;
+import com.cloud.base.member.user.vo.MenuVo;
 import com.cloud.base.member.user.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

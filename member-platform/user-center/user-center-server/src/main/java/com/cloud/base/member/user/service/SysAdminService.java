@@ -1,10 +1,9 @@
 package com.cloud.base.member.user.service;
 
-import com.cloud.base.member.user.repository.entity.SysRegion;
 import com.cloud.base.member.user.repository.entity.SysRes;
 import com.cloud.base.member.user.repository.entity.SysRole;
 import com.cloud.base.member.user.repository.entity.SysUser;
-import com.cloud.base.member.user.repository.param.*;
+import com.cloud.base.member.user.param.*;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;

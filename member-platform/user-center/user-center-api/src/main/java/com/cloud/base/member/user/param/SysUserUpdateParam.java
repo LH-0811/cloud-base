@@ -1,4 +1,4 @@
-package com.cloud.base.member.user.repository.param;
+package com.cloud.base.member.user.param;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;

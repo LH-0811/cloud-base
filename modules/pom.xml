@@ -20,6 +20,7 @@
         <module>modules-logger</module>
         <module>modules-zk-distributed-util</module>
         <module>modules-elasticsearch</module>
+        <module>modules-lh-security</module>
     </modules>
 
 </project>

@@ -1,4 +1,4 @@
-package com.cloud.base.member.user.repository.param;
+package com.cloud.base.member.user.param;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -15,18 +15,14 @@ import java.io.Serializable;
  */
 @Setter
 @Getter
-public class SysRegionCreateParam implements Serializable {
+public class SysRegionUpdateParam implements Serializable {
 
     @NotNull(message = "未上传 行政区划代码")
     @ApiModelProperty(value = "行政区划代码",required = true)
     private String code;
 
-    @NotNull(message = "未上传 行政区划代码")
-    @ApiModelProperty(value = "名称",required = true)
+    @ApiModelProperty(value = "名称")
     private String name;
 
-    @NotNull(message = "未上传 父级code")
-    @ApiModelProperty(value = "父级code",required = true)
-    private String pcode;
 
 }
