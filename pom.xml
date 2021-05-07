@@ -15,7 +15,6 @@
         <module>common</module>
         <module>dependency</module>
         <module>modules</module>
-        <module>member-platform</module>
     </modules>
 
     <properties>
