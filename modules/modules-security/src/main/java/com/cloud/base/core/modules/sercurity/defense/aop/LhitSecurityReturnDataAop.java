@@ -3,24 +3,19 @@ package com.cloud.base.core.modules.sercurity.defense.aop;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
-import com.cloud.base.core.common.entity.CommonMethod;
-import com.cloud.base.core.common.entity.ResponseCode;
-import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ResponseCode;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityTokenManagerAdapter;
-import com.cloud.base.core.modules.sercurity.defense.annotation.LhitDataIntercept;
 import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityDataRule;
 import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityPermission;
 import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityUserPerms;
 import com.cloud.base.core.modules.sercurity.defense.properties.LhitSecurityProperties;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +23,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Aspect

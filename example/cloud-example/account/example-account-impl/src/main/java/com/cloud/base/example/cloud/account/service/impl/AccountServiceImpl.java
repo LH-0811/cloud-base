@@ -1,8 +1,7 @@
 package com.cloud.base.example.cloud.account.service.impl;
 
-import com.cloud.base.core.common.entity.CommonMethod;
-import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.example.cloud.account.param.AccountSubtractionParam;
 import com.cloud.base.example.cloud.account.repository.dao.TAccountDao;
 import com.cloud.base.example.cloud.account.repository.entity.TAccount;

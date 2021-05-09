@@ -1,6 +1,6 @@
 package com.cloud.base.example.cloud.account.api;
 
-import com.cloud.base.core.common.entity.ServerResponse;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.example.cloud.account.param.AccountSubtractionParam;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -22,7 +22,7 @@ public interface ExampleAccountApi {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "MyToken", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "AccountSubtractionParam", dataTypeClass = AccountSubtractionParam.class, name = "param", value = "参数"),
     })
-    ServerResponse accountSubtraction(@RequestBody AccountSubtractionParam param,@RequestHeader(value = "MyToken", defaultValue = "") String token) throws Exception;
+    ServerResponse accountSubtraction(@RequestBody AccountSubtractionParam param, @RequestHeader(value = "MyToken", defaultValue = "") String token) throws Exception;
 
 
     @GetMapping("/account/hello")

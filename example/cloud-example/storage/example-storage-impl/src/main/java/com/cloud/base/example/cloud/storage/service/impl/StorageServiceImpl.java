@@ -1,8 +1,7 @@
 package com.cloud.base.example.cloud.storage.service.impl;
 
-import com.cloud.base.core.common.entity.CommonMethod;
-import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.example.cloud.storage.param.SubtractionStorageParam;
 import com.cloud.base.example.cloud.storage.repository.dao.TStorageDao;
 import com.cloud.base.example.cloud.storage.repository.entity.TStorage;

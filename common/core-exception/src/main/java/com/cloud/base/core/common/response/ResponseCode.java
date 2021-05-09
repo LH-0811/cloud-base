@@ -1,4 +1,4 @@
-package com.cloud.base.core.common.entity;
+package com.cloud.base.core.common.response;
 
 
 public enum ResponseCode {

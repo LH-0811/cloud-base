@@ -17,6 +17,11 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.cloud.common</groupId>
+            <artifactId>core-exception</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <!--通用-->
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -1,7 +1,7 @@
 package com.cloud.base.security.customer_login.username_pwd;
 
-import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityUserVerificationAdapter;
 import com.cloud.base.core.modules.sercurity.defense.annotation.LhitUserVerification;
 import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityDataRule;

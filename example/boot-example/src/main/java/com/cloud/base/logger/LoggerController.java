@@ -1,7 +1,7 @@
 package com.cloud.base.logger;
 
-import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.logger.annotation.LhitLogger;
 import com.cloud.base.core.modules.logger.entity.LoggerBusinessType;
 import com.cloud.base.logger.param.ExampleParam;

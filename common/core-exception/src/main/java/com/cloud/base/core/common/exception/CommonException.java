@@ -1,14 +1,15 @@
 package com.cloud.base.core.common.exception;
 
 
-import com.cloud.base.core.common.entity.CommonMethod;
-import com.cloud.base.core.common.entity.ServerResponse;
+import com.cloud.base.core.common.response.ServerResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * 自定义异常处理
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ControllerAdvice
 public class CommonException extends Exception {
 
     private Throwable error;
@@ -32,7 +32,7 @@ public class CommonException extends Exception {
     }
 
     public static CommonException create(Throwable error, ServerResponse responseEntity) {
-        log.error(CommonMethod.getTrace(error));
+        log.error(getTrace(error));
         CommonException exception = new CommonException();
         exception.serverResponse = responseEntity;
         exception.error = error;
@@ -40,4 +40,11 @@ public class CommonException extends Exception {
     }
 
 
+    public static String getTrace(Throwable t) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
+        t.printStackTrace(writer);
+        StringBuffer buffer = stringWriter.getBuffer();
+        return buffer.toString();
+    }
 }

@@ -2,7 +2,7 @@ package com.cloud.base.datasource.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.cloud.base.core.common.entity.ServerResponse;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.datasource.param.PeopleCreateParam;
 import com.cloud.base.datasource.param.PeopleQueryParam;
 import com.cloud.base.datasource.pojo.People;

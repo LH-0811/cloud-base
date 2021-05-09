@@ -1,7 +1,7 @@
 package com.cloud.base.core.modules.zk.distributed.function.subscribe;
 
-import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.zk.distributed.client.ZkDistributedClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

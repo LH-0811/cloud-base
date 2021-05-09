@@ -1,7 +1,7 @@
 package com.cloud.base.core.common.exception;
 
 import com.cloud.base.core.common.entity.CommonMethod;
-import com.cloud.base.core.common.entity.ServerResponse;
+import com.cloud.base.core.common.response.ServerResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

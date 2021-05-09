@@ -1,8 +1,11 @@
 package com.cloud.base.core.modules.lh_security.entity;
 
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -15,6 +18,9 @@ import java.util.List;
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ApiModel(value = "权限信息类")
 public class SecurityAuthority {
 
     @ApiModelProperty(value = "用户信息")

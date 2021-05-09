@@ -1,7 +1,7 @@
 package com.cloud.base.core.modules.sercurity.defense.util;
 
-import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityUserPerms;
 import com.cloud.base.core.modules.sercurity.defense.properties.LhitSecurityProperties;
 import io.jsonwebtoken.Claims;

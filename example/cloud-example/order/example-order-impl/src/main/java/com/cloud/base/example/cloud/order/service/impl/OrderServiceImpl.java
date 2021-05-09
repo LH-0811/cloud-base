@@ -1,8 +1,7 @@
 package com.cloud.base.example.cloud.order.service.impl;
 
-import com.cloud.base.core.common.entity.CommonMethod;
-import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.example.cloud.account.api.ExampleAccountApi;
 import com.cloud.base.example.cloud.account.param.AccountSubtractionParam;

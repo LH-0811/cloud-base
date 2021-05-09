@@ -1,6 +1,6 @@
 package com.cloud.base.security.data_intercept.controller;
 
-import com.cloud.base.core.common.entity.ServerResponse;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.sercurity.defense.annotation.LhitDataIntercept;
 import com.cloud.base.security.data_intercept.vo.Room;
 import com.cloud.base.security.data_intercept.vo.Student;

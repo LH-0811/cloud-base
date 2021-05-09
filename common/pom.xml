@@ -17,5 +17,6 @@
     <modules>
         <module>core-common</module>
         <module>core-common-sentinel</module>
+        <module>core-exception</module>
     </modules>
 </project>

@@ -1,8 +1,8 @@
 package com.cloud.base.core.modules.sercurity.defense.filter;
 
-import com.cloud.base.core.common.entity.ResponseCode;
-import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ResponseCode;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityResourceProtectAdapter;
 import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityTokenManagerAdapter;
 import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityPermission;

@@ -17,6 +17,7 @@
     <modules>
         <module>boot-example</module>
         <module>cloud-example</module>
+        <module>lh-security-example</module>
     </modules>
 
 

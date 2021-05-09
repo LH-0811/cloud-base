@@ -1,7 +1,7 @@
 package com.cloud.base.zk;
 
 import com.cloud.base.core.common.entity.CommonMethod;
-import com.cloud.base.core.common.entity.ServerResponse;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.zk.distributed.client.ZkDistributedClient;
 import com.cloud.base.core.modules.zk.distributed.function.barrier.DistributedBarrierEngine;
 import com.cloud.base.core.modules.zk.distributed.function.subscribe.ZkStoryboardEngine;

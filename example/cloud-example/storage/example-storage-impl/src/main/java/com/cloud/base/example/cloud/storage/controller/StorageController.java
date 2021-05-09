@@ -1,7 +1,7 @@
 package com.cloud.base.example.cloud.storage.controller;
 
 
-import com.cloud.base.core.common.entity.ServerResponse;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.example.cloud.storage.param.SubtractionStorageParam;
 import com.cloud.base.example.cloud.storage.service.StorageService;
 import com.cloud.base.example.cloud.storage.vo.SubtractionStorageVo;

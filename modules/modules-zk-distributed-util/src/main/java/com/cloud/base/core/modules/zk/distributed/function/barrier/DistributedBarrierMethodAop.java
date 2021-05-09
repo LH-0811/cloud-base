@@ -1,8 +1,8 @@
 package com.cloud.base.core.modules.zk.distributed.function.barrier;
 
 import com.cloud.base.core.common.entity.CommonMethod;
-import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.zk.distributed.client.ZkDistributedClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

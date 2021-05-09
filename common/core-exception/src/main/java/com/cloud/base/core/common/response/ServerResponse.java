@@ -1,12 +1,12 @@
-package com.cloud.base.core.common.entity;
+package com.cloud.base.core.common.response;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ServerResponse<T> implements Serializable {
 
     @ApiModelProperty(value = "请求结果状态0成功 其他是失败")
@@ -15,6 +15,8 @@ public class ServerResponse<T> implements Serializable {
     @ApiModelProperty(value = "附加消息")
     private String msg;
 
+    @Getter
+    @Setter
     @ApiModelProperty(value = "数据")
     private T data;
 
@@ -44,9 +46,6 @@ public class ServerResponse<T> implements Serializable {
     }
     public Integer getStatus(){
         return status;
-    }
-    public T getData(){
-        return data;
     }
     public String getMsg(){
         return msg;

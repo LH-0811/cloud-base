@@ -3,8 +3,7 @@ package com.cloud.base.example.cloud.account.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.cloud.base.core.common.entity.ServerResponse;
-import com.cloud.base.example.cloud.account.api.ExampleAccountApi;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.example.cloud.account.param.AccountSubtractionParam;
 import com.cloud.base.example.cloud.account.service.AccountService;
 import io.swagger.annotations.Api;

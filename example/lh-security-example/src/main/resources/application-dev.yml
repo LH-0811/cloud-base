@@ -1,0 +1,12 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: lh-security-example
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+    time-zone: GMT+8
+    generator:
+      # 避免Long类型丢失经度
+      WRITE_NUMBERS_AS_STRINGS: true

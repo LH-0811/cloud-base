@@ -1,7 +1,7 @@
 package com.cloud.base.datasource.service.impl;
 
-import com.cloud.base.core.common.entity.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.modules.datasource.annotation.DataSource;
 import com.cloud.base.datasource.dao.PeopleDao;

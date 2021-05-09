@@ -1,6 +1,6 @@
 package com.cloud.base.example.cloud.storage.api;
 
-import com.cloud.base.core.common.entity.ServerResponse;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.example.cloud.storage.param.SubtractionStorageParam;
 import com.cloud.base.example.cloud.storage.vo.SubtractionStorageVo;
 import io.swagger.annotations.ApiImplicitParam;
