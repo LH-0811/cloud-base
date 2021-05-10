@@ -16,7 +16,6 @@ public class SecurityClientProperties {
     // 请求头中token的key
     private String tokenKey = "LHTOKEN";
 
-
     @Getter
     @Setter
     // 请求头中token的key
@@ -26,21 +25,6 @@ public class SecurityClientProperties {
     @Setter
     // token 过期时间 单位是分钟
     private Integer serverPort = 8999;
-
-    @Getter
-    @Setter
-    // 忽略鉴权的url
-    private List<String> ignoreUrl = Lists.newArrayList();
-
-    @Getter
-    @Setter
-    // 忽略鉴权的permsCode
-    private List<String> ignorePermsCode = Lists.newArrayList();
-
-    @Getter
-    @Setter
-    // 忽略鉴权的静态资源地址
-    private List<String> ignoreStaticResPath = Lists.newArrayList();
 
     @Getter
     @Setter
