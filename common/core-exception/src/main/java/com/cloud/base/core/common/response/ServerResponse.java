@@ -6,7 +6,8 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-
+@Getter
+@Setter
 public class ServerResponse<T> implements Serializable {
 
     @ApiModelProperty(value = "请求结果状态0成功 其他是失败")
@@ -15,8 +16,7 @@ public class ServerResponse<T> implements Serializable {
     @ApiModelProperty(value = "附加消息")
     private String msg;
 
-    @Getter
-    @Setter
+
     @ApiModelProperty(value = "数据")
     private T data;
 

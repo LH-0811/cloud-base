@@ -16,6 +16,7 @@
     <modules>
         <module>lh-security-core</module>
         <module>lh-security-server</module>
+        <module>lh-security-client</module>
     </modules>
 
 
