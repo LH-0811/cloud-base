@@ -3,9 +3,10 @@ package com.cloud.base.core.modules.lh_security.client.component.annotation;
 import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.lh_security.client.component.GetTokenFromContext;
+import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
 import com.cloud.base.core.modules.lh_security.client.component.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.client.entity.CheckResParam;
+import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
 import com.cloud.base.core.modules.lh_security.client.properties.SecurityClientProperties;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
@@ -26,7 +27,7 @@ public class HasPermsCodeAop {
     private SecurityClientProperties securityClientProperties;
 
     @Autowired
-    private GetTokenFromContext getTokenFromContext;
+    private ProvideResToSecurityClient provideResToSecurityClient;
 
     @Autowired
     private OkHttpClientUtil okHttpClientUtil;
@@ -41,15 +42,19 @@ public class HasPermsCodeAop {
         log.debug("进入HasPermsCodeAop切面");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         HasPermsCode annotation = signature.getMethod().getAnnotation(HasPermsCode.class);
+
         String permsCode = annotation.permsCode();
-        if (StringUtils.isBlank(permsCode))
-            throw CommonException.create(ServerResponse.createByError("使用@HasPermsCode注解，必须填写permsCode。"));
-        log.debug("拦截到的url:{}", permsCode);
-        String serverUrlOfCheckUrl = String.format("http://%s:%s%s", securityClientProperties.getServerAddr(), securityClientProperties.getServerPort(), securityClientProperties.getServerUrlOfCheckPermsCode());
-        log.debug("请求访问权限验证服务端地址:{}", serverUrlOfCheckUrl);
-        String token = getTokenFromContext.getToken();
+        if (StringUtils.isBlank(permsCode)) throw CommonException.create(ServerResponse.createByError("使用@HasPermsCode注解，必须填写permsCode。"));
+
+        String token = provideResToSecurityClient.getTokenFromApplicationContext();
+        SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
+        String reqUrl = "http://" + serverAddr.toHttpAddrAndPort() + securityClientProperties.getServerUrlOfCheckPermsCode();
+
+        log.debug("拦截到的permsCode:{}", permsCode);
         log.debug("获取到token:{}", token);
-        Response response = okHttpClientUtil.postJSONParameters(serverUrlOfCheckUrl, JSON.toJSONString(new CheckResParam(token, permsCode)));
+        log.debug("请求访问权限验证服务端地址:{}", reqUrl);
+
+        Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new CheckResParam(token, permsCode)));
         ServerResponse serverResponse = JSON.parseObject(response.body().string(), ServerResponse.class);
         log.debug("response:{}", JSON.toJSONString(serverResponse));
         if (!serverResponse.getStatus().equals("0"))

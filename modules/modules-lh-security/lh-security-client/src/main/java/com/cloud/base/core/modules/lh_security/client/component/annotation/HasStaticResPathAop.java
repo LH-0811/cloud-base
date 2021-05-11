@@ -3,9 +3,10 @@ package com.cloud.base.core.modules.lh_security.client.component.annotation;
 import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.lh_security.client.component.GetTokenFromContext;
+import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
 import com.cloud.base.core.modules.lh_security.client.component.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.client.entity.CheckResParam;
+import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
 import com.cloud.base.core.modules.lh_security.client.properties.SecurityClientProperties;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
@@ -26,7 +27,7 @@ public class HasStaticResPathAop {
     private SecurityClientProperties securityClientProperties;
 
     @Autowired
-    private GetTokenFromContext getTokenFromContext;
+    private ProvideResToSecurityClient provideResToSecurityClient;
 
     @Autowired
     private OkHttpClientUtil okHttpClientUtil;
@@ -42,14 +43,17 @@ public class HasStaticResPathAop {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         HasStaticResPath annotation = signature.getMethod().getAnnotation(HasStaticResPath.class);
         String resPath = annotation.resPath();
-        if (StringUtils.isBlank(resPath))
-            throw CommonException.create(ServerResponse.createByError("使用@HasStaticResPath注解，必须填写resPath。"));
-        log.debug("拦截到的url:{}", resPath);
-        String serverUrlOfCheckUrl = String.format("http://%s:%s%s", securityClientProperties.getServerAddr(), securityClientProperties.getServerPort(), securityClientProperties.getServerUrlOfCheckStaticResPath());
-        log.debug("请求访问权限验证服务端地址:{}", serverUrlOfCheckUrl);
-        String token = getTokenFromContext.getToken();
+        if (StringUtils.isBlank(resPath)) throw CommonException.create(ServerResponse.createByError("使用@HasStaticResPath注解，必须填写resPath。"));
+
+        String token = provideResToSecurityClient.getTokenFromApplicationContext();
+        SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
+        String reqUrl = "http://" + serverAddr.toHttpAddrAndPort() + securityClientProperties.getServerUrlOfCheckStaticResPath();
+
+        log.debug("拦截到的resPath:{}", resPath);
         log.debug("获取到token:{}", token);
-        Response response = okHttpClientUtil.postJSONParameters(serverUrlOfCheckUrl, JSON.toJSONString(new CheckResParam(token, resPath)));
+        log.debug("请求访问权限验证服务端地址:{}", reqUrl);
+
+        Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new CheckResParam(token, resPath)));
         ServerResponse serverResponse = JSON.parseObject(response.body().string(), ServerResponse.class);
         log.debug("response:{}", JSON.toJSONString(serverResponse));
         if (!serverResponse.getStatus().equals("0"))
