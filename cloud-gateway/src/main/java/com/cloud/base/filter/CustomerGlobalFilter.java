@@ -17,9 +17,6 @@ public class CustomerGlobalFilter implements GlobalFilter, Ordered {
 
     private static final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
-//    @Autowired
-//    private TokenStore tokenStore;
-
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
@@ -28,45 +25,8 @@ public class CustomerGlobalFilter implements GlobalFilter, Ordered {
         ServerHttpResponse response = exchange.getResponse();
         log.info("****************进入自定义全局过滤器:request-uri-{}****************", request.getURI());
 
-        //0 排除swagger请求
-        if (antPathMatcher.match("/**/swagger-resources/**", request.getURI().getPath())) {
-            return chain.filter(exchange);
-        }
-        if (antPathMatcher.match("/**/v2/api-docs", request.getURI().getPath())) {
-            return chain.filter(exchange);
-        }
-        if (antPathMatcher.match("**/swagger-ui.html", request.getURI().getPath())) {
-            return chain.filter(exchange);
-        }
-        //1 放行用户服务
-//        if (antPathMatcher.match("/**/user-center-server/**", request.getURI().getPath())) {
-//            return chain.filter(exchange);
-//        }
-        //2 检查token是否存在
-//        String token = getToken(exchange);
-//        if (StringUtils.isNotBlank(token)) {
-//            // 判断是否是有效的token
-//            OAuth2AccessToken oAuth2AccessToken;
-//            try {
-//                oAuth2AccessToken = tokenStore.readAccessToken(token);
-//                Map<String, Object> additionalInformation = oAuth2AccessToken.getAdditionalInformation();
-//                //取出用户身份信息
-//                String principal = MapUtils.getString(additionalInformation, "user_name");
-//                //获取用户权限
-////                List<String> authorities = (List<String>) additionalInformation.get("authorities");
-////                JSONObject jsonObject=new JSONObject();
-////                jsonObject.put("principal",principal);
-////                jsonObject.put("authorities",authorities);
-//                //给header里面添加值
-//                String base64 = EncryptUtil.encodeUTF8StringBase64(principal);
-//                ServerHttpRequest tokenRequest = exchange.getRequest().mutate().header(CommonEntity.HeaderUserInfoKey, base64).build();
-//                ServerWebExchange build = exchange.mutate().request(tokenRequest).build();
-//                return chain.filter(build);
-//            } catch (InvalidTokenException e) {
-//                log.info("无效的token: {}", token);
-//                return invalidTokenMono(exchange);
-//            }
-//        }
+
+
         return chain.filter(exchange);
     }
 

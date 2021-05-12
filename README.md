@@ -77,6 +77,7 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |   |--modules-multi-datasource 多数据功能封装
 |   |
 |   |--modules-security 安全授权鉴权框架封装
+|   |--modules-lh-security 安全授权鉴权框架封装 modules-security的替代品 后期就去掉了modules-security
 |   |
 |   |--modules-zk-distributed-util 基于ZooKeeper的分布式环境下数据一致性工具包
 |   |
