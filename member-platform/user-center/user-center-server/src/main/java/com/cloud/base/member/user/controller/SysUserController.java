@@ -1,14 +1,14 @@
 package com.cloud.base.member.user.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityRole;
-import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityUserPerms;
-import com.cloud.base.core.modules.sercurity.defense.pojo.user.LhitSecurityUser;
+import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
+import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.member.user.param.SysUserUpdatePasswordParam;
 import com.cloud.base.member.user.repository.entity.SysRes;
 import com.cloud.base.member.user.repository.entity.SysRole;
-import com.cloud.base.member.user.param.SysUserUpdatePasswordParam;
-import com.cloud.base.member.user.vo.MenuVo;
 import com.cloud.base.member.user.service.SysUserService;
+import com.cloud.base.member.user.vo.MenuVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -44,11 +44,11 @@ public class SysUserController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    public ServerResponse<LhitSecurityUserPerms<LhitSecurityRole, LhitSecurityUser>> getUesrInfo(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+    @TokenToAuthority
+    public ServerResponse<SecurityAuthority> getUesrInfo(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token,SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserController-getUesrInfo");
-        LhitSecurityUserPerms<LhitSecurityRole, LhitSecurityUser> perms = getCurrentUserInfoWithPrems(token);
-        return ServerResponse.createBySuccess("获取成功", perms);
+        return ServerResponse.createBySuccess("获取成功", securityAuthority);
     }
 
     /**
@@ -63,10 +63,11 @@ public class SysUserController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "userId", value = "参数")
     })
-    public ServerResponse<List<SysRole>> getUserRoleList(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+    @TokenToAuthority
+    public ServerResponse<List<SysRole>> getUserRoleList(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token,SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取用户角色列表 接口 : SysUserController-getUserRoleList");
-        List<SysRole> roles = sysUserService.getUserRoleList(getCurrentSysUser(token).getId());
+        List<SysRole> roles = sysUserService.getUserRoleList(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         return ServerResponse.createBySuccess("查询成功", roles);
     }
 
@@ -81,10 +82,11 @@ public class SysUserController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    public ServerResponse<List<SysRes>> getResTreeByUser(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+    @TokenToAuthority
+    public ServerResponse<List<SysRes>> getResTreeByUser(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token,SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取用户资源树 接口 : SysUserController-getResTreeByUser");
-        List<SysRes> resTreeByUser = sysUserService.getResTreeByUser(getCurrentSysUser(token));
+        List<SysRes> resTreeByUser = sysUserService.getResTreeByUser(getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("查询成功", resTreeByUser);
     }
 
@@ -99,14 +101,13 @@ public class SysUserController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    public ServerResponse<List<MenuVo>> getMenuTreeByUser(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+    @TokenToAuthority
+    public ServerResponse<List<MenuVo>> getMenuTreeByUser(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token,SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取用户资源树 接口 : SysUserController-getMenuTreeByUser");
-        List<MenuVo> menuTreeByUser = sysUserService.getMenuTreeByUser(getCurrentSysUser(token));
+        List<MenuVo> menuTreeByUser = sysUserService.getMenuTreeByUser(getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("查询成功", menuTreeByUser);
     }
-
-
 
     /**
      * 获取用户资源列表
@@ -119,10 +120,11 @@ public class SysUserController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    public ServerResponse<List<SysRes>> getResListByUser(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+    @TokenToAuthority
+    public ServerResponse<List<SysRes>> getResListByUser(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token,SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取用户资源列表 接口 : SysUserController-getResListByUser");
-        List<SysRes> resListByUser = sysUserService.getResListByUser(getCurrentSysUser(token));
+        List<SysRes> resListByUser = sysUserService.getResListByUser(getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("查询成功", resListByUser);
     }
 
@@ -139,10 +141,11 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserUpdatePasswordParam", dataTypeClass = SysUserUpdatePasswordParam.class, name = "param", value = "参数")
     })
-    public ServerResponse updateUserPassword(@Validated @RequestBody SysUserUpdatePasswordParam param, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+    @TokenToAuthority
+    public ServerResponse updateUserPassword(@Validated @RequestBody SysUserUpdatePasswordParam param, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token,SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 用户修改密码 接口 : SysUserController-updateUserPassword");
-        sysUserService.updateUserPassword(param, getCurrentSysUser(token));
+        sysUserService.updateUserPassword(param, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("修改成功");
     }
 }

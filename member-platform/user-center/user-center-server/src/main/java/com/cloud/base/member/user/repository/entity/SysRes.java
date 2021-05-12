@@ -43,9 +43,9 @@ public class SysRes implements Serializable {
     @ApiModelProperty(value = "名称")
     private String name;
     /**
-     * 类型：0-静态资源 1-目录 2-菜单 3-按钮 4-接口
+     * 类型：1-菜单 2-接口 3-权限码,4-静态资源
      */
-    @ApiModelProperty(value = "类型：0-静态资源 1-目录 2-菜单 3-按钮 4-接口")
+    @ApiModelProperty(value = "类型：1-菜单 2-接口 3-权限码,4-静态资源")
     private Integer type;
     /**
      * 权限标识符
@@ -126,11 +126,10 @@ public class SysRes implements Serializable {
     @AllArgsConstructor
     @NoArgsConstructor
     public enum Type {
-        Static(0, "静态资源"),
-        Catalog(1, "目录"),
-        Menu(2, "菜单"),
-        Button(3, "按钮"),
-        Inteface(4, "接口");
+        MENU(1, "菜单"),
+        INTERFACE(2, "接口"),
+        PERMS_CODE(3, "权限码"),
+        STATIC_RES(4, "静态资源");
 
         private Integer code;
 

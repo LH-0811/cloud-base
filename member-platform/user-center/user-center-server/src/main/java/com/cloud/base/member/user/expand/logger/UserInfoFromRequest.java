@@ -1,11 +1,8 @@
 package com.cloud.base.member.user.expand.logger;
 
-import com.alibaba.fastjson.JSON;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.core.modules.lh_security.server.token.TokenManager;
 import com.cloud.base.core.modules.logger.adapter.LhitLoggerUserInfoFromRequestAdapter;
-import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityTokenManagerAdapter;
-import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityRole;
-import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityUserPerms;
-import com.cloud.base.core.modules.sercurity.defense.pojo.user.LhitSecurityUser;
 import com.cloud.base.member.user.repository.dao.SysUserDao;
 import com.cloud.base.member.user.repository.entity.SysUser;
 import org.apache.commons.lang3.StringUtils;
@@ -22,18 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 public class UserInfoFromRequest implements LhitLoggerUserInfoFromRequestAdapter<SysUser> {
 
     @Autowired
-    private LhitSecurityTokenManagerAdapter<LhitSecurityUser, LhitSecurityRole> lhitSecurityTokenManagerAdapter;
+    private TokenManager tokenManager;
 
     @Autowired
     private SysUserDao sysUserDao;
 
     @Override
-    public SysUser getUserInfoFromRequest(HttpServletRequest request) {
+    public SysUser getUserInfoFromRequest(HttpServletRequest request) throws Exception {
         String lhtoken = request.getHeader("LHTOKEN");
         if (StringUtils.isNotEmpty(lhtoken)) {
-            LhitSecurityUserPerms<LhitSecurityRole, LhitSecurityUser> permsByToken = lhitSecurityTokenManagerAdapter.getPermsByToken(lhtoken);
-            if (permsByToken != null && permsByToken.getUser() != null) {
-                SysUser sysUser = sysUserDao.selectByPrimaryKey(JSON.parseObject(JSON.toJSONString(permsByToken.getUser())).getLong("id"));
+            SecurityAuthority securityAuthority = tokenManager.getSecurityAuthorityByToken(lhtoken);
+            if (securityAuthority != null && securityAuthority.getSecurityUser() != null) {
+                SysUser sysUser = sysUserDao.selectByPrimaryKey(Long.valueOf(securityAuthority.getSecurityUser().getId()));
                 return sysUser;
             }
         }

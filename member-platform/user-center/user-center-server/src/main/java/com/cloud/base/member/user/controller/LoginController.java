@@ -1,14 +1,13 @@
 package com.cloud.base.member.user.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
+import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.core.modules.lh_security.server.authentication.SecurityVoucherVerificationProcess;
+import com.cloud.base.core.modules.lh_security.server.token.TokenManager;
 import com.cloud.base.core.modules.logger.annotation.LhitLogger;
 import com.cloud.base.core.modules.logger.entity.LoggerBusinessType;
-import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityTokenManagerAdapter;
-import com.cloud.base.core.modules.sercurity.defense.adapter.LhitSecurityUserAuthenticationLoginAdapter;
-import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityRole;
-import com.cloud.base.core.modules.sercurity.defense.pojo.entity.LhitSecurityUserPerms;
-import com.cloud.base.core.modules.sercurity.defense.pojo.user.DefaultLhitSecurityUser;
-import com.cloud.base.core.modules.sercurity.defense.pojo.user.LhitSecurityUser;
 import com.cloud.base.member.user.expand.security.verification.username_password.UsernamePasswordVerification;
 import com.cloud.base.member.user.vo.LoginVo;
 import io.swagger.annotations.Api;
@@ -33,10 +32,10 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController extends BaseController {
 
     @Autowired
-    private LhitSecurityUserAuthenticationLoginAdapter userAuthenticationLoginAdapter;
+    private SecurityVoucherVerificationProcess process;
 
     @Autowired
-    private LhitSecurityTokenManagerAdapter<DefaultLhitSecurityUser, LhitSecurityRole> lhitSecurityTokenManagerAdapter;
+    private TokenManager tokenManager;
 
     @PostMapping("/sys_user/username_password")
     @ApiOperation("系统用户登录")
@@ -47,7 +46,7 @@ public class LoginController extends BaseController {
     public ServerResponse<LoginVo> sysUserLoginByUsernamePassword(@Validated @RequestBody UsernamePasswordVerification param) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 系统用户登录 接口 : LoginAuthenticationController-sysUserLoginByUsernamePassword ");
-        String token = userAuthenticationLoginAdapter.userAuthenticationLogin(param);
+        String token = process.voucherVerificationProcess(param);
         LoginVo loginVo = new LoginVo();
         loginVo.setToken(token);
         return ServerResponse.createBySuccess("登录成功", loginVo);
@@ -59,11 +58,11 @@ public class LoginController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    public ServerResponse<LhitSecurityUserPerms<LhitSecurityRole, LhitSecurityUser>> getUesrInfo(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+    @HasUrl(url = "/123")
+    public ServerResponse<SecurityAuthority> getUesrInfo(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token,SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserController-getUesrInfo");
-        LhitSecurityUserPerms<LhitSecurityRole, LhitSecurityUser> perms = getCurrentUserInfoWithPrems(token);
-        return ServerResponse.createBySuccess("获取成功", perms);
+        return ServerResponse.createBySuccess("获取成功", securityAuthority);
     }
 
     @GetMapping("/logout")
@@ -75,7 +74,7 @@ public class LoginController extends BaseController {
     public ServerResponse logout(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserController-logout");
-        lhitSecurityTokenManagerAdapter.removeToken(token);
+        tokenManager.removeToken(token);
         return ServerResponse.createBySuccess("退出成功");
     }
 

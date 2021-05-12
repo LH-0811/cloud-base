@@ -19,7 +19,7 @@ import lombok.Setter;
 public class SecurityRes {
 
     // 全部code资源权限
-    public static String ALL_CODE = "ALL";
+    public static String ALL = "ALL";
 
     @ApiModelProperty(value = "资源类型")
     private Integer resType;
@@ -74,7 +74,7 @@ public class SecurityRes {
         SecurityRes allCode = new SecurityRes();
         allCode.setResType(ResType.PERMS_CODE.getCode());
         allCode.setName("全Code权限");
-        allCode.setCode(ALL_CODE);
+        allCode.setCode(ALL);
         allCode.setUrl("");
         allCode.setPath("");
         return allCode;
@@ -92,7 +92,7 @@ public class SecurityRes {
         allCode.setName("全StaticResPath权限");
         allCode.setCode("");
         allCode.setUrl("");
-        allCode.setPath(ALL_CODE);
+        allCode.setPath(ALL);
         return allCode;
     }
 

@@ -208,7 +208,7 @@ public class SysUserServiceImpl implements SysUserService {
                 icon.put("type", "icon");
                 icon.put("value", ele.getIcon());
                 menuVo.setIcon(icon);
-                menuVo.setGroup(ele.getType().equals(SysRes.Type.Catalog.getCode()));
+                menuVo.setGroup(ele.getType().equals(SysRes.Type.MENU.getCode()));
                 menuVo.setText(ele.getName());
                 menuVo.setLink(ele.getUrl());
                 return menuVo;

@@ -3,6 +3,7 @@ package com.cloud.base.core.modules.lh_security.server.network.base.http.compone
 import com.alibaba.fastjson.JSONObject;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.param.CheckResParam;
 import com.cloud.base.core.modules.lh_security.server.authentication.SecurityCheckAuthority;
 import com.cloud.base.core.modules.lh_security.server.network.base.util.HttpMsgUtil;
@@ -53,7 +54,7 @@ public class NettyHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
             HttpMsgUtil.sendResponse(ctx, ServerResponse.createByError(securityServerProperties.getNoAuthorizedCode(), "未上传用户token"));
             return;
         }
-        if (StringUtils.isBlank(checkResParam.getResource())) {
+        if (!reqUri.endsWith(securityServerProperties.getServerUrlOfGetSecurityAuthority()) && StringUtils.isBlank(checkResParam.getResource())) {
             HttpMsgUtil.sendResponse(ctx, ServerResponse.createByError(securityServerProperties.getUnAuthorizedCode(), "未上传要验证的资源"));
             return;
         }
@@ -67,7 +68,11 @@ public class NettyHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
         } else if (reqUri.equalsIgnoreCase(securityServerProperties.getServerUrlOfCheckStaticResPath())) {
             securityCheckResServer.checkStaticResPath(ctx,checkResParam.getToken(),checkResParam.getResource());
             return;
+        } else if (reqUri.equalsIgnoreCase(securityServerProperties.getServerUrlOfGetSecurityAuthority())) {
+            securityCheckResServer.getSecurityAuthority(ctx,checkResParam.getToken());
+            return;
         }
+
         HttpMsgUtil.sendResponse(ctx, ServerResponse.createByError("服务不存在"));
     }
 

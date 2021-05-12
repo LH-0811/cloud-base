@@ -2,10 +2,7 @@ package com.cloud.base.core.modules.lh_security.client;
 
 
 import com.cloud.base.core.modules.lh_security.client.component.OkHttpClientUtil;
-import com.cloud.base.core.modules.lh_security.client.component.annotation.HasPermsCode;
-import com.cloud.base.core.modules.lh_security.client.component.annotation.HasPermsCodeAop;
-import com.cloud.base.core.modules.lh_security.client.component.annotation.HasStaticResPathAop;
-import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrlAop;
+import com.cloud.base.core.modules.lh_security.client.component.annotation.*;
 import com.cloud.base.core.modules.lh_security.client.properties.SecurityClientProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -45,5 +42,9 @@ public class SecurityClientAutoConfiguration {
         return new HasStaticResPathAop();
     }
 
+    @Bean
+    public TokenToAuthorityAop tokenToAuthorityAop(){
+        return new TokenToAuthorityAop();
+    }
 
 }

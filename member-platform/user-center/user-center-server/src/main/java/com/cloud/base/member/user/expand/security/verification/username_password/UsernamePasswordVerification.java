@@ -1,6 +1,6 @@
 package com.cloud.base.member.user.expand.security.verification.username_password;
 
-import com.cloud.base.core.modules.sercurity.defense.pojo.verification.LhitSecurityUserVerification;
+import com.cloud.base.core.modules.lh_security.server.voucher.SecurityVoucher;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsernamePasswordVerification implements LhitSecurityUserVerification {
+public class UsernamePasswordVerification implements SecurityVoucher {
 
     // 用户名
     @NotBlank(message = "未上传 username")

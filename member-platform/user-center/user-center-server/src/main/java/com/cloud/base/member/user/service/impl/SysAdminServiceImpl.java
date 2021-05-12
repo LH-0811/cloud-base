@@ -567,7 +567,7 @@ public class SysAdminServiceImpl implements SysAdminService {
             }
             List<SysRes> sysRes = sysResDao.selectByIdList(roleResList.stream().map(ele -> ele.getResId()).collect(Collectors.toList()));
             log.info("完成 查询角色资源列表");
-            return sysRes.stream().filter(ele -> ele.getType().equals(SysRes.Type.Inteface.getCode()) || ele.getType().equals(SysRes.Type.Button.getCode())).collect(Collectors.toList());
+            return sysRes;
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取角色资源列表失败,请联系管理员"));
         }

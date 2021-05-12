@@ -51,4 +51,11 @@ public class SecurityClientProperties {
     // 校验permsCode权限的服务url
     private String serverUrlOfCheckStaticResPath = "/check_static_res_path";
 
+
+    @Getter
+    @Setter
+    // 校验permsCode权限的服务url
+    private String serverUrlOfGetSecurityAuthority = "/get_security_authority";
+
+
 }

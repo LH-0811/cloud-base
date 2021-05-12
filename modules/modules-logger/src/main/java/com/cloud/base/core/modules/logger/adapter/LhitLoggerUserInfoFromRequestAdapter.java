@@ -14,5 +14,5 @@ public interface LhitLoggerUserInfoFromRequestAdapter<T> {
      *
      * @return
      */
-    T getUserInfoFromRequest(HttpServletRequest request);
+    T getUserInfoFromRequest(HttpServletRequest request) throws Exception;
 }

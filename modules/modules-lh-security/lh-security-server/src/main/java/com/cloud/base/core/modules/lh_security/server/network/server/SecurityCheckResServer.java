@@ -1,6 +1,7 @@
 package com.cloud.base.core.modules.lh_security.server.network.server;
 
 import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.server.authentication.SecurityCheckAuthority;
 import com.cloud.base.core.modules.lh_security.server.network.base.util.HttpMsgUtil;
 import com.cloud.base.core.modules.lh_security.server.properties.SecurityServerProperties;
@@ -43,6 +44,11 @@ public class SecurityCheckResServer {
         } else {
             HttpMsgUtil.sendResponse(ctx, ServerResponse.createByError(securityServerProperties.getUnAuthorizedCode(), "非法访问"));
         }
+    }
+
+    public void getSecurityAuthority(ChannelHandlerContext ctx, String token) throws Exception {
+        SecurityAuthority securityAuthority = securityCheckAuthority.getSecurityAuthorityByToken(token);
+        HttpMsgUtil.sendResponse(ctx, ServerResponse.createBySuccess("获取成功",securityAuthority));
     }
 
 }

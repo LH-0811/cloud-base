@@ -1,5 +1,7 @@
 package com.cloud.base.core.modules.lh_security.server.authentication;
 
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+
 /**
  * 权限校验
  *
@@ -37,4 +39,13 @@ public interface SecurityCheckAuthority {
      * @throws Exception
      */
     Boolean checkStaticResPath(String token, String permsCode) throws Exception;
+
+    /**
+     * 根据token 获取到用户权限信息
+     *
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    SecurityAuthority getSecurityAuthorityByToken(String token) throws Exception;
 }

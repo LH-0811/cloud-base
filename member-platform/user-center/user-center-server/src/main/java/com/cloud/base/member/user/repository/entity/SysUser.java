@@ -1,6 +1,5 @@
 package com.cloud.base.member.user.repository.entity;
 
-import com.cloud.base.core.modules.sercurity.defense.pojo.user.LhitSecurityUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -25,7 +24,7 @@ import java.util.Date;
 @Setter
 @Getter
 @Table(name = "sys_user")
-public class SysUser implements Serializable, LhitSecurityUser {
+public class SysUser implements Serializable {
 
     /**
      * 系统用户id
@@ -115,13 +114,6 @@ public class SysUser implements Serializable, LhitSecurityUser {
      */
     @ApiModelProperty(value = "更新人")
     private Long updateBy;
-
-
-    @Override
-    public String getUserId() {
-        return String.valueOf(id);
-    }
-
 
     @Getter
     @AllArgsConstructor

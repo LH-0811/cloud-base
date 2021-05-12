@@ -1,5 +1,6 @@
 package com.cloud.base.core.modules.lh_security.server.authentication.impl;
 
+import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.modules.lh_security.server.authentication.SecurityCheckAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
@@ -105,6 +106,20 @@ public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
             if (thisStaticResPath.equals(staticResPath)) return true;
         }
         return false;
+    }
+
+
+    /**
+     * 根据token 获取到用户权限信息
+     *
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public SecurityAuthority getSecurityAuthorityByToken(String token) throws Exception {
+        // 获取到token对应存储的用户权限信息
+        return tokenManager.getSecurityAuthorityByToken(token);
     }
 
 }

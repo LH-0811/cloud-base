@@ -4,31 +4,30 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
 import com.cloud.base.core.modules.lh_security.client.component.OkHttpClientUtil;
+import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
+import com.cloud.base.core.modules.lh_security.client.entity.CheckResParam;
 import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
 import com.cloud.base.core.modules.lh_security.client.entity.TokenToAuthorityParam;
 import com.cloud.base.core.modules.lh_security.client.properties.SecurityClientProperties;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
+import org.springframework.core.Ordered;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-
+/**
+ * @author lh0811
+ * @date 2021/5/10
+ */
 @Aspect
 @Slf4j
-public class HasPermsCodeAop {
+public class TokenToAuthorityAop implements Ordered {
 
     @Autowired
     private SecurityClientProperties securityClientProperties;
@@ -39,26 +38,20 @@ public class HasPermsCodeAop {
     @Autowired
     private OkHttpClientUtil okHttpClientUtil;
 
-    @Pointcut("@annotation(com.cloud.base.core.modules.lh_security.client.component.annotation.HasPermsCode)")
+    @Pointcut("@annotation(com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority)")
     public void annotationPointCut() {
     }
 
 
     @Around("annotationPointCut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.debug("进入HasPermsCodeAop切面");
+        log.debug("进入HasTokenAop切面");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        HasPermsCode annotation = signature.getMethod().getAnnotation(HasPermsCode.class);
-        String permsCode = annotation.permsCode();
-        if (StringUtils.isBlank(permsCode))
-            throw CommonException.create(ServerResponse.createByError("使用@HasPermsCode注解，必须填写permsCode。"));
-
+        TokenToAuthority annotation = signature.getMethod().getAnnotation(TokenToAuthority.class);
         String token = provideResToSecurityClient.getTokenFromApplicationContext();
         if (StringUtils.isBlank(token)) {
             throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityClientProperties.getNoAuthorizedCode()), "未上传用户token", ""));
         }
-
-
         SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
         String reqUrl = serverAddr.toHttpAddrAndPort() + securityClientProperties.getServerUrlOfGetSecurityAuthority();
         log.debug("获取到token:{}", token);
@@ -69,32 +62,19 @@ public class HasPermsCodeAop {
         log.debug("response:{}", JSON.toJSONString(serverResponse));
         if (!serverResponse.getStatus().equals(0))
             throw CommonException.create(serverResponse);
-
-        // 获取到所有的权限
-        List<SecurityRes> securityResList = serverResponse.getData().getSecurityResList();
-        if (CollectionUtils.isEmpty(securityResList))
-            throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
-        // 获取到所有的permsCode权限
-        List<SecurityRes> permsResList = securityResList.stream().filter(ele -> StringUtils.isNotBlank(ele.getCode())).collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(permsResList))
-            throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
-        // 获取到所有的code
-        List<String> codeList = permsResList.stream().map(ele -> ele.getCode()).collect(Collectors.toList());
-
-        for (String code : codeList) {
-            if (codeList.contains(SecurityRes.ALL) || code.equalsIgnoreCase(permsCode)) {
-                Object[] args = joinPoint.getArgs();
-                for (int i = 0; i < args.length; i++) {
-                    Object arg = args[i];
-                    if (arg instanceof SecurityAuthority)
-                        args[i] = serverResponse.getData();
-                }
-                Object proceed = joinPoint.proceed(args);
-                log.debug("退出HasPermsCodeAop切面");
-                return proceed;
-            }
+        Object[] args = joinPoint.getArgs();
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            if (arg instanceof SecurityAuthority)
+                args[i] = serverResponse.getData();
         }
-        throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
+        Object proceed = joinPoint.proceed(args);
+        log.debug("退出HasTokenAop切面");
+        return proceed;
     }
 
+    @Override
+    public int getOrder() {
+        return 0;
+    }
 }

@@ -131,7 +131,7 @@ public class LhitLoggerMethodAop implements MethodInterceptor {
     }
 
     // 保存操作用户信息
-    private void setOperUserInfo(LhitLoggerEntity lhitLoggerEntity, LhitLogger annotation) {
+    private void setOperUserInfo(LhitLoggerEntity lhitLoggerEntity, LhitLogger annotation) throws Exception {
         boolean isSave = lhitLoggerProperties.getSaveOperUserInfo() && annotation.isSaveOperUserInfo();
         if (isSave) {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
