@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 登录接口
@@ -59,7 +60,7 @@ public class LoginController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
     @HasUrl(url = "/123")
-    public ServerResponse<SecurityAuthority> getUesrInfo(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token,SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<SecurityAuthority> getUesrInfo(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserController-getUesrInfo");
         return ServerResponse.createBySuccess("获取成功", securityAuthority);
@@ -71,10 +72,11 @@ public class LoginController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
     @LhitLogger(title = "用户退出",businessType = LoggerBusinessType.QUERY)
-    public ServerResponse logout(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+    @TokenToAuthority
+    public ServerResponse logout(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserController-logout");
-        tokenManager.removeToken(token);
+        tokenManager.removeToken(securityAuthority.getToken());
         return ServerResponse.createBySuccess("退出成功");
     }
 

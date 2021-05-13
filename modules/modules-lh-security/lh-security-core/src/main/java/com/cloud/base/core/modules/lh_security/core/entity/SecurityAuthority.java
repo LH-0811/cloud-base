@@ -23,6 +23,9 @@ import java.util.List;
 @ApiModel(value = "权限信息类")
 public class SecurityAuthority {
 
+    @ApiModelProperty(value = "用户token")
+    private String token;
+
     @ApiModelProperty(value = "用户信息")
     private SecurityUser securityUser;
 

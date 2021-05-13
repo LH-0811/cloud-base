@@ -65,6 +65,7 @@ public class DefaultTokenManager implements TokenManager {
     public String tokenGenerateAndSave(SecurityAuthority securityAuthority) throws Exception {
         // 生成token
         String token = tokenGenerate.generate(securityAuthority);
+        securityAuthority.setToken(token);
         // 存储token
         saveToken(token, securityAuthority);
         return token;
