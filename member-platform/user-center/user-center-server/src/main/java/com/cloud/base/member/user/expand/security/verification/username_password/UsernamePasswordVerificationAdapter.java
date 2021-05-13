@@ -48,15 +48,15 @@ public class UsernamePasswordVerificationAdapter implements SecurityVoucherVerif
 
         SecurityAuthority securityAuthority = new SecurityAuthority();
         securityAuthority.setSecurityUser(new SecurityUser(String.valueOf(loginUser.getId()), loginUser.getUsername()));
-        securityAuthority.setSecurityResList(Lists.newArrayList(
-                SecurityRes.allUrlRes(),
-                SecurityRes.allCodeRes(),
-                SecurityRes.allStaticResPath()
-        ));
-//        if (!CollectionUtils.isEmpty(resAllList)) {
-//            List<SecurityRes> securityResList = resAllList.stream().map(ele -> new SecurityRes(ele.getType(), ele.getName(), ele.getCode(), ele.getUrl(), "")).collect(Collectors.toList());
-//            securityAuthority.setSecurityResList(securityResList);
-//        }
+//        securityAuthority.setSecurityResList(Lists.newArrayList(
+//                SecurityRes.allUrlRes(),
+//                SecurityRes.allCodeRes(),
+//                SecurityRes.allStaticResPath()
+//        ));
+        if (!CollectionUtils.isEmpty(resAllList)) {
+            List<SecurityRes> securityResList = resAllList.stream().map(ele -> new SecurityRes(ele.getType(), ele.getName(), ele.getCode(), ele.getUrl(), "")).collect(Collectors.toList());
+            securityAuthority.setSecurityResList(securityResList);
+        }
         if (!CollectionUtils.isEmpty(userRoleList)) {
             List<SecurityRole> securityRoleList = userRoleList.stream().map(ele -> new SecurityRole(ele.getName())).collect(Collectors.toList());
             securityAuthority.setSecurityRoleList(securityRoleList);
