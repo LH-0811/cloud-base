@@ -1,6 +1,7 @@
 package com.cloud.base.member.user.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.user.repository.entity.SysRes;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -41,7 +43,6 @@ public class SysAdminController extends BaseController {
      * 创建用户
      *
      * @param param
-     * @param token
      * @throws Exception
      */
     @PostMapping("/sys_user/create")
@@ -50,8 +51,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserCreateParam", dataTypeClass = SysUserCreateParam.class, name = "param", value = "参数")
     })
-    @TokenToAuthority
-    public ServerResponse createUser(@Validated @RequestBody SysUserCreateParam param, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_user/create")
+    public ServerResponse createUser(@Validated @RequestBody SysUserCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建用户 接口 : SysUserController-createUser ");
         sysAdminService.createUser(param, getCurrentSysUser(securityAuthority));
@@ -62,7 +63,6 @@ public class SysAdminController extends BaseController {
      * 修改用户
      *
      * @param param
-     * @param token
      * @throws Exception
      */
     @PostMapping("/sys_user/update")
@@ -71,8 +71,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserUpdateParam", dataTypeClass = SysUserUpdateParam.class, name = "param", value = "参数")
     })
-    @TokenToAuthority
-    public ServerResponse updateUser(@Validated @RequestBody SysUserUpdateParam param, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_user/update")
+    public ServerResponse updateUser(@Validated @RequestBody SysUserUpdateParam param,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改用户 接口 : SysUserController-updateUser ");
         sysAdminService.updateUser(param, getCurrentSysUser(securityAuthority));
@@ -83,7 +83,6 @@ public class SysAdminController extends BaseController {
      * 查询用户
      *
      * @param param
-     * @param token
      * @return
      * @throws Exception
      */
@@ -93,8 +92,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserQueryParam", dataTypeClass = SysUserQueryParam.class, name = "param", value = "参数")
     })
-    @TokenToAuthority
-    public ServerResponse<PageInfo<SysUser>> queryUser(@Validated @RequestBody SysUserQueryParam param, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_user/query")
+    public ServerResponse<PageInfo<SysUser>> queryUser(@Validated @RequestBody SysUserQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询用户 接口 : SysUserController-queryUser ");
         PageInfo<SysUser> pageInfo = sysAdminService.queryUser(param, getCurrentSysUser(securityAuthority));
@@ -110,8 +109,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserRoleSetParam", dataTypeClass = SysUserRoleSetParam.class, name = "param", value = "参数")
     })
-    @TokenToAuthority
-    public ServerResponse setUserRoleList(@Validated @RequestBody SysUserRoleSetParam param, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_user/roles/set")
+    public ServerResponse setUserRoleList(@Validated @RequestBody SysUserRoleSetParam param,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 设置用户角色列表 接口 : SysUserController-setUserRegions");
         sysAdminService.setUserRoleList(param, getCurrentSysUser(securityAuthority));
@@ -128,8 +127,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "userId", value = "用户id")
     })
-    @TokenToAuthority
-    public ServerResponse delUser(@PathVariable(value = "userId") Long userId, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_user/delete/{userId}")
+    public ServerResponse delUser(@PathVariable(value = "userId") Long userId,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除用户 接口 : SysUserController-delUser");
         sysAdminService.delUser(userId, getCurrentSysUser(securityAuthority));
@@ -147,8 +146,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysResCreateParam", dataTypeClass = SysResCreateParam.class, name = "param", value = "参数")
     })
-    @TokenToAuthority
-    public ServerResponse createRes(@Validated @RequestBody SysResCreateParam param, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_res/create")
+    public ServerResponse createRes(@Validated @RequestBody SysResCreateParam param,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建权限 接口 : SysAdminController-createRes ");
         sysAdminService.createRes(param, getCurrentSysUser(securityAuthority));
@@ -164,8 +163,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysResCreateParam", dataTypeClass = SysResCreateParam.class, name = "param", value = "参数")
     })
-    @TokenToAuthority
-    public ServerResponse deleteRes(@PathVariable(value = "resId") Long resId, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_res/delete/{resId}")
+    public ServerResponse deleteRes(@PathVariable(value = "resId") Long resId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除权限信息 接口 : SysAdminController-deleteRes ");
         sysAdminService.deleteRes(resId, getCurrentSysUser(securityAuthority));
@@ -181,8 +180,8 @@ public class SysAdminController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    @TokenToAuthority
-    public ServerResponse<List<SysRes>> getAllResTree(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_res/tree")
+    public ServerResponse<List<SysRes>> getAllResTree(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取全部资源树 接口 : SysAdminController-getAllResTree ");
         List<SysRes> allResTree = sysAdminService.getAllResTree();
@@ -200,8 +199,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleCreateParam", dataTypeClass = SysRoleCreateParam.class, name = "param", value = "参数")
     })
-    @TokenToAuthority
-    public ServerResponse createRole(@Validated @RequestBody SysRoleCreateParam param, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_role/create")
+    public ServerResponse createRole(@Validated @RequestBody SysRoleCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建系统角色信息 接口 : SysAdminController-createRole ");
         sysAdminService.createRole(param, getCurrentSysUser(securityAuthority));
@@ -217,8 +216,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleUpdateParam", dataTypeClass = SysRoleUpdateParam.class, name = "param", value = "参数")
     })
-    @TokenToAuthority
-    public ServerResponse updateRole(@Validated @RequestBody SysRoleUpdateParam param, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_role/update")
+    public ServerResponse updateRole(@Validated @RequestBody SysRoleUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改系统角色信息 接口 : SysAdminController-updateRole ");
         sysAdminService.updateRole(param, getCurrentSysUser(securityAuthority));
@@ -234,8 +233,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "roleId", value = "角色id")
     })
-    @TokenToAuthority
-    public ServerResponse deleteRole(@PathVariable(name = "roleId") Long roleId, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_role/delete/{roleId}")
+    public ServerResponse deleteRole(@PathVariable(name = "roleId") Long roleId,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除系统角色信息 接口 : SysAdminController-deleteRole ");
         sysAdminService.deleteRole(roleId, getCurrentSysUser(securityAuthority));
@@ -251,8 +250,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleQueryParam", dataTypeClass = SysRoleQueryParam.class, name = "param", value = "参数")
     })
-    @TokenToAuthority
-    public ServerResponse<PageInfo<SysRole>> queryRole(@Validated @RequestBody SysRoleQueryParam param, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_role/query")
+    public ServerResponse<PageInfo<SysRole>> queryRole(@Validated @RequestBody SysRoleQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询系统角色信息 接口 : SysAdminController-queryRole ");
         PageInfo<SysRole> pageInfo = sysAdminService.queryRole(param, getCurrentSysUser(securityAuthority));
@@ -267,7 +266,8 @@ public class SysAdminController extends BaseController {
      */
     @GetMapping("/sys_role/query/all_list")
     @ApiOperation("获取角色列表")
-    public ServerResponse<List<SysRole>> getRoleList() throws Exception {
+    @HasUrl(url = "/sys_admin/sys_role/query/all_list")
+    public ServerResponse<List<SysRole>> getRoleList(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取角色列表 接口 : SysAdminController-getRoleList ");
         List<SysRole> roleList = sysAdminService.getRoleList();
@@ -283,8 +283,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleResSaveParam", dataTypeClass = SysRoleResSaveParam.class, name = "param", value = "参数")
     })
-    @TokenToAuthority
-    public ServerResponse saveRoleRes(@Validated @RequestBody SysRoleResSaveParam param, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_role/save_res")
+    public ServerResponse saveRoleRes(@Validated @RequestBody SysRoleResSaveParam param,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 保存角色资源（权限） 接口 : SysAdminController-queryRole ");
         sysAdminService.saveRoleRes(param, getCurrentSysUser(securityAuthority));
@@ -300,8 +300,8 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "roleId", value = "角色Id")
     })
-    @TokenToAuthority
-    public ServerResponse<List<SysRes>> getSysResListByRoleId(@PathVariable(name = "roleId") Long roleId, @RequestHeader(value = "LHTOKEN", defaultValue = "") String token, SecurityAuthority securityAuthority) throws Exception {
+    @HasUrl(url = "/sys_admin/sys_role/res/by_id/{roleId}")
+    public ServerResponse<List<SysRes>> getSysResListByRoleId(@PathVariable(name = "roleId") Long roleId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询角色资源列表 接口 : SysAdminController-getSysResListByRoleId ");
         List<SysRes> sysResList = sysAdminService.getSysResListByRoleId(roleId, getCurrentSysUser(securityAuthority));

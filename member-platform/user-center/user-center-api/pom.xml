@@ -25,13 +25,6 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!--   redis     -->
-        <dependency>
-            <groupId>com.cloud.dependency</groupId>
-            <artifactId>dependency-redis</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
         <!-- 引入mysql mybatis 相关orm-->
         <dependency>
             <groupId>com.cloud.dependency</groupId>
@@ -45,6 +38,7 @@
             <artifactId>dependency-alibaba-cloud</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
     </dependencies>
 
 </project>
