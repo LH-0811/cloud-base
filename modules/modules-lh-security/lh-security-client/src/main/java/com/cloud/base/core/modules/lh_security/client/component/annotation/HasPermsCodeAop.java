@@ -5,12 +5,13 @@ import com.alibaba.fastjson.TypeReference;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
-import com.cloud.base.core.modules.lh_security.client.component.OkHttpClientUtil;
+import com.cloud.base.core.modules.lh_security.client.util.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
 import com.cloud.base.core.modules.lh_security.client.entity.TokenToAuthorityParam;
-import com.cloud.base.core.modules.lh_security.client.properties.SecurityClientProperties;
+import com.cloud.base.core.modules.lh_security.client.service.SecurityClientService;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
+import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
@@ -31,13 +32,16 @@ import java.util.stream.Collectors;
 public class HasPermsCodeAop {
 
     @Autowired
-    private SecurityClientProperties securityClientProperties;
+    private SecurityProperties securityProperties;
 
     @Autowired
     private ProvideResToSecurityClient provideResToSecurityClient;
 
     @Autowired
     private OkHttpClientUtil okHttpClientUtil;
+
+    @Autowired
+    private SecurityClientService securityClientService;
 
     @Pointcut("@annotation(com.cloud.base.core.modules.lh_security.client.component.annotation.HasPermsCode)")
     public void annotationPointCut() {
@@ -55,12 +59,12 @@ public class HasPermsCodeAop {
 
         String token = provideResToSecurityClient.getTokenFromApplicationContext();
         if (StringUtils.isBlank(token)) {
-            throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityClientProperties.getNoAuthorizedCode()), "未上传用户token", ""));
+            throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityProperties.getNoAuthorizedCode()), "未上传用户token", ""));
         }
 
 
         SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
-        String reqUrl = serverAddr.toHttpAddrAndPort() + securityClientProperties.getServerUrlOfGetSecurityAuthority();
+        String reqUrl = serverAddr.toHttpAddrAndPort() + securityProperties.getServerUrlOfTokenToAuthority();
         log.debug("获取到token:{}", token);
         log.debug("请求访问权限验证服务端地址:{}", reqUrl);
         Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new TokenToAuthorityParam(token)));
@@ -73,11 +77,11 @@ public class HasPermsCodeAop {
         // 获取到所有的权限
         List<SecurityRes> securityResList = serverResponse.getData().getSecurityResList();
         if (CollectionUtils.isEmpty(securityResList))
-            throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
+            throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
         // 获取到所有的permsCode权限
         List<SecurityRes> permsResList = securityResList.stream().filter(ele -> StringUtils.isNotBlank(ele.getCode())).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(permsResList))
-            throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
+            throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
         // 获取到所有的code
         List<String> codeList = permsResList.stream().map(ele -> ele.getCode()).collect(Collectors.toList());
 
@@ -94,7 +98,7 @@ public class HasPermsCodeAop {
                 return proceed;
             }
         }
-        throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
+        throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
     }
 
 }

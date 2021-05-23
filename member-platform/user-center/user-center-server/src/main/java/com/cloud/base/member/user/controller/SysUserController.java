@@ -28,7 +28,7 @@ import java.util.List;
  * @date 2021/1/18
  */
 @Slf4j
-@Api(tags = "系统用户接口")
+@Api(tags = "当前系统用户信息接口")
 @RestController
 @RequestMapping("/sys_user")
 public class SysUserController extends BaseController {

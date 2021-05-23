@@ -1,4 +1,4 @@
-package com.cloud.base.member.user.vo;
+package com.cloud.base.core.common.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

@@ -5,25 +5,21 @@ import com.alibaba.fastjson.TypeReference;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
-import com.cloud.base.core.modules.lh_security.client.component.OkHttpClientUtil;
-import com.cloud.base.core.modules.lh_security.client.entity.CheckResParam;
+import com.cloud.base.core.modules.lh_security.client.util.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
 import com.cloud.base.core.modules.lh_security.client.entity.TokenToAuthorityParam;
-import com.cloud.base.core.modules.lh_security.client.properties.SecurityClientProperties;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
+import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 
@@ -39,7 +35,7 @@ import java.util.stream.Collectors;
 public class HasUrlAop {
 
     @Autowired
-    private SecurityClientProperties securityClientProperties;
+    private SecurityProperties securityProperties;
 
     @Autowired
     private ProvideResToSecurityClient provideResToSecurityClient;
@@ -66,11 +62,11 @@ public class HasUrlAop {
 
         String token = provideResToSecurityClient.getTokenFromApplicationContext();
         if (StringUtils.isBlank(token)) {
-            throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityClientProperties.getNoAuthorizedCode()), "未上传用户token", ""));
+            throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityProperties.getNoAuthorizedCode()), "未上传用户token", ""));
         }
 
         SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
-        String reqUrl = serverAddr.toHttpAddrAndPort() + securityClientProperties.getServerUrlOfGetSecurityAuthority();
+        String reqUrl = serverAddr.toHttpAddrAndPort() + securityProperties.getServerUrlOfTokenToAuthority();
         log.debug("获取到token:{}", token);
         log.debug("请求访问权限验证服务端地址:{}", reqUrl);
         Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new TokenToAuthorityParam(token)));
@@ -82,11 +78,11 @@ public class HasUrlAop {
         // 获取到所有的url权限
         List<SecurityRes> securityResList = serverResponse.getData().getSecurityResList();
         if (CollectionUtils.isEmpty(securityResList))
-            throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
+            throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
         // 获取到所有的url权限
         List<SecurityRes> urlResList = securityResList.stream().filter(ele -> StringUtils.isNotBlank(ele.getUrl())).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(urlResList))
-            throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
+            throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
         // 获取到所有的url
         List<String> urlMatcherList = urlResList.stream().map(ele -> ele.getUrl()).collect(Collectors.toList());
         for (String urlMatcher : urlMatcherList) {
@@ -102,7 +98,7 @@ public class HasUrlAop {
                 return proceed;
             }
         }
-        throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
+        throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
     }
 
 }

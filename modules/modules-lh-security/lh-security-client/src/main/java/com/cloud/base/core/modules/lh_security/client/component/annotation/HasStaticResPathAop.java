@@ -4,26 +4,22 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.core.modules.lh_security.client.util.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
-import com.cloud.base.core.modules.lh_security.client.component.OkHttpClientUtil;
-import com.cloud.base.core.modules.lh_security.client.entity.CheckResParam;
 import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
 import com.cloud.base.core.modules.lh_security.client.entity.TokenToAuthorityParam;
-import com.cloud.base.core.modules.lh_security.client.properties.SecurityClientProperties;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
+import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -35,7 +31,7 @@ import java.util.stream.Collectors;
 public class HasStaticResPathAop {
 
     @Autowired
-    private SecurityClientProperties securityClientProperties;
+    private SecurityProperties securityProperties;
 
     @Autowired
     private ProvideResToSecurityClient provideResToSecurityClient;
@@ -61,11 +57,11 @@ public class HasStaticResPathAop {
 
         String token = provideResToSecurityClient.getTokenFromApplicationContext();
         if (StringUtils.isBlank(token)) {
-            throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityClientProperties.getNoAuthorizedCode()), "未上传用户token", ""));
+            throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityProperties.getNoAuthorizedCode()), "未上传用户token", ""));
         }
 
         SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
-        String reqUrl = serverAddr.toHttpAddrAndPort() + securityClientProperties.getServerUrlOfGetSecurityAuthority();
+        String reqUrl = serverAddr.toHttpAddrAndPort() + securityProperties.getServerUrlOfTokenToAuthority();
         log.debug("获取到token:{}", token);
         log.debug("请求访问权限验证服务端地址:{}", reqUrl);
         Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new TokenToAuthorityParam(token)));
@@ -78,11 +74,11 @@ public class HasStaticResPathAop {
         // 获取到所有的权限
         List<SecurityRes> securityResList = serverResponse.getData().getSecurityResList();
         if (CollectionUtils.isEmpty(securityResList))
-            throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
+            throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
         // 获取到所有的permsCode权限
         List<SecurityRes> staticResResList = securityResList.stream().filter(ele -> StringUtils.isNotBlank(ele.getPath())).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(staticResResList))
-            throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
+            throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
         // 获取到所有的code
         List<String> staticResPathList = staticResResList.stream().map(ele -> ele.getPath()).collect(Collectors.toList());
 
@@ -99,7 +95,7 @@ public class HasStaticResPathAop {
                 return proceed;
             }
         }
-        throw CommonException.create(ServerResponse.createByError(securityClientProperties.getUnAuthorizedCode(), "非法访问"));
+        throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
 
     }
 }

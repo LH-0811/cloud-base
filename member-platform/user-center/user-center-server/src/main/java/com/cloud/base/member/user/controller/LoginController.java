@@ -1,15 +1,16 @@
 package com.cloud.base.member.user.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
+import com.cloud.base.core.common.vo.LoginVo;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.core.modules.lh_security.core.param.TokenParam;
 import com.cloud.base.core.modules.lh_security.server.authentication.SecurityVoucherVerificationProcess;
+import com.cloud.base.core.modules.lh_security.server.service.SecurityService;
 import com.cloud.base.core.modules.lh_security.server.token.TokenManager;
 import com.cloud.base.core.modules.logger.annotation.LhitLogger;
 import com.cloud.base.core.modules.logger.entity.LoggerBusinessType;
 import com.cloud.base.member.user.expand.security.verification.username_password.UsernamePasswordVerification;
-import com.cloud.base.member.user.vo.LoginVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -33,10 +34,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class LoginController extends BaseController {
 
     @Autowired
-    private SecurityVoucherVerificationProcess process;
-
-    @Autowired
-    private TokenManager tokenManager;
+    private SecurityService securityService;
 
     @PostMapping("/sys_user/username_password")
     @ApiOperation("系统用户登录")
@@ -47,23 +45,8 @@ public class LoginController extends BaseController {
     public ServerResponse<LoginVo> sysUserLoginByUsernamePassword(@Validated @RequestBody UsernamePasswordVerification param) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 系统用户登录 接口 : LoginAuthenticationController-sysUserLoginByUsernamePassword ");
-        String token = process.voucherVerificationProcess(param);
-        LoginVo loginVo = new LoginVo();
-        loginVo.setToken(token);
-        return ServerResponse.createBySuccess("登录成功", loginVo);
-    }
-
-
-    @GetMapping("/current_user_prems")
-    @ApiOperation("获取当前用户信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
-    })
-    @HasUrl(url = "/123")
-    public ServerResponse<SecurityAuthority> getUesrInfo(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
-        log.info("|-----------------------------------------------|");
-        log.info("进入 获取当前用户信息 接口 : SysUserController-getUesrInfo");
-        return ServerResponse.createBySuccess("获取成功", securityAuthority);
+        LoginVo authorize = securityService.authorize(param);
+        return ServerResponse.createBySuccess("登录成功", authorize);
     }
 
     @GetMapping("/logout")
@@ -76,7 +59,7 @@ public class LoginController extends BaseController {
     public ServerResponse logout(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserController-logout");
-        tokenManager.removeToken(securityAuthority.getToken());
+        securityService.tokenDestroy(new TokenParam(securityAuthority.getToken()));
         return ServerResponse.createBySuccess("退出成功");
     }
 

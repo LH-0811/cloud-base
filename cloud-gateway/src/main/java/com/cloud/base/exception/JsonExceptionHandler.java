@@ -79,6 +79,7 @@ public class JsonExceptionHandler implements ErrorWebExceptionHandler {
 
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+        ex.printStackTrace();
         // 按照异常类型进行处理
         HttpStatus httpStatus;
         String body;

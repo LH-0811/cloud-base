@@ -17,14 +17,6 @@
             <artifactId>lh-security-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-        <!--引入netty-->
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-        </dependency>
-
-
     </dependencies>
 
 </project>

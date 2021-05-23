@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.core.modules.lh_security.server.properties.SecurityServerProperties;
+import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
 import com.cloud.base.core.modules.lh_security.server.token.TokenGenerate;
 import com.cloud.base.core.modules.lh_security.server.token.TokenManager;
 import com.google.common.cache.Cache;
@@ -12,8 +12,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +34,7 @@ public class DefaultTokenManager implements TokenManager {
 
     // 配置文件
     @Autowired
-    private SecurityServerProperties securityServerProperties;
+    private SecurityProperties securityProperties;
 
     // 缓存userId - token 对应关系
     private Cache<String, String> userIdTokenCache;
@@ -49,12 +49,12 @@ public class DefaultTokenManager implements TokenManager {
     // 初始化缓存 过期时间在配置文件中指定
     @PostConstruct
     private void init() {
-        this.userIdTokenCache = CacheBuilder.newBuilder().expireAfterWrite(Long.valueOf(securityServerProperties.getExpire()), TimeUnit.MINUTES).removalListener(new RemovalListener<String, String>() {
+        this.userIdTokenCache = CacheBuilder.newBuilder().expireAfterWrite(Long.valueOf(securityProperties.getExpire()), TimeUnit.MINUTES).removalListener(new RemovalListener<String, String>() {
             public void onRemoval(RemovalNotification<String, String> notification) {
                 log.info("用户id:{} token:{} 已过期", notification.getKey(), notification.getValue());
             }
         }).build();
-        this.tokenAuthorityCache = CacheBuilder.newBuilder().expireAfterWrite(Long.valueOf(securityServerProperties.getExpire()), TimeUnit.MINUTES).removalListener(new RemovalListener<String, SecurityAuthority>() {
+        this.tokenAuthorityCache = CacheBuilder.newBuilder().expireAfterWrite(Long.valueOf(securityProperties.getExpire()), TimeUnit.MINUTES).removalListener(new RemovalListener<String, SecurityAuthority>() {
             public void onRemoval(RemovalNotification<String, SecurityAuthority> notification) {
                 log.info("token:{} authority:{} 已过期", notification.getKey(), JSON.toJSONString(notification.getValue()));
             }
@@ -112,10 +112,13 @@ public class DefaultTokenManager implements TokenManager {
 
     @Override
     public SecurityAuthority getSecurityAuthorityByToken(String token) throws Exception {
+        if (StringUtils.isBlank(token)) {
+            throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityProperties.getNoAuthorizedCode()), "未上传用户token，请登录后重试", ""));
+        }
         // 获取token 存在的有效权限信息
         SecurityAuthority authority = tokenAuthorityCache.getIfPresent(token);
         if (authority == null) {
-            throw CommonException.create(ServerResponse.createByError(Integer.parseInt(securityServerProperties.getNoAuthorizedCode()),"token无效"));
+            throw CommonException.create(ServerResponse.createByError(Integer.parseInt(securityProperties.getNoAuthorizedCode()),"token无效"));
         }
         // 完成验证后 返回权限信息
         return authority;

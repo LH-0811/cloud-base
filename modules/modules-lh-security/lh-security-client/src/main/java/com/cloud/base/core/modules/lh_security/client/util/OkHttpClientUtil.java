@@ -1,6 +1,6 @@
-package com.cloud.base.core.modules.lh_security.client.component;
+package com.cloud.base.core.modules.lh_security.client.util;
 
-import com.cloud.base.core.modules.lh_security.client.properties.SecurityClientProperties;
+import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class OkHttpClientUtil {
 
     @Autowired
-    private SecurityClientProperties securityClientProperties;
+    private SecurityProperties securityProperties;
 
     OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)//设置链接超时

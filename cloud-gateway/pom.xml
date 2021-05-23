@@ -13,6 +13,14 @@
     <artifactId>cloud-gateway</artifactId>
 
     <dependencies>
+
+        <!--   security     -->
+        <dependency>
+            <groupId>com.cloud.modules</groupId>
+            <artifactId>lh-security-client</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!--   redis     -->
         <dependency>
             <groupId>com.cloud.dependency</groupId>

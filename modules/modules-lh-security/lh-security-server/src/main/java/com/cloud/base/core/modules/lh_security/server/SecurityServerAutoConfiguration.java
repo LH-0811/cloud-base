@@ -6,12 +6,9 @@ import com.cloud.base.core.modules.lh_security.server.authentication.SecurityVou
 import com.cloud.base.core.modules.lh_security.server.authentication.impl.DefaultSecurityCheckAuthority;
 import com.cloud.base.core.modules.lh_security.server.authentication.impl.DefaultUsernamePasswordVoucherVoucherVerification;
 import com.cloud.base.core.modules.lh_security.server.authentication.impl.DefaultSecurityVoucherVerificationProcess;
-import com.cloud.base.core.modules.lh_security.server.network.base.http.NettyHttpServer;
-import com.cloud.base.core.modules.lh_security.server.network.base.http.component.NettyHttpServerHandler;
-import com.cloud.base.core.modules.lh_security.server.network.base.http.component.NettyHttpServerInitializer;
-import com.cloud.base.core.modules.lh_security.server.network.base.http.component.NettyHttpSocketStart;
-import com.cloud.base.core.modules.lh_security.server.network.server.SecurityCheckResServer;
-import com.cloud.base.core.modules.lh_security.server.properties.SecurityServerProperties;
+import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
+import com.cloud.base.core.modules.lh_security.server.service.SecurityService;
+import com.cloud.base.core.modules.lh_security.server.service.impl.SecurityServiceImpl;
 import com.cloud.base.core.modules.lh_security.server.token.TokenGenerate;
 import com.cloud.base.core.modules.lh_security.server.token.TokenManager;
 import com.cloud.base.core.modules.lh_security.server.token.impl.DefaultTokenGenerate;
@@ -29,7 +26,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({SecurityServerProperties.class})
+@EnableConfigurationProperties({SecurityProperties.class})
 public class SecurityServerAutoConfiguration {
 
     // token //////////////////////////////////////////////////////////////////
@@ -48,13 +45,14 @@ public class SecurityServerAutoConfiguration {
         return new DefaultTokenGenerate();
     }
 
-    // 凭证认证 //////////////////////////////////////////////////////////////////
 
-    // 服务处理类
     @Bean
-    public SecurityCheckResServer securityCheckResServer(){
-        return new SecurityCheckResServer();
+    @ConditionalOnMissingBean(SecurityService.class)
+    public SecurityService securityService(){
+        return new SecurityServiceImpl();
     }
+
+    // 凭证认证 //////////////////////////////////////////////////////////////////
 
     // 认证过程
     @Bean
@@ -74,27 +72,6 @@ public class SecurityServerAutoConfiguration {
     @ConditionalOnMissingBean(SecurityCheckAuthority.class)
     public SecurityCheckAuthority securityCheckAuthority() {
         return new DefaultSecurityCheckAuthority();
-    }
-
-    // Netty Http Server //////////////////////////////////////////////////////////////////
-    @Bean
-    public NettyHttpServerHandler nettyHttpServerHandler() {
-        return new NettyHttpServerHandler();
-    }
-
-    @Bean
-    public NettyHttpServerInitializer nettyHttpServerInitializer() {
-        return new NettyHttpServerInitializer();
-    }
-
-    @Bean
-    public NettyHttpSocketStart nettyHttpSocketStart() {
-        return new NettyHttpSocketStart();
-    }
-
-    @Bean
-    public NettyHttpServer nettyHttpServer() {
-        return new NettyHttpServer();
     }
 
 

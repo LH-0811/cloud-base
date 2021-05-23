@@ -1,11 +1,14 @@
 package com.cloud.base.core.modules.lh_security.server.authentication.impl;
 
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
 import com.cloud.base.core.modules.lh_security.server.authentication.SecurityCheckAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
 import com.cloud.base.core.modules.lh_security.server.token.TokenManager;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
@@ -19,6 +22,10 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
+
+
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @Autowired
     private TokenManager tokenManager;
