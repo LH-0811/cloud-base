@@ -1,4 +1,4 @@
-package com.cloud.base.member.user.expand.security.verification.username_password;
+package com.cloud.base.authorize.security.verification;
 
 import com.cloud.base.core.modules.lh_security.server.voucher.SecurityVoucher;
 import io.swagger.annotations.ApiModelProperty;

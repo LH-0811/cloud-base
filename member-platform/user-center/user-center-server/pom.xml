@@ -31,11 +31,6 @@
             <artifactId>lh-security-client</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.cloud.modules</groupId>
-            <artifactId>lh-security-server</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
         <!--  logger      -->
         <dependency>
             <groupId>com.cloud.modules</groupId>

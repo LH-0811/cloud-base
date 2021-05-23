@@ -12,6 +12,9 @@
     <groupId>com.cloud.member</groupId>
     <artifactId>authorize-center</artifactId>
     <packaging>pom</packaging>
+    <modules>
+        <module>authorize-center-server</module>
+    </modules>
 
 
 </project>

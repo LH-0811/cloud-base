@@ -25,6 +25,12 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.cloud.modules</groupId>
+            <artifactId>lh-security-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- 引入mysql mybatis 相关orm-->
         <dependency>
             <groupId>com.cloud.dependency</groupId>

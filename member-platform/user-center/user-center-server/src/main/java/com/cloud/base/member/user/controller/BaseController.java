@@ -4,7 +4,6 @@ import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ResponseCode;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.core.modules.lh_security.server.token.TokenManager;
 import com.cloud.base.member.user.repository.entity.SysUser;
 import com.cloud.base.member.user.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +19,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class BaseController {
-
-    @Autowired
-    private TokenManager tokenManager;
 
     @Autowired
     private SysUserService sysUserService;

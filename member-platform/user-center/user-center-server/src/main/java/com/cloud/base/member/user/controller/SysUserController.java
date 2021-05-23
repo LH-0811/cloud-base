@@ -5,8 +5,10 @@ import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUr
 import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.user.param.SysUserUpdatePasswordParam;
+import com.cloud.base.member.user.param.UsernamePasswordVerificationParam;
 import com.cloud.base.member.user.repository.entity.SysRes;
 import com.cloud.base.member.user.repository.entity.SysRole;
+import com.cloud.base.member.user.service.AuthorizeService;
 import com.cloud.base.member.user.service.SysUserService;
 import com.cloud.base.member.user.vo.MenuVo;
 import io.swagger.annotations.Api;
@@ -35,6 +37,21 @@ public class SysUserController extends BaseController {
 
     @Autowired
     private SysUserService sysUserService;
+
+    @Autowired
+    private AuthorizeService authorizeService;
+
+    @PostMapping("/verification/username_password")
+    @ApiOperation("系统用户通过用户名密码认证")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "body", dataType = "UsernamePasswordVerificationParam", dataTypeClass = UsernamePasswordVerificationParam.class, name = "param", value = "参数")
+    })
+    public ServerResponse<SecurityAuthority> verificationUserByUsernameAndPwd(@Validated UsernamePasswordVerificationParam param) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 获取当前用户信息 接口 : SysUserController-getUesrInfo");
+        SecurityAuthority securityAuthority = authorizeService.verification(param);
+        return ServerResponse.createBySuccess("获取成功", securityAuthority);
+    }
 
 
     /**
@@ -85,7 +102,7 @@ public class SysUserController extends BaseController {
     public ServerResponse<List<SysRes>> getResTreeByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取用户资源树 接口 : SysUserController-getResTreeByUser");
-        List<SysRes> resTreeByUser = sysUserService.getResTreeByUser(getCurrentSysUser(securityAuthority));
+        List<SysRes> resTreeByUser = sysUserService.getResTreeByUser(getCurrentSysUser(securityAuthority).getId());
         return ServerResponse.createBySuccess("查询成功", resTreeByUser);
     }
 
@@ -103,7 +120,7 @@ public class SysUserController extends BaseController {
     public ServerResponse<List<MenuVo>> getMenuTreeByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取用户资源树 接口 : SysUserController-getMenuTreeByUser");
-        List<MenuVo> menuTreeByUser = sysUserService.getMenuTreeByUser(getCurrentSysUser(securityAuthority));
+        List<MenuVo> menuTreeByUser = sysUserService.getMenuTreeByUser(getCurrentSysUser(securityAuthority).getId());
         return ServerResponse.createBySuccess("查询成功", menuTreeByUser);
     }
 
@@ -121,7 +138,7 @@ public class SysUserController extends BaseController {
     public ServerResponse<List<SysRes>> getResListByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取用户资源列表 接口 : SysUserController-getResListByUser");
-        List<SysRes> resListByUser = sysUserService.getResListByUser(getCurrentSysUser(securityAuthority));
+        List<SysRes> resListByUser = sysUserService.getResListByUser(getCurrentSysUser(securityAuthority).getId());
         return ServerResponse.createBySuccess("查询成功", resListByUser);
     }
 
@@ -141,7 +158,7 @@ public class SysUserController extends BaseController {
     public ServerResponse updateUserPassword(@Validated @RequestBody SysUserUpdatePasswordParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 用户修改密码 接口 : SysUserController-updateUserPassword");
-        sysUserService.updateUserPassword(param, getCurrentSysUser(securityAuthority));
+        sysUserService.updateUserPassword(param, getCurrentSysUser(securityAuthority).getId());
         return ServerResponse.createBySuccess("修改成功");
     }
 }

@@ -50,10 +50,6 @@ public class SysUserServiceImpl implements SysUserService {
 
     /**
      * 获取用户角色列表
-     *
-     * @param userId
-     * @return
-     * @throws Exception
      */
     @Override
     public List<SysRole> getUserRoleList(Long userId) throws Exception {
@@ -74,22 +70,17 @@ public class SysUserServiceImpl implements SysUserService {
         }
     }
 
-
     /**
      * 用户修改密码
-     *
-     * @param param
-     * @param sysUser
-     * @throws Exception
      */
     @Override
-    public void updateUserPassword(SysUserUpdatePasswordParam param, SysUser sysUser) throws Exception {
+    public void updateUserPassword(SysUserUpdatePasswordParam param, Long userId) throws Exception {
         log.info("开始 用户修改密码");
         if (!param.getRePwd().equals(param.getNewPwd())) {
             throw CommonException.create(ServerResponse.createByError("两次输入密码不一致"));
         }
 
-        SysUser currentUser = sysUserDao.selectByPrimaryKey(sysUser.getId());
+        SysUser currentUser = sysUserDao.selectByPrimaryKey(userId);
         if (currentUser == null) {
             throw CommonException.create(ServerResponse.createByError("当前用户不存在"));
         }
@@ -97,7 +88,6 @@ public class SysUserServiceImpl implements SysUserService {
             throw CommonException.create(ServerResponse.createByError("旧密码不正确"));
         }
         try {
-
             SysUser updateUser = new SysUser();
             updateUser.setId(currentUser.getId());
             updateUser.setPassword(Md5Util.getMD5Str(param.getNewPwd()));
@@ -111,17 +101,14 @@ public class SysUserServiceImpl implements SysUserService {
     /**
      * 获取用户资源树
      *
-     * @param sysUser
-     * @throws Exception
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<SysRes> getResTreeByUser(SysUser sysUser) throws Exception {
+    public List<SysRes> getResTreeByUser(Long userId) throws Exception {
         log.info("进入 获取用户资源树");
         try {
             // 获取用户角色
             SysUserRole roleSelect = new SysUserRole();
-            roleSelect.setUserId(sysUser.getId());
+            roleSelect.setUserId(userId);
             List<SysUserRole> roleList = sysUserRoleDao.select(roleSelect);
             if (CollectionUtils.isEmpty(roleList)) {
                 return Lists.newArrayList();
@@ -154,21 +141,17 @@ public class SysUserServiceImpl implements SysUserService {
         }
     }
 
-
     /**
      * 获取用户菜单树
      *
-     * @param sysUser
-     * @throws Exception
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<MenuVo> getMenuTreeByUser(SysUser sysUser) throws Exception {
+    public List<MenuVo> getMenuTreeByUser(Long userId) throws Exception {
         log.info("进入 获取用户菜单树");
         try {
             // 获取用户角色
             SysUserRole roleSelect = new SysUserRole();
-            roleSelect.setUserId(sysUser.getId());
+            roleSelect.setUserId(userId);
             List<SysUserRole> roleList = sysUserRoleDao.select(roleSelect);
             if (CollectionUtils.isEmpty(roleList)) {
                 return Lists.newArrayList();
@@ -223,21 +206,16 @@ public class SysUserServiceImpl implements SysUserService {
         }
     }
 
-
     /**
      * 获取用户资源列表
-     *
-     * @param sysUser
-     * @throws Exception
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<SysRes> getResListByUser(SysUser sysUser) throws Exception {
+    public List<SysRes> getResListByUser(Long userId) throws Exception {
         log.info("进入  获取用户资源列表");
         try {
             // 获取用户角色
             SysUserRole roleSelect = new SysUserRole();
-            roleSelect.setUserId(sysUser.getId());
+            roleSelect.setUserId(userId);
             List<SysUserRole> roleList = sysUserRoleDao.select(roleSelect);
             if (CollectionUtils.isEmpty(roleList)) {
                 return Lists.newArrayList();
@@ -274,7 +252,6 @@ public class SysUserServiceImpl implements SysUserService {
             throw CommonException.create(e, ServerResponse.createByError("根据用户id获取用户信息接口失败,请联系管理员"));
         }
     }
-
 
     /**
      * 通过用户名 密码获取用户信息

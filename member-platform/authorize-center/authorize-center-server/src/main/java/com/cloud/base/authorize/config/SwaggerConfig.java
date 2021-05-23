@@ -1,4 +1,4 @@
-package com.cloud.base.config;
+package com.cloud.base.authorize.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.cloud.base"))
+                .apis(RequestHandlerSelectors.basePackage("com.cloud.base.member.user.controller"))
                 .paths(PathSelectors.any())
                 .build();
 
@@ -27,7 +27,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("示例 Boot模块api")
+                .title("授权中心模块api")
                 .version("1.0.0")
                 .description("API desc")
                 .build();
