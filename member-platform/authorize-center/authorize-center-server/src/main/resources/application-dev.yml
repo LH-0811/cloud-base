@@ -1,8 +1,8 @@
 server:
-  port: 9301
+  port: 9300
 spring:
   application:
-    name: user-center-server
+    name: authorize-center-server
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
@@ -10,40 +10,6 @@ spring:
     generator:
       # 避免Long类型丢失经度
       WRITE_NUMBERS_AS_STRINGS: true
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    # 使用多数据源时 这个配置便是 默认数据源
-    druid:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://49.232.166.94:3306/member-user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-      username: root
-      password: QQliuhe951@@
-      initial-size: 10
-      max-active: 100
-      min-idle: 10
-      max-wait: 60000
-      pool-prepared-statements: true
-      max-pool-prepared-statement-per-connection-size: 20
-      time-between-eviction-runs-millis: 60000
-      min-evictable-idle-time-millis: 300000
-      #Oracle需要打开注释
-      #validation-query: SELECT 1 FROM DUAL
-      test-while-idle: true
-      test-on-borrow: false
-      test-on-return: false
-      stat-view-servlet:
-        enabled: true
-        url-pattern: /druid/*
-        #login-username: admin
-        #login-password: admin
-      filter:
-        stat:
-          log-slow-sql: true
-          slow-sql-millis: 1000
-          merge-sql: false
-        wall:
-          config:
-            multi-statement-allow: true
   cloud:
     nacos: # 配置nacos
       discovery: # 服务发现地址
@@ -62,29 +28,6 @@ spring:
     sleuth:
       sampler:
         probability: 1.0 # 收集数据百分比，默认 0.1（10%） 生成中最好不要配置1 影响性能。
-mybatis:
-  configuration:
-    map-underscore-to-camel-case: true
-  type-aliases-package: com.cloud.base.member.user.repository.entity
-mapper:
-  not-empty: false
-  identity: MYSQL
-pagehelper:
-  helper-dialect: mysql
-  reasonable: true
-  support-methods-arguments: true
-  params: count=countSql
-#  redis:
-#    host: 49.232.166.94
-#    port: 6379
-#    password: QQliuhe951@@
-#    jedis:
-#      pool:
-#        max-active: 8
-#        max-wait: -1
-#        max-idle: 500
-#        min-idle: 0
-
 feign:
   httpclient:
     enabled: true
@@ -96,7 +39,6 @@ feign:
         loggerLevel: none  # full | basic | none | headers
   sentinel:
     enabled: true
-
 management: # 健康检查暴露端点
   endpoints:
     web:
