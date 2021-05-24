@@ -2,11 +2,11 @@ package com.cloud.base.core.modules.lh_security.client;
 
 
 import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
+import com.cloud.base.core.modules.lh_security.client.component.SecurityClient;
 import com.cloud.base.core.modules.lh_security.client.component.impl.DefaultProvideResToSecurityClient;
+import com.cloud.base.core.modules.lh_security.client.component.impl.DefaultSecurityClientImpl;
 import com.cloud.base.core.modules.lh_security.client.util.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.*;
-import com.cloud.base.core.modules.lh_security.client.service.SecurityClientService;
-import com.cloud.base.core.modules.lh_security.client.service.impl.SecurityClientServiceImpl;
 import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -51,10 +51,9 @@ public class SecurityClientAutoConfiguration {
     }
 
     @Bean
-    public SecurityClientService securityClientService() {
-        return new SecurityClientServiceImpl();
+    public SecurityClient securityClient(){
+        return new DefaultSecurityClientImpl();
     }
-
     @Bean
     public ProvideResToSecurityClient provideResToSecurityClient() {
         return new DefaultProvideResToSecurityClient();

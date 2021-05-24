@@ -48,7 +48,7 @@ public class DefaultProvideResToSecurityClient implements ProvideResToSecurityCl
     @Override
     public SecurityServerAddr getServerAddrFromApplicationContext() throws CommonException {
         if (securityProperties.getUseCloud()){
-            List<ServiceInstance> instances = discoveryClient.getInstances("user-center-server");
+            List<ServiceInstance> instances = discoveryClient.getInstances(securityProperties.getServerName());
             if (CollectionUtils.isEmpty(instances)){
                 throw CommonException.create(ServerResponse.createByError("未获取到用户中心服务示例"));
             }

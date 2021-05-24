@@ -5,6 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
+import com.cloud.base.core.modules.lh_security.client.component.SecurityClient;
 import com.cloud.base.core.modules.lh_security.client.util.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
 import com.cloud.base.core.modules.lh_security.client.entity.TokenToAuthorityParam;
@@ -35,15 +36,7 @@ import java.util.stream.Collectors;
 public class HasUrlAop {
 
     @Autowired
-    private SecurityProperties securityProperties;
-
-    @Autowired
-    private ProvideResToSecurityClient provideResToSecurityClient;
-
-    @Autowired
-    private OkHttpClientUtil okHttpClientUtil;
-
-    private AntPathMatcher antPathMatcher = new AntPathMatcher();
+    private SecurityClient securityClient;
 
     @Pointcut("@annotation(com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl)")
     public void annotationPointCut() {
@@ -60,45 +53,19 @@ public class HasUrlAop {
         if (StringUtils.isBlank(url))
             throw CommonException.create(ServerResponse.createByError("使用@HasUrl注解，必须填写url。"));
 
-        String token = provideResToSecurityClient.getTokenFromApplicationContext();
-        if (StringUtils.isBlank(token)) {
-            throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityProperties.getNoAuthorizedCode()), "未上传用户token", ""));
-        }
+        // 判断是否有静态资源权限并返回权限信息
+        SecurityAuthority securityAuthority = securityClient.hasUrl(url);
 
-        SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
-        String reqUrl = serverAddr.toHttpAddrAndPort() + securityProperties.getServerUrlOfTokenToAuthority();
-        log.debug("获取到token:{}", token);
-        log.debug("请求访问权限验证服务端地址:{}", reqUrl);
-        Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new TokenToAuthorityParam(token)));
-        ServerResponse<SecurityAuthority> serverResponse = JSON.parseObject(response.body().string(), new TypeReference<ServerResponse<SecurityAuthority>>() {
-        });
-        log.debug("response:{}", JSON.toJSONString(serverResponse));
-        if (!serverResponse.getStatus().equals(0))
-            throw CommonException.create(serverResponse);
-        // 获取到所有的url权限
-        List<SecurityRes> securityResList = serverResponse.getData().getSecurityResList();
-        if (CollectionUtils.isEmpty(securityResList))
-            throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
-        // 获取到所有的url权限
-        List<SecurityRes> urlResList = securityResList.stream().filter(ele -> StringUtils.isNotBlank(ele.getUrl())).collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(urlResList))
-            throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
-        // 获取到所有的url
-        List<String> urlMatcherList = urlResList.stream().map(ele -> ele.getUrl()).collect(Collectors.toList());
-        for (String urlMatcher : urlMatcherList) {
-            if (antPathMatcher.match(urlMatcher, url)) {
-                Object[] args = joinPoint.getArgs();
-                for (int i = 0; i < args.length; i++) {
-                    Object arg = args[i];
-                    if (arg instanceof SecurityAuthority)
-                        args[i] = serverResponse.getData();
-                }
-                Object proceed = joinPoint.proceed(args);
-                log.debug("退出HasUrlAop切面");
-                return proceed;
-            }
+        // 替换入参
+        Object[] args = joinPoint.getArgs();
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            if (arg instanceof SecurityAuthority)
+                args[i] = securityAuthority;
         }
-        throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
+        Object proceed = joinPoint.proceed(args);
+        log.debug("退出HasUrlAop切面");
+        return proceed;
     }
 
 }

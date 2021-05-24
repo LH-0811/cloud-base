@@ -1,7 +1,7 @@
 package com.cloud.base.member.user.expand.logger;
 
+import com.cloud.base.core.modules.lh_security.client.component.SecurityClient;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.core.modules.lh_security.server.token.TokenManager;
 import com.cloud.base.core.modules.logger.adapter.LhitLoggerUserInfoFromRequestAdapter;
 import com.cloud.base.member.user.repository.dao.SysUserDao;
 import com.cloud.base.member.user.repository.entity.SysUser;
@@ -19,20 +19,17 @@ import javax.servlet.http.HttpServletRequest;
 public class UserInfoFromRequest implements LhitLoggerUserInfoFromRequestAdapter<SysUser> {
 
     @Autowired
-    private TokenManager tokenManager;
+    private SysUserDao sysUserDao;
 
     @Autowired
-    private SysUserDao sysUserDao;
+    private SecurityClient securityClient;
 
     @Override
     public SysUser getUserInfoFromRequest(HttpServletRequest request) throws Exception {
-        String lhtoken = request.getHeader("LHTOKEN");
-        if (StringUtils.isNotEmpty(lhtoken)) {
-            SecurityAuthority securityAuthority = tokenManager.getSecurityAuthorityByToken(lhtoken);
-            if (securityAuthority != null && securityAuthority.getSecurityUser() != null) {
-                SysUser sysUser = sysUserDao.selectByPrimaryKey(Long.valueOf(securityAuthority.getSecurityUser().getId()));
-                return sysUser;
-            }
+        SecurityAuthority securityAuthority = securityClient.tokenToAuthority();
+        if (securityAuthority != null && securityAuthority.getSecurityUser() != null) {
+            SysUser sysUser = sysUserDao.selectByPrimaryKey(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+            return sysUser;
         }
         return new SysUser();
     }

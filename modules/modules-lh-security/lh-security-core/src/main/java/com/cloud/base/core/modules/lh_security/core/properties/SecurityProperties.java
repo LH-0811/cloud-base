@@ -51,11 +51,11 @@ public class SecurityProperties {
     @Getter
     @Setter
     // 鉴权服务端是否使用 springcloud
-    private Boolean useCloud = false;
+    private Boolean useCloud = true;
 
     @Getter
     @Setter
-    private String serverName = "user-center-server";
+    private String serverName = "authorize-center-server";
 
 
 

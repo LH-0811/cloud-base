@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.core.modules.lh_security.client.component.SecurityClient;
 import com.cloud.base.core.modules.lh_security.client.util.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
 import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
@@ -31,13 +32,7 @@ import java.util.stream.Collectors;
 public class HasStaticResPathAop {
 
     @Autowired
-    private SecurityProperties securityProperties;
-
-    @Autowired
-    private ProvideResToSecurityClient provideResToSecurityClient;
-
-    @Autowired
-    private OkHttpClientUtil okHttpClientUtil;
+    private SecurityClient securityClient;
 
     @Pointcut("@annotation(com.cloud.base.core.modules.lh_security.client.component.annotation.HasStaticResPath)")
     public void annotationPointCut() {
@@ -55,47 +50,19 @@ public class HasStaticResPathAop {
             throw CommonException.create(ServerResponse.createByError("使用@HasStaticResPath注解，必须填写resPath。"));
 
 
-        String token = provideResToSecurityClient.getTokenFromApplicationContext();
-        if (StringUtils.isBlank(token)) {
-            throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityProperties.getNoAuthorizedCode()), "未上传用户token", ""));
+        // 判断是否有静态资源权限并返回权限信息
+        SecurityAuthority securityAuthority = securityClient.hasStaticResPath(resPath);
+
+        // 补充入参
+        Object[] args = joinPoint.getArgs();
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            if (arg instanceof SecurityAuthority)
+                args[i] = securityAuthority;
         }
-
-        SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
-        String reqUrl = serverAddr.toHttpAddrAndPort() + securityProperties.getServerUrlOfTokenToAuthority();
-        log.debug("获取到token:{}", token);
-        log.debug("请求访问权限验证服务端地址:{}", reqUrl);
-        Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new TokenToAuthorityParam(token)));
-        ServerResponse<SecurityAuthority> serverResponse = JSON.parseObject(response.body().string(), new TypeReference<ServerResponse<SecurityAuthority>>() {
-        });
-        log.debug("response:{}", JSON.toJSONString(serverResponse));
-        if (!serverResponse.getStatus().equals(0))
-            throw CommonException.create(serverResponse);
-
-        // 获取到所有的权限
-        List<SecurityRes> securityResList = serverResponse.getData().getSecurityResList();
-        if (CollectionUtils.isEmpty(securityResList))
-            throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
-        // 获取到所有的permsCode权限
-        List<SecurityRes> staticResResList = securityResList.stream().filter(ele -> StringUtils.isNotBlank(ele.getPath())).collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(staticResResList))
-            throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
-        // 获取到所有的code
-        List<String> staticResPathList = staticResResList.stream().map(ele -> ele.getPath()).collect(Collectors.toList());
-
-        for (String path : staticResPathList) {
-            if (staticResPathList.contains(SecurityRes.ALL) || path.equalsIgnoreCase(resPath)) {
-                Object[] args = joinPoint.getArgs();
-                for (int i = 0; i < args.length; i++) {
-                    Object arg = args[i];
-                    if (arg instanceof SecurityAuthority)
-                        args[i] = serverResponse.getData();
-                }
-                Object proceed = joinPoint.proceed(args);
-                log.debug("退出HasStaticResPathAop切面");
-                return proceed;
-            }
-        }
-        throw CommonException.create(ServerResponse.createByError(securityProperties.getUnAuthorizedCode(), "非法访问"));
+        Object proceed = joinPoint.proceed(args);
+        log.debug("退出HasStaticResPathAop切面");
+        return proceed;
 
     }
 }

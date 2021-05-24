@@ -19,7 +19,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.cloud.base.member.user.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.cloud.base.authorize.controller"))
                 .paths(PathSelectors.any())
                 .build();
 

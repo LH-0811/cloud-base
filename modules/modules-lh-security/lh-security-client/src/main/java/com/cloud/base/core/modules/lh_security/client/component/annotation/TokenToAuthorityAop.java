@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.core.modules.lh_security.client.component.SecurityClient;
 import com.cloud.base.core.modules.lh_security.client.util.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
 import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
@@ -30,13 +31,7 @@ import org.springframework.core.Ordered;
 public class TokenToAuthorityAop implements Ordered {
 
     @Autowired
-    private SecurityProperties securityProperties;
-
-    @Autowired
-    private ProvideResToSecurityClient provideResToSecurityClient;
-
-    @Autowired
-    private OkHttpClientUtil okHttpClientUtil;
+    private SecurityClient securityClient;
 
     @Pointcut("@annotation(com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority)")
     public void annotationPointCut() {
@@ -48,25 +43,16 @@ public class TokenToAuthorityAop implements Ordered {
         log.debug("进入HasTokenAop切面");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         TokenToAuthority annotation = signature.getMethod().getAnnotation(TokenToAuthority.class);
-        String token = provideResToSecurityClient.getTokenFromApplicationContext();
-        if (StringUtils.isBlank(token)) {
-            throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityProperties.getNoAuthorizedCode()), "未上传用户token", ""));
-        }
-        SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
-        String reqUrl = serverAddr.toHttpAddrAndPort() + securityProperties.getServerUrlOfTokenToAuthority();
-        log.debug("获取到token:{}", token);
-        log.debug("请求访问权限验证服务端地址:{}", reqUrl);
-        Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new TokenToAuthorityParam(token)));
-        ServerResponse<SecurityAuthority> serverResponse = JSON.parseObject(response.body().string(), new TypeReference<ServerResponse<SecurityAuthority>>() {
-        });
-        log.debug("response:{}", JSON.toJSONString(serverResponse));
-        if (!serverResponse.getStatus().equals(0))
-            throw CommonException.create(serverResponse);
+
+        // 获取到当前用户信息
+        SecurityAuthority securityAuthority = securityClient.tokenToAuthority();
+
+        // 替换入参
         Object[] args = joinPoint.getArgs();
         for (int i = 0; i < args.length; i++) {
             Object arg = args[i];
             if (arg instanceof SecurityAuthority)
-                args[i] = serverResponse.getData();
+                args[i] = securityAuthority;
         }
         Object proceed = joinPoint.proceed(args);
         log.debug("退出HasTokenAop切面");

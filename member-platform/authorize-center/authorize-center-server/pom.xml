@@ -25,6 +25,12 @@
             <groupId>com.cloud.member.user</groupId>
             <artifactId>user-center-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.cloud.dependency</groupId>
+                    <artifactId>dependency-mybatis-tk</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
 
@@ -70,6 +76,7 @@
 
 
     </dependencies>
+
 
 
     <build>
