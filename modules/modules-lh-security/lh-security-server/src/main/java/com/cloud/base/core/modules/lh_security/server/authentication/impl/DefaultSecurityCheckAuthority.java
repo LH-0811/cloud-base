@@ -53,7 +53,11 @@ public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
         // 获取到所有的url
         List<String> urlMatcherList = urlResList.stream().map(ele -> ele.getUrl()).collect(Collectors.toList());
         for (String urlMatcher : urlMatcherList) {
-            if (antPathMatcher.match(urlMatcher, url)) return true;
+            if (antPathMatcher.match(urlMatcher, url)) {
+                // 重新设置token信息 实现token续期
+                tokenManager.saveToken(token,securityAuthority);
+                return true;
+            }
         }
         return false;
     }
@@ -81,7 +85,11 @@ public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
         List<String> permsCodeList = permsResList.stream().map(ele -> ele.getCode()).collect(Collectors.toList());
         if (permsCodeList.contains("all") || permsCodeList.contains("ALL")) return true;
         for (String thisPermsCode : permsCodeList) {
-            if (thisPermsCode.equals(permsCode)) return true;
+            if (thisPermsCode.equals(permsCode)) {
+                // 重新设置token信息 实现token续期
+                tokenManager.saveToken(token,securityAuthority);
+                return true;
+            }
         }
         return false;
     }
@@ -110,7 +118,11 @@ public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
         List<String> staticResPathList = staticResPathResList.stream().map(ele -> ele.getPath()).collect(Collectors.toList());
         if (staticResPathList.contains("all") || staticResPathList.contains("ALL")) return true;
         for (String thisStaticResPath : staticResPathList) {
-            if (thisStaticResPath.equals(staticResPath)) return true;
+            if (thisStaticResPath.equals(staticResPath)) {
+                // 重新设置token信息 实现token续期
+                tokenManager.saveToken(token,securityAuthority);
+                return true;
+            }
         }
         return false;
     }
@@ -126,7 +138,10 @@ public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
     @Override
     public SecurityAuthority getSecurityAuthorityByToken(String token) throws Exception {
         // 获取到token对应存储的用户权限信息
-        return tokenManager.getSecurityAuthorityByToken(token);
+        SecurityAuthority securityAuthorityByToken = tokenManager.getSecurityAuthorityByToken(token);
+        // 重新设置token信息 实现token续期
+        tokenManager.saveToken(token,securityAuthorityByToken);
+        return securityAuthorityByToken;
     }
 
 }
