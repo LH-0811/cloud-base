@@ -23,10 +23,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
 
-
-    @Autowired
-    private SecurityProperties securityProperties;
-
     @Autowired
     private TokenManager tokenManager;
 
