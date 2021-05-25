@@ -51,7 +51,7 @@ public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
         for (String urlMatcher : urlMatcherList) {
             if (antPathMatcher.match(urlMatcher, url)) {
                 // 重新设置token信息 实现token续期
-                tokenManager.saveToken(token,securityAuthority);
+                tokenManager.delayExpired(token);
                 return true;
             }
         }
@@ -83,7 +83,7 @@ public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
         for (String thisPermsCode : permsCodeList) {
             if (thisPermsCode.equals(permsCode)) {
                 // 重新设置token信息 实现token续期
-                tokenManager.saveToken(token,securityAuthority);
+                tokenManager.delayExpired(token);
                 return true;
             }
         }
@@ -116,7 +116,7 @@ public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
         for (String thisStaticResPath : staticResPathList) {
             if (thisStaticResPath.equals(staticResPath)) {
                 // 重新设置token信息 实现token续期
-                tokenManager.saveToken(token,securityAuthority);
+                tokenManager.delayExpired(token);
                 return true;
             }
         }
@@ -136,7 +136,7 @@ public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
         // 获取到token对应存储的用户权限信息
         SecurityAuthority securityAuthorityByToken = tokenManager.getSecurityAuthorityByToken(token);
         // 重新设置token信息 实现token续期
-        tokenManager.saveToken(token,securityAuthorityByToken);
+        tokenManager.delayExpired(token);
         return securityAuthorityByToken;
     }
 
