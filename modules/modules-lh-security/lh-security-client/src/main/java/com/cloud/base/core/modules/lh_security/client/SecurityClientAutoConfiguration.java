@@ -2,8 +2,8 @@ package com.cloud.base.core.modules.lh_security.client;
 
 
 import com.cloud.base.core.modules.lh_security.client.component.provide.ProvideResToSecurityClient;
-import com.cloud.base.core.modules.lh_security.client.service.SecurityClient;
 import com.cloud.base.core.modules.lh_security.client.component.provide.impl.DefaultProvideResToSecurityClient;
+import com.cloud.base.core.modules.lh_security.client.service.SecurityClient;
 import com.cloud.base.core.modules.lh_security.client.service.impl.DefaultSecurityClientImpl;
 import com.cloud.base.core.modules.lh_security.client.util.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.*;
@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 
 /**
  * 自动装配

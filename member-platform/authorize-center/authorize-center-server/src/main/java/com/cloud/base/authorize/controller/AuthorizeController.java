@@ -2,8 +2,8 @@ package com.cloud.base.authorize.controller;
 
 import com.cloud.base.authorize.security.verification.UsernamePasswordVerification;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.common.vo.LoginVo;
 import com.cloud.base.core.modules.lh_security.core.param.TokenParam;
+import com.cloud.base.core.modules.lh_security.core.vo.AuthenticationVo;
 import com.cloud.base.core.modules.lh_security.server.service.SecurityServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -34,10 +34,10 @@ public class AuthorizeController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "UsernamePasswordVerification", dataTypeClass = UsernamePasswordVerification.class, name = "param", value = "参数")
     })
-    public ServerResponse<LoginVo> sysUserLoginByUsernamePassword(@Validated @RequestBody UsernamePasswordVerification param) throws Exception {
+    public ServerResponse<AuthenticationVo> sysUserLoginByUsernamePassword(@Validated @RequestBody UsernamePasswordVerification param) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 系统用户登录 接口 : LoginAuthenticationController-sysUserLoginByUsernamePassword ");
-        LoginVo authorize = securityServer.authorize(param);
+        AuthenticationVo authorize = securityServer.authorize(param);
         return ServerResponse.createBySuccess("登录成功", authorize);
     }
 

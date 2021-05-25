@@ -1,4 +1,4 @@
-package com.cloud.base.core.common.vo;
+package com.cloud.base.core.modules.lh_security.core.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginVo {
+public class AuthenticationVo {
 
     @ApiModelProperty(value = "用户token")
     private String token;
