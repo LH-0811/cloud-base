@@ -1,4 +1,4 @@
-package com.cloud.base.core.modules.lh_security.client.entity;
+package com.cloud.base.core.modules.lh_security.core.param;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -14,11 +14,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CheckResParam {
+public class TokenToAuthorityParam {
 
     @ApiModelProperty(value = "当前用户token")
     private String token;
 
-    @ApiModelProperty(value = "资源：URL、permsCode、staticResPath")
-    private String resource;
 }

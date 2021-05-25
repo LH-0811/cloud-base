@@ -1,4 +1,4 @@
-package com.cloud.base.core.modules.lh_security.client.component;
+package com.cloud.base.core.modules.lh_security.client.service;
 
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 

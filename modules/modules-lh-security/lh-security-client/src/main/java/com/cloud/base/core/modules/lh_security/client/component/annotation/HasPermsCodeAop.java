@@ -2,7 +2,7 @@ package com.cloud.base.core.modules.lh_security.client.component.annotation;
 
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.lh_security.client.component.SecurityClient;
+import com.cloud.base.core.modules.lh_security.client.service.SecurityClient;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

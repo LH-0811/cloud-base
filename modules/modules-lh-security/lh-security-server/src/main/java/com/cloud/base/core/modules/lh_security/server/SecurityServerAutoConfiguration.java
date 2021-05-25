@@ -7,8 +7,8 @@ import com.cloud.base.core.modules.lh_security.server.authentication.impl.Defaul
 import com.cloud.base.core.modules.lh_security.server.authentication.impl.DefaultUsernamePasswordVoucherVoucherVerification;
 import com.cloud.base.core.modules.lh_security.server.authentication.impl.DefaultSecurityVoucherVerificationProcess;
 import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
-import com.cloud.base.core.modules.lh_security.server.service.SecurityService;
-import com.cloud.base.core.modules.lh_security.server.service.impl.SecurityServiceImpl;
+import com.cloud.base.core.modules.lh_security.server.service.SecurityServer;
+import com.cloud.base.core.modules.lh_security.server.service.impl.DefaultSecurityServerImpl;
 import com.cloud.base.core.modules.lh_security.server.token.TokenGenerate;
 import com.cloud.base.core.modules.lh_security.server.token.TokenManager;
 import com.cloud.base.core.modules.lh_security.server.token.impl.DefaultTokenGenerate;
@@ -47,9 +47,9 @@ public class SecurityServerAutoConfiguration {
 
 
     @Bean
-    @ConditionalOnMissingBean(SecurityService.class)
-    public SecurityService securityService(){
-        return new SecurityServiceImpl();
+    @ConditionalOnMissingBean(SecurityServer.class)
+    public SecurityServer securityService(){
+        return new DefaultSecurityServerImpl();
     }
 
     // 凭证认证 //////////////////////////////////////////////////////////////////

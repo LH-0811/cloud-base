@@ -1,9 +1,9 @@
-package com.cloud.base.core.modules.lh_security.client.component.impl;
+package com.cloud.base.core.modules.lh_security.client.component.provide.impl;
 
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
-import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
+import com.cloud.base.core.modules.lh_security.client.component.provide.ProvideResToSecurityClient;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityServerAddr;
 import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

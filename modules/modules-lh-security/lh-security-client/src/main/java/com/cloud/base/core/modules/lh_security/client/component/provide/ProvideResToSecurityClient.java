@@ -1,7 +1,7 @@
-package com.cloud.base.core.modules.lh_security.client.component;
+package com.cloud.base.core.modules.lh_security.client.component.provide;
 
 import com.cloud.base.core.common.exception.CommonException;
-import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityServerAddr;
 
 /**
  * 从应用上下文中获取到当前用户的token

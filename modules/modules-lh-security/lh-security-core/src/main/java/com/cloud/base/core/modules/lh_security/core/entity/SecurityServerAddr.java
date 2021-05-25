@@ -1,4 +1,4 @@
-package com.cloud.base.core.modules.lh_security.client.entity;
+package com.cloud.base.core.modules.lh_security.core.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

@@ -1,11 +1,10 @@
 package com.cloud.base.member.user.expand.logger;
 
-import com.cloud.base.core.modules.lh_security.client.component.SecurityClient;
+import com.cloud.base.core.modules.lh_security.client.service.SecurityClient;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.logger.adapter.LhitLoggerUserInfoFromRequestAdapter;
 import com.cloud.base.member.user.repository.dao.SysUserDao;
 import com.cloud.base.member.user.repository.entity.SysUser;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

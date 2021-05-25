@@ -1,19 +1,18 @@
-package com.cloud.base.core.modules.lh_security.client.component.impl;
+package com.cloud.base.core.modules.lh_security.client.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.lh_security.client.component.ProvideResToSecurityClient;
-import com.cloud.base.core.modules.lh_security.client.component.SecurityClient;
-import com.cloud.base.core.modules.lh_security.client.entity.SecurityServerAddr;
-import com.cloud.base.core.modules.lh_security.client.entity.TokenToAuthorityParam;
+import com.cloud.base.core.modules.lh_security.client.component.provide.ProvideResToSecurityClient;
+import com.cloud.base.core.modules.lh_security.client.service.SecurityClient;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityServerAddr;
+import com.cloud.base.core.modules.lh_security.core.param.TokenToAuthorityParam;
 import com.cloud.base.core.modules.lh_security.client.util.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
 import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -9,7 +9,7 @@ import com.cloud.base.core.modules.lh_security.server.voucher.SecurityVoucher;
  * @author lh0811
  * @date 2021/5/23
  */
-public interface SecurityService {
+public interface SecurityServer {
     /**
      * 授权服务 用户授权
      */
