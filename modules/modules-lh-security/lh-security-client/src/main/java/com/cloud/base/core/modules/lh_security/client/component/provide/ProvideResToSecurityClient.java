@@ -11,6 +11,12 @@ import com.cloud.base.core.modules.lh_security.core.entity.SecurityServerAddr;
  */
 public interface ProvideResToSecurityClient {
 
+    /**
+     * 从请求上下文中获取到用户token
+     *
+     * @return
+     * @throws Exception
+     */
     String getTokenFromApplicationContext() throws Exception;
 
     /**

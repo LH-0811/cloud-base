@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("/security")
 public class SecurityController {
 
 
@@ -32,13 +31,8 @@ public class SecurityController {
     @Autowired
     private SecurityCheckAuthority securityCheckAuthority;
 
-
-
-
-
-
     ///////// 鉴权接口
-    @PostMapping("/check_url")
+    @PostMapping("${lhit.security.serverUrlOfCheckUrl}")
     @ApiOperation(tags = "鉴权接口", value = "鉴权接口-验证用户是否有url权限")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "CheckResParam", dataTypeClass = CheckResParam.class, name = "param", value = "参数")
@@ -53,7 +47,7 @@ public class SecurityController {
         }
     }
 
-    @PostMapping("/check_perms_code")
+    @PostMapping("${lhit.security.serverUrlOfCheckPermsCode}")
     @ApiOperation(tags = "鉴权接口", value = "鉴权接口-验证用户是否有permsCode（权限码）权限")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "CheckResParam", dataTypeClass = CheckResParam.class, name = "param", value = "参数")
@@ -68,7 +62,7 @@ public class SecurityController {
         }
     }
 
-    @PostMapping("/check_static_res_path")
+    @PostMapping("${lhit.security.serverUrlOfCheckStaticResPath}")
     @ApiOperation(tags = "鉴权接口", value = "鉴权接口-验证用户是否有staticResPath（静态资源路径）权限")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "CheckResParam", dataTypeClass = CheckResParam.class, name = "param", value = "参数")
@@ -83,7 +77,7 @@ public class SecurityController {
         }
     }
 
-    @PostMapping("/token_to_authority")
+    @PostMapping("${lhit.security.serverUrlOfTokenToAuthority}")
     @ApiOperation(tags = "鉴权接口", value = "鉴权接口-token转换为用户权限信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "CheckResParam", dataTypeClass = CheckResParam.class, name = "param", value = "参数")
