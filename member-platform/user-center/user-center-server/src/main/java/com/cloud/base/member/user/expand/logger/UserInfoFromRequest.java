@@ -5,6 +5,7 @@ import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.logger.adapter.LhitLoggerUserInfoFromRequestAdapter;
 import com.cloud.base.member.user.repository.dao.SysUserDao;
 import com.cloud.base.member.user.repository.entity.SysUser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author lh0811
  * @date 2021/2/26
  */
+@Slf4j
 @Component
 public class UserInfoFromRequest implements LhitLoggerUserInfoFromRequestAdapter<SysUser> {
 
@@ -25,10 +27,15 @@ public class UserInfoFromRequest implements LhitLoggerUserInfoFromRequestAdapter
 
     @Override
     public SysUser getUserInfoFromRequest(HttpServletRequest request) throws Exception {
-        SecurityAuthority securityAuthority = securityClient.tokenToAuthority();
-        if (securityAuthority != null && securityAuthority.getSecurityUser() != null) {
-            SysUser sysUser = sysUserDao.selectByPrimaryKey(Long.valueOf(securityAuthority.getSecurityUser().getId()));
-            return sysUser;
+
+        try {
+            SecurityAuthority securityAuthority = securityClient.tokenToAuthority();
+            if (securityAuthority != null && securityAuthority.getSecurityUser() != null) {
+                SysUser sysUser = sysUserDao.selectByPrimaryKey(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+                return sysUser;
+            }
+        } catch (Exception e) {
+            log.info("日志组件获取用户信息失败:{}",e);
         }
         return new SysUser();
     }

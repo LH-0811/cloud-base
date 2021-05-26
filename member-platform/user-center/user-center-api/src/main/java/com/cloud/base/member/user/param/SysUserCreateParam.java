@@ -1,6 +1,7 @@
 package com.cloud.base.member.user.param;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +21,6 @@ import java.util.Date;
 @Setter
 @Getter
 public class SysUserCreateParam implements Serializable {
-
-
 
     /**
      * 用户类型 1-系统管理员 2-商户 3-C端客户

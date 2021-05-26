@@ -30,7 +30,5 @@ public class UsernamePasswordVerificationAdapter implements SecurityVoucherVerif
             log.info("用户名密码 登录失败");
             throw CommonException.create(serverResponse);
         }
-
     }
-
 }
