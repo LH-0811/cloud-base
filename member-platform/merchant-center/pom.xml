@@ -9,12 +9,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cloud.member</groupId>
-    <artifactId>authorize-center</artifactId>
+    <groupId>com.cloud.merchant</groupId>
+    <artifactId>merchant-center</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>authorize-center-server</module>
-    </modules>
 
-    <description>认证中心</description>
+    <description>商户中心</description>
+    <modules>
+        <module>merchant-center-api</module>
+        <module>merchant-center-server</module>
+    </modules>
 </project>

@@ -1,18 +1,28 @@
 package com.cloud.base.member.user.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.common.util.Md5Util;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityRole;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityUser;
+import com.cloud.base.member.user.param.SysUserRegisterParam;
 import com.cloud.base.member.user.param.SysUserUpdatePasswordParam;
+import com.cloud.base.member.user.param.UsernamePasswordVerificationParam;
 import com.cloud.base.member.user.repository.dao.*;
 import com.cloud.base.member.user.repository.entity.*;
 import com.cloud.base.member.user.vo.MenuVo;
 import com.cloud.base.member.user.service.SysUserService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +57,8 @@ public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private SysResDao sysResDao;
 
+    @Autowired
+    private IdWorker idWorker;
 
     /**
      * 获取用户角色列表
@@ -100,7 +112,6 @@ public class SysUserServiceImpl implements SysUserService {
 
     /**
      * 获取用户资源树
-     *
      */
     @Override
     public List<SysRes> getResTreeByUser(Long userId) throws Exception {
@@ -143,7 +154,6 @@ public class SysUserServiceImpl implements SysUserService {
 
     /**
      * 获取用户菜单树
-     *
      */
     @Override
     public List<MenuVo> getMenuTreeByUser(Long userId) throws Exception {
@@ -159,9 +169,9 @@ public class SysUserServiceImpl implements SysUserService {
             // 角色id列表
             List<Long> roleIds = roleList.stream().map(ele -> ele.getRoleId()).collect(Collectors.toList());
             List<Long> resIds = null;
-            if (roleIds.contains(1L)){
-                resIds = sysResDao.selectAll().stream().map(ele->ele.getId()).collect(Collectors.toList());
-            }else {
+            if (roleIds.contains(1L)) {
+                resIds = sysResDao.selectAll().stream().map(ele -> ele.getId()).collect(Collectors.toList());
+            } else {
                 Example example = new Example(SysRoleRes.class);
                 example.createCriteria().andIn("roleId", roleIds);
                 List<SysRoleRes> sysRoleRes = sysRoleResDao.selectByExample(example);
@@ -275,7 +285,7 @@ public class SysUserServiceImpl implements SysUserService {
             throw CommonException.create(e, ServerResponse.createByError("当前用户不存在"));
         }
 
-        if (currentUser == null){
+        if (currentUser == null) {
             throw CommonException.create(ServerResponse.createByError("当前用户不存在"));
         }
 
@@ -288,4 +298,68 @@ public class SysUserServiceImpl implements SysUserService {
         log.info("完成 通过用户名 密码获取用户信息");
         return currentUser;
     }
+
+    /**
+     * 通过用户名密码 获取用户信息 并组装权限信息
+     */
+    @Override
+    public SecurityAuthority verification(UsernamePasswordVerificationParam param) throws Exception {
+        log.info("开始 通过用户名密码 获取用户信息 并组装权限信息:{}", JSON.toJSONString(param));
+        // 获取到等用户
+        SysUser loginUser = getUserByUsernameAndPassword(param.getUsername(), param.getPassword());
+        if (loginUser == null) {
+            throw CommonException.create(ServerResponse.createByError("用户名或密码错误"));
+        }
+        if (!loginUser.getActiveFlag()) {
+            throw CommonException.create(ServerResponse.createByError("用户不可用请联系管理员"));
+        }
+        // 获取用户角色列表
+        List<SysRole> userRoleList = getUserRoleList(loginUser.getId());
+        // 获取用户资源列表
+        List<SysRes> resAllList = getResListByUser(loginUser.getId());
+
+        SecurityAuthority securityAuthority = new SecurityAuthority();
+        securityAuthority.setSecurityUser(new SecurityUser(String.valueOf(loginUser.getId()), loginUser.getUsername()));
+//      securityAuthority.setSecurityResList(Lists.newArrayList(SecurityRes.allUrlRes(),SecurityRes.allCodeRes(),SecurityRes.allStaticResPath()));
+        if (!CollectionUtils.isEmpty(resAllList)) {
+            List<SecurityRes> securityResList = resAllList.stream().map(ele -> new SecurityRes(ele.getType(), ele.getName(), ele.getCode(), ele.getUrl(), "")).collect(Collectors.toList());
+            securityAuthority.setSecurityResList(securityResList);
+        }
+        if (!CollectionUtils.isEmpty(userRoleList)) {
+            List<SecurityRole> securityRoleList = userRoleList.stream().map(ele -> new SecurityRole(ele.getName())).collect(Collectors.toList());
+            securityAuthority.setSecurityRoleList(securityRoleList);
+        }
+        log.info("完成 通过用户名密码 获取用户信息 并组装权限信息:{}", JSON.toJSONString(param));
+        return securityAuthority;
+    }
+
+
+    /**
+     * 注册用户
+     *
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public void registerUser(SysUserRegisterParam param) throws Exception {
+        log.info("开始 用户注册:{}", JSON.toJSONString(param));
+        if (!param.getPassword().equals(param.getRepassword())){
+            throw CommonException.create(ServerResponse.createByError("两次输入密码不一致"));
+        }
+        try {
+            SysUser sysUser = new SysUser();
+            sysUser.setId(idWorker.nextId());
+            // 属性对拷
+            BeanUtils.copyProperties(param,sysUser);
+            sysUser.setSalt(RandomStringUtils.random(4));
+            sysUser.setPassword(Md5Util.getMD5Str(param.getPassword(),sysUser.getSalt()));
+            sysUser.setActiveFlag(true);
+            sysUserDao.insertSelective(sysUser);
+            log.info("完成 用户注册");
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("用户注册失败,请联系管理员"));
+        }
+    }
+
+
 }

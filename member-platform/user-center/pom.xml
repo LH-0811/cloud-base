@@ -18,17 +18,6 @@
         <module>user-center-server</module>
     </modules>
 
-    <description>
-        用户中心
-        1. 管理员用户基础信息管理
-        2. 商户优化基础信息管理
-        3. C段用户基础信息管理
-        4. 授权、鉴权
-
-        授权鉴权实现：基于lh-security + redis的实现方式，在common包中增加RedisAuthFilter来做统一鉴权，所有服务都依赖common。
-
-    </description>
-
-
+    <description>用户中心</description>
 
 </project>

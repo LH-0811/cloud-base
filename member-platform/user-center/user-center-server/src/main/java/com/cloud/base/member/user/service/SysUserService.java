@@ -1,6 +1,9 @@
 package com.cloud.base.member.user.service;
 
 
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.member.user.param.SysUserRegisterParam;
+import com.cloud.base.member.user.param.UsernamePasswordVerificationParam;
 import com.cloud.base.member.user.repository.entity.SysRes;
 import com.cloud.base.member.user.repository.entity.SysRole;
 import com.cloud.base.member.user.repository.entity.SysUser;
@@ -62,4 +65,19 @@ public interface SysUserService {
     SysUser getUserByUsernameAndPassword(String username, String password) throws Exception;
 
 
+    /**
+     * 验证用户口令
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    SecurityAuthority verification(UsernamePasswordVerificationParam param) throws Exception;
+
+    /**
+     * 注册用户
+     *
+     * @throws Exception
+     */
+    void registerUser(SysUserRegisterParam param) throws Exception;
 }
