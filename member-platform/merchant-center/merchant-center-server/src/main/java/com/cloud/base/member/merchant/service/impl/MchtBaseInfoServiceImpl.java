@@ -5,6 +5,9 @@ import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityRole;
+import com.cloud.base.member.common.constant.RoleConstant;
+import com.cloud.base.member.common.method.UserRoleCheck;
 import com.cloud.base.member.merchant.repository.dao.MchtBaseInfoDao;
 import com.cloud.base.member.merchant.repository.entity.MchtBaseInfo;
 import com.cloud.base.member.merchant.service.MchtBaseInfoService;
@@ -60,6 +63,7 @@ public class MchtBaseInfoServiceImpl implements MchtBaseInfoService {
             // 设置
             mchtBaseInfo.setId(idWorker.nextId());
             mchtBaseInfo.setEnableFlag(false);
+            mchtBaseInfo.setDelFlag(false);
             mchtBaseInfo.setCreateTime(new Date());
             mchtBaseInfo.setCreateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             mchtBaseInfoDao.insertSelective(mchtBaseInfo);
@@ -79,9 +83,8 @@ public class MchtBaseInfoServiceImpl implements MchtBaseInfoService {
 
             Example example = new Example(MchtBaseInfo.class);
             example.setOrderByClause(" create_time desc ");
-
             Example.Criteria criteria = example.createCriteria();
-
+            criteria.andEqualTo("delFalg",false);
             if (param.getMchtUserId() != null) {
                 criteria.andEqualTo("mchtUserId", param.getMchtUserId());
             }
@@ -97,7 +100,6 @@ public class MchtBaseInfoServiceImpl implements MchtBaseInfoService {
             if (param.getCreateTimeUp() != null) {
                 criteria.andLessThanOrEqualTo("createTime", param.getCreateTimeUp());
             }
-
             PageHelper.startPage(param.getPageNum(), param.getPageSize());
             List<MchtBaseInfo> mchtBaseInfoList = mchtBaseInfoDao.selectByExample(example);
             PageInfo pageInfo = new PageInfo(mchtBaseInfoList);
@@ -153,6 +155,7 @@ public class MchtBaseInfoServiceImpl implements MchtBaseInfoService {
             MchtBaseInfo selectParam = new MchtBaseInfo();
             selectParam.setMchtUserId(userId);
             selectParam.setEnableFlag(true);
+            selectParam.setDelFlag(false);
             mchtBaseInfoList = mchtBaseInfoDao.select(selectParam);
         } catch (Exception e) {
             throw CommonException.create(ServerResponse.createByError("根据用户id 查询用户关联的商户基本信息失败,请联系管理员"));
@@ -173,21 +176,38 @@ public class MchtBaseInfoServiceImpl implements MchtBaseInfoService {
     }
 
 
-
+    /**
+     * 删除商户信息
+     */
     public void deletaMchtBaseInfo(Long mchtBaseId, SecurityAuthority securityAuthority) throws Exception {
-        log.info("开始 删除商户基本信息:{}",mchtBaseId);
+        log.info("开始 删除商户基本信息:{}", mchtBaseId);
+        // 防止横向越权
+        if (!UserRoleCheck.isSysAdmin(securityAuthority)) {
+            List<MchtBaseInfo> mchtBaseInfoList = null;
+            try {
+                MchtBaseInfo selectParam = new MchtBaseInfo();
+                selectParam.setMchtUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+                selectParam.setDelFlag(false);
+                mchtBaseInfoList = mchtBaseInfoDao.select(selectParam);
+            } catch (Exception e) {
+                throw CommonException.create(ServerResponse.createByError("根据用户id 查询用户关联的商户基本信息失败,请联系管理员"));
+            }
+            List<Long> mchtBaseInfoIdList = mchtBaseInfoList.stream().map(ele -> ele.getId()).collect(Collectors.toList());
+            if (!mchtBaseInfoIdList.contains(mchtBaseId)) {
+                throw CommonException.create(ServerResponse.createByError("非法操作，不能删除不属于自己的商户信息"));
+            }
+        }
 
-//        List<MchtBaseInfo> mchtBaseInfoList = null;
-//        try {
-//            MchtBaseInfo selectParam = new MchtBaseInfo();
-//            selectParam.setMchtUserId(userId);
-//            selectParam.setEnableFlag(true);
-//            mchtBaseInfoList = mchtBaseInfoDao.select(selectParam);
-//        } catch (Exception e) {
-//            throw CommonException.create(ServerResponse.createByError("根据用户id 查询用户关联的商户基本信息失败,请联系管理员"));
-//        }
 
-
+        try {
+            MchtBaseInfo delParam = new MchtBaseInfo();
+            delParam.setId(mchtBaseId);
+            delParam.setDelFlag(true);
+            mchtBaseInfoDao.updateByPrimaryKeySelective(delParam);
+            log.info("完成 删除商户基本信息");
+        } catch (Exception e) {
+            throw CommonException.create(e,ServerResponse.createByError("删除商户基本信息失败,请联系管理员"));
+        }
     }
 
 // 私有方法 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -201,6 +221,7 @@ public class MchtBaseInfoServiceImpl implements MchtBaseInfoService {
         }
         MchtBaseInfo checkParam = new MchtBaseInfo();
         checkParam.setMchtName(mchtName);
+        checkParam.setDelFlag(false);
         if (mchtBaseInfoDao.selectCount(checkParam) > 0) {
             throw CommonException.create(ServerResponse.createByError("商户名:" + mchtName + "已经存在"));
         }

@@ -53,6 +53,11 @@ public class MchtBaseInfo implements Serializable {
     @ApiModelProperty(value="是可用")
     private Boolean enableFlag;
     /**
+     * 是可用
+     */
+    @ApiModelProperty(value="是否删除")
+    private Boolean delFlag;
+    /**
      * 创建时间
      */
     @ApiModelProperty(value="创建时间")

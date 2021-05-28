@@ -17,6 +17,7 @@
         <module>authorize-center</module>
         <module>merchant-center</module>
         <module>property-center</module>
+        <module>member-common</module>
     </modules>
 
 
