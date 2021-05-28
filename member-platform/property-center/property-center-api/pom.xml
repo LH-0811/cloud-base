@@ -3,24 +3,27 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>user-center</artifactId>
+        <artifactId>property-center</artifactId>
         <groupId>com.cloud.member</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>user-center-api</artifactId>
-    <packaging>jar</packaging>
-
-    <description>
-        会员平台-用户中心-对外公开的依赖包。
-    </description>
+    <artifactId>property-center-api</artifactId>
 
     <dependencies>
+
         <!-- 通用包 -->
         <dependency>
             <groupId>com.cloud.common</groupId>
             <artifactId>core-common-sentinel</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 安全框架 -->
+        <dependency>
+            <groupId>com.cloud.modules</groupId>
+            <artifactId>lh-security-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -37,6 +40,7 @@
             <artifactId>dependency-alibaba-cloud</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
 
     </dependencies>
 

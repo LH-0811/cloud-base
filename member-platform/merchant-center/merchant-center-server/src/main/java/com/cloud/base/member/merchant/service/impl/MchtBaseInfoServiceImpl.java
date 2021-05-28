@@ -173,6 +173,23 @@ public class MchtBaseInfoServiceImpl implements MchtBaseInfoService {
     }
 
 
+
+    public void deletaMchtBaseInfo(Long mchtBaseId, SecurityAuthority securityAuthority) throws Exception {
+        log.info("开始 删除商户基本信息:{}",mchtBaseId);
+
+//        List<MchtBaseInfo> mchtBaseInfoList = null;
+//        try {
+//            MchtBaseInfo selectParam = new MchtBaseInfo();
+//            selectParam.setMchtUserId(userId);
+//            selectParam.setEnableFlag(true);
+//            mchtBaseInfoList = mchtBaseInfoDao.select(selectParam);
+//        } catch (Exception e) {
+//            throw CommonException.create(ServerResponse.createByError("根据用户id 查询用户关联的商户基本信息失败,请联系管理员"));
+//        }
+
+
+    }
+
 // 私有方法 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**

@@ -326,7 +326,7 @@ public class SysUserServiceImpl implements SysUserService {
             securityAuthority.setSecurityResList(securityResList);
         }
         if (!CollectionUtils.isEmpty(userRoleList)) {
-            List<SecurityRole> securityRoleList = userRoleList.stream().map(ele -> new SecurityRole(ele.getName())).collect(Collectors.toList());
+            List<SecurityRole> securityRoleList = userRoleList.stream().map(ele -> new SecurityRole(ele.getId(),ele.getNo(),ele.getName())).collect(Collectors.toList());
             securityAuthority.setSecurityRoleList(securityRoleList);
         }
         log.info("完成 通过用户名密码 获取用户信息 并组装权限信息:{}", JSON.toJSONString(param));

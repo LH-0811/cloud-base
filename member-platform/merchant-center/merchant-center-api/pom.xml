@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>merchant-center</artifactId>
-        <groupId>com.cloud.merchant</groupId>
+        <groupId>com.cloud.member</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -19,13 +19,6 @@
         <dependency>
             <groupId>com.cloud.common</groupId>
             <artifactId>core-common-sentinel</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <!-- 安全框架 -->
-        <dependency>
-            <groupId>com.cloud.modules</groupId>
-            <artifactId>lh-security-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

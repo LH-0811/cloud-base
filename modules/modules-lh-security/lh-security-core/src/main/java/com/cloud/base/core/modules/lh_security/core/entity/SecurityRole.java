@@ -18,6 +18,12 @@ import lombok.Setter;
 @ApiModel(value = "安全框架角色信息")
 public class SecurityRole {
 
+    @ApiModelProperty(value = "角色id")
+    private Long roleId;
+
+    @ApiModelProperty(value = "角色编号")
+    private String roleNo;
+
     @ApiModelProperty(value = "角色名称")
     private String name;
 

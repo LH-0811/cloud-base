@@ -16,6 +16,7 @@
         <module>user-center</module>
         <module>authorize-center</module>
         <module>merchant-center</module>
+        <module>property-center</module>
     </modules>
 
 

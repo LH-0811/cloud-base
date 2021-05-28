@@ -10,12 +10,28 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cloud.member</groupId>
-    <artifactId>merchant-center</artifactId>
+    <artifactId>property-center</artifactId>
     <packaging>pom</packaging>
 
-    <description>商户中心</description>
     <modules>
-        <module>merchant-center-api</module>
-        <module>merchant-center-server</module>
+        <module>property-center-api</module>
+        <module>property-center-server</module>
     </modules>
+
+
+    <description>
+        资产中心：
+
+        1. 优惠券管理
+
+        2. 积分账号管理
+
+        3. 优惠券生命周期管理
+
+        4. 积分账户动账记录
+
+    </description>
+
+
+
 </project>

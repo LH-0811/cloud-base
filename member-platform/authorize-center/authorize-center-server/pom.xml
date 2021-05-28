@@ -22,7 +22,7 @@
 
         <!-- 引入用户api -->
         <dependency>
-            <groupId>com.cloud.member.user</groupId>
+            <groupId>com.cloud.member</groupId>
             <artifactId>user-center-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <exclusions>
