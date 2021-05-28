@@ -1,4 +1,4 @@
-package com.cloud.base.alibaba_cloud;
+package com.cloud.base.alibaba_cloud.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

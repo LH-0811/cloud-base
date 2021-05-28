@@ -1,6 +1,6 @@
 package com.cloud.base.example.cloud.order.service;
 
-import com.cloud.base.alibaba_cloud.FeignConfiguration;
+import com.cloud.base.alibaba_cloud.config.FeignConfiguration;
 import com.cloud.base.example.cloud.account.api.ExampleAccountApi;
 import org.springframework.cloud.openfeign.FeignClient;
 

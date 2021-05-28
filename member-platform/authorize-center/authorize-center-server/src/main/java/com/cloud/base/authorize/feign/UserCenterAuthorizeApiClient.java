@@ -1,6 +1,6 @@
 package com.cloud.base.authorize.feign;
 
-import com.cloud.base.alibaba_cloud.FeignConfiguration;
+import com.cloud.base.alibaba_cloud.config.FeignConfiguration;
 import com.cloud.base.member.user.api.UserCenterAuthorizeApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
