@@ -25,6 +25,13 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <!-- 引用商户中心api -->
+        <dependency>
+            <groupId>com.cloud.merchant</groupId>
+            <artifactId>merchant-center-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!--   security     -->
         <dependency>
             <groupId>com.cloud.modules</groupId>

@@ -1,8 +1,10 @@
 package com.cloud.base.authorize.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.cloud.base.authorize.security.verification.UsernamePasswordVerification;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.core.param.TokenParam;
+import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
 import com.cloud.base.core.modules.lh_security.core.vo.AuthenticationVo;
 import com.cloud.base.core.modules.lh_security.server.service.SecurityServer;
 import io.swagger.annotations.Api;
@@ -13,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author lh0811
@@ -28,6 +32,13 @@ public class AuthorizeController {
     @Autowired
     private SecurityServer securityServer;
 
+    @Autowired
+    private SecurityProperties securityProperties;
+
+    @PostConstruct
+    public void init(){
+        log.info("securityProperties:{}", JSON.toJSONString(securityProperties));
+    }
 
     @PostMapping("/login/username_password")
     @ApiOperation("系统用户登录")

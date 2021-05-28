@@ -1,7 +1,7 @@
 package com.cloud.base.authorize.security.verification;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cloud.base.authorize.feign.UserCenterAuthorizeFeignClient;
+import com.cloud.base.authorize.feign.UserCenterAuthorizeApiClient;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class UsernamePasswordVerificationAdapter implements SecurityVoucherVerification<UsernamePasswordVerification> {
 
     @Autowired
-    private UserCenterAuthorizeFeignClient userCenterAuthorizeFeignClient;
+    private UserCenterAuthorizeApiClient userCenterAuthorizeFeignClient;
 
 
     @Override

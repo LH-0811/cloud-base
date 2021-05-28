@@ -51,3 +51,10 @@ seata:
   service:
 #    vgroup-mapping.my_test_tx_group: default
     grouplist: { "default": "49.232.166.94:8091" }
+
+lhit:
+  security:
+    server-url-of-check-url: /security/check_url
+    server-url-of-check-perms-code: /security/check_perms_code
+    server-url-of-check-static-res-path: /security/check_static_res_path
+    server-url-of-token-to-authority: /security/token_to_authority

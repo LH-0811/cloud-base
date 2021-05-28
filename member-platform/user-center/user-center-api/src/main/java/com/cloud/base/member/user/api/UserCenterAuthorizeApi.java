@@ -16,16 +16,13 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author lh0811
  * @date 2021/5/23
  */
-public interface UserCenterBaseFeign {
+public interface UserCenterAuthorizeApi {
 
-
-    /**
-     * 获取当前用户信息
-     */
-    @GetMapping("/sys_user/current_user_info")
-    @ApiOperation("获取当前基础信息")
+    @PostMapping("/sys_user/verification/username_password")
+    @ApiOperation("系统用户通过用户名密码认证")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "body", dataType = "UsernamePasswordVerificationParam", dataTypeClass = UsernamePasswordVerificationParam.class, name = "param", value = "参数")
     })
-    ServerResponse<SysUserVo> getUesrInfo(@ApiIgnore SecurityAuthority securityAuthority) throws Exception;
+    ServerResponse<SecurityAuthority> verificationUserByUsernameAndPwd(@Validated UsernamePasswordVerificationParam param) throws Exception;
+
 }

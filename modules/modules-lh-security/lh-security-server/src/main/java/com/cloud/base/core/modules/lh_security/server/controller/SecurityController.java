@@ -32,7 +32,7 @@ public class SecurityController {
     private SecurityCheckAuthority securityCheckAuthority;
 
     ///////// 鉴权接口
-    @PostMapping("${lhit.security.serverUrlOfCheckUrl}")
+    @PostMapping("${lhit.security.server-url-of-check-url}")
     @ApiOperation(tags = "鉴权接口", value = "鉴权接口-验证用户是否有url权限")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "CheckResParam", dataTypeClass = CheckResParam.class, name = "param", value = "参数")
@@ -47,7 +47,7 @@ public class SecurityController {
         }
     }
 
-    @PostMapping("${lhit.security.serverUrlOfCheckPermsCode}")
+    @PostMapping("${lhit.security.server-url-of-check-perms-code}")
     @ApiOperation(tags = "鉴权接口", value = "鉴权接口-验证用户是否有permsCode（权限码）权限")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "CheckResParam", dataTypeClass = CheckResParam.class, name = "param", value = "参数")
@@ -62,7 +62,7 @@ public class SecurityController {
         }
     }
 
-    @PostMapping("${lhit.security.serverUrlOfCheckStaticResPath}")
+    @PostMapping("${lhit.security.server-url-of-check-static-res-path}")
     @ApiOperation(tags = "鉴权接口", value = "鉴权接口-验证用户是否有staticResPath（静态资源路径）权限")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "CheckResParam", dataTypeClass = CheckResParam.class, name = "param", value = "参数")
@@ -77,7 +77,7 @@ public class SecurityController {
         }
     }
 
-    @PostMapping("${lhit.security.serverUrlOfTokenToAuthority}")
+    @PostMapping("${lhit.security.server-url-of-token-to-authority}")
     @ApiOperation(tags = "鉴权接口", value = "鉴权接口-token转换为用户权限信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "CheckResParam", dataTypeClass = CheckResParam.class, name = "param", value = "参数")

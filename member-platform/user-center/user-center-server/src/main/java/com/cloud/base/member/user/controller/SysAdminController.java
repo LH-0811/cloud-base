@@ -4,11 +4,13 @@ import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.member.user.feign.MchtBaseInfoApiClient;
 import com.cloud.base.member.user.repository.entity.SysRes;
 import com.cloud.base.member.user.repository.entity.SysRole;
 import com.cloud.base.member.user.repository.entity.SysUser;
 import com.cloud.base.member.user.param.*;
 import com.cloud.base.member.user.service.SysAdminService;
+import com.cloud.base.memeber.merchant.param.MchtBaseInfoCreateParam;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -36,6 +38,30 @@ public class SysAdminController extends BaseController {
 
     @Autowired
     private SysAdminService sysAdminService;
+
+
+    @Autowired
+    private MchtBaseInfoApiClient mchtBaseInfoApiClient;
+
+    /**
+     * 系统管理员创建商户基本信息
+     *
+     * @param param
+     * @throws Exception
+     */
+    @PostMapping("/mcht_base_info/create")
+    @ApiOperation("系统管理员创建商户基本信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "body", dataType = "MchtBaseInfoCreateParam", dataTypeClass = MchtBaseInfoCreateParam.class, name = "param", value = "参数")
+    })
+    @HasUrl(url = "/sys_admin/mcht_base_info/create")
+    public ServerResponse testFeignCreateMchtBaseInfo(@RequestBody MchtBaseInfoCreateParam param,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 系统管理员创建商户基本信息 接口 : SysUserController-testFeignCreateMchtBaseInfo ");
+        ServerResponse serverResponse = mchtBaseInfoApiClient.mchtBaseInfoCreate(param);
+        return serverResponse;
+    }
 
 // ///////////////////////////////////用户操作
 
@@ -72,7 +98,7 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "body", dataType = "SysUserUpdateParam", dataTypeClass = SysUserUpdateParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/sys_admin/sys_user/update")
-    public ServerResponse updateUser(@Validated @RequestBody SysUserUpdateParam param,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse updateUser(@Validated @RequestBody SysUserUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改用户 接口 : SysUserController-updateUser ");
         sysAdminService.updateUser(param, getCurrentSysUser(securityAuthority));
@@ -110,7 +136,7 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "body", dataType = "SysUserRoleSetParam", dataTypeClass = SysUserRoleSetParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/sys_admin/sys_user/roles/set")
-    public ServerResponse setUserRoleList(@Validated @RequestBody SysUserRoleSetParam param,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse setUserRoleList(@Validated @RequestBody SysUserRoleSetParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 设置用户角色列表 接口 : SysUserController-setUserRegions");
         sysAdminService.setUserRoleList(param, getCurrentSysUser(securityAuthority));
@@ -128,7 +154,7 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "userId", value = "用户id")
     })
     @HasUrl(url = "/sys_admin/sys_user/delete/{userId}")
-    public ServerResponse delUser(@PathVariable(value = "userId") Long userId,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse delUser(@PathVariable(value = "userId") Long userId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除用户 接口 : SysUserController-delUser");
         sysAdminService.delUser(userId, getCurrentSysUser(securityAuthority));
@@ -147,7 +173,7 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "body", dataType = "SysResCreateParam", dataTypeClass = SysResCreateParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/sys_admin/sys_res/create")
-    public ServerResponse createRes(@Validated @RequestBody SysResCreateParam param,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse createRes(@Validated @RequestBody SysResCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建权限 接口 : SysAdminController-createRes ");
         sysAdminService.createRes(param, getCurrentSysUser(securityAuthority));
@@ -234,7 +260,7 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "roleId", value = "角色id")
     })
     @HasUrl(url = "/sys_admin/sys_role/delete/{roleId}")
-    public ServerResponse deleteRole(@PathVariable(name = "roleId") Long roleId,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse deleteRole(@PathVariable(name = "roleId") Long roleId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除系统角色信息 接口 : SysAdminController-deleteRole ");
         sysAdminService.deleteRole(roleId, getCurrentSysUser(securityAuthority));
@@ -284,7 +310,7 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleResSaveParam", dataTypeClass = SysRoleResSaveParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/sys_admin/sys_role/save_res")
-    public ServerResponse saveRoleRes(@Validated @RequestBody SysRoleResSaveParam param,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse saveRoleRes(@Validated @RequestBody SysRoleResSaveParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 保存角色资源（权限） 接口 : SysAdminController-queryRole ");
         sysAdminService.saveRoleRes(param, getCurrentSysUser(securityAuthority));
