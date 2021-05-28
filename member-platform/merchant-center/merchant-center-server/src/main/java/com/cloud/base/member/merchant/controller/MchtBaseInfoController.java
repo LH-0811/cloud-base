@@ -86,11 +86,28 @@ public class MchtBaseInfoController {
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "userId", value = "用户id")
     })
     @HasUrl(url = "/merchant_base_info/query/by_user_id/{userId}")
-    public ServerResponse<List<MchtBaseInfoVo>> getMchtBaseInfoByUserId(@PathVariable(value = "userId") Long userId,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<MchtBaseInfoVo>> getMchtBaseInfoByUserId(@PathVariable(value = "userId") Long userId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 根据用户id 查询用户关联的商户基本信息 接口 : MchtBaseInfoController-getMchtBaseInfoByUserId");
         List<MchtBaseInfoVo> mchtBaseInfoList = mchtBaseInfoService.getMchtBaseInfoByUserId(userId, securityAuthority);
-        return ServerResponse.createBySuccess("查询成功",mchtBaseInfoList);
+        return ServerResponse.createBySuccess("查询成功", mchtBaseInfoList);
+    }
+
+    /**
+     * 删除商户信息
+     */
+    @PostMapping("/delete/{mchtBaseId}")
+    @ApiOperation("删除商户信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "mchtBaseId", value = "商户id")
+    })
+    @HasUrl(url = "/merchant_base_info/delete/{mchtBaseId}")
+    public ServerResponse deletaMchtBaseInfo(@PathVariable(value = "mchtBaseId") Long mchtBaseId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 根据用户id 查询用户关联的商户基本信息 接口 : MchtBaseInfoController-deletaMchtBaseInfo");
+        mchtBaseInfoService.deletaMchtBaseInfo(mchtBaseId, securityAuthority);
+        return ServerResponse.createBySuccess("删除成功");
     }
 
 }

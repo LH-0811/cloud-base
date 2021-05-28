@@ -176,9 +176,11 @@ public class MchtBaseInfoServiceImpl implements MchtBaseInfoService {
     }
 
 
+
     /**
      * 删除商户信息
      */
+    @Override
     public void deletaMchtBaseInfo(Long mchtBaseId, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 删除商户基本信息:{}", mchtBaseId);
         // 防止横向越权

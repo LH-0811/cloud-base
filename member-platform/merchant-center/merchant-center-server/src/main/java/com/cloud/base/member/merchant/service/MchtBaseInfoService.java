@@ -42,4 +42,9 @@ public interface MchtBaseInfoService {
      * 根据用户id 查询用户关联的商户基本信息
      */
     List<MchtBaseInfoVo> getMchtBaseInfoByUserId(Long userId, SecurityAuthority securityAuthority) throws Exception;
+
+    /**
+     * 删除商户信息
+     */
+    void deletaMchtBaseInfo(Long mchtBaseId, SecurityAuthority securityAuthority) throws Exception;
 }
