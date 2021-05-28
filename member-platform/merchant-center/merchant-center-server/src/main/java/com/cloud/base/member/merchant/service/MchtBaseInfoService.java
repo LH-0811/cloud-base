@@ -41,5 +41,5 @@ public interface MchtBaseInfoService {
     /**
      * 根据用户id 查询用户关联的商户基本信息
      */
-    List<MchtBaseInfo> getMchtBaseInfoByUserId(Long userId, SecurityAuthority securityAuthority) throws Exception;
+    List<MchtBaseInfoVo> getMchtBaseInfoByUserId(Long userId, SecurityAuthority securityAuthority) throws Exception;
 }

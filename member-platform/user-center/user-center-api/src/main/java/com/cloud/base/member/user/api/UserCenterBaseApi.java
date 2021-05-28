@@ -27,5 +27,5 @@ public interface UserCenterBaseApi {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    ServerResponse<SysUserVo> getUesrInfo(@ApiIgnore SecurityAuthority securityAuthority) throws Exception;
+    ServerResponse<SysUserVo> getUesrInfo() throws Exception;
 }

@@ -146,7 +146,7 @@ public class MchtBaseInfoServiceImpl implements MchtBaseInfoService {
      * 根据用户id 查询用户关联的商户基本信息
      */
     @Override
-    public List<MchtBaseInfo> getMchtBaseInfoByUserId(Long userId, SecurityAuthority securityAuthority) throws Exception {
+    public List<MchtBaseInfoVo> getMchtBaseInfoByUserId(Long userId, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 根据用户id 查询用户关联的商户基本信息:{}", userId);
         List<MchtBaseInfo> mchtBaseInfoList = null;
         try {
@@ -161,8 +161,15 @@ public class MchtBaseInfoServiceImpl implements MchtBaseInfoService {
         if (CollectionUtils.isEmpty(mchtBaseInfoList)) {
             throw CommonException.create(ServerResponse.createByError("当前用户没有可用的关联商户信息"));
         }
+        // 转vo
+        List<MchtBaseInfoVo> mchtBaseInfoVoList = mchtBaseInfoList.stream().map(ele -> {
+            MchtBaseInfoVo mchtBaseInfoVo = new MchtBaseInfoVo();
+            BeanUtils.copyProperties(ele, mchtBaseInfoVo);
+            return mchtBaseInfoVo;
+        }).collect(Collectors.toList());
+
         log.info("完成 根据用户id 查询用户关联的商户基本信息:{}", userId);
-        return mchtBaseInfoList;
+        return mchtBaseInfoVoList;
     }
 
 
