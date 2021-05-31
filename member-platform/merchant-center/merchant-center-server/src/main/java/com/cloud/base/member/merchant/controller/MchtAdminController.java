@@ -3,11 +3,11 @@ package com.cloud.base.member.merchant.controller;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.member.merchant.repository.entity.MchtBaseInfo;
-import com.cloud.base.member.merchant.service.MchtBaseInfoService;
+import com.cloud.base.member.merchant.service.MchtInfoService;
 import com.cloud.base.memeber.merchant.param.MchtBaseInfoCreateParam;
 import com.cloud.base.memeber.merchant.param.MchtBaseInfoQueryParam;
 import com.cloud.base.memeber.merchant.param.MchtBaseInfoUpdateParam;
+import com.cloud.base.memeber.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.memeber.merchant.vo.MchtBaseInfoVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -22,20 +22,14 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
-/**
- * 商户基本信息维护接口
- *
- * @author lh0811
- * @date 2021/5/26
- */
 @Slf4j
-@Api(tags = "商户基本信息维护接口")
+@Api(tags = "商户基本信息管理接口")
 @RestController
-@RequestMapping("/merchant_base_info")
-public class MchtBaseInfoController {
+@RequestMapping("/merchant_base_info/manager")
+public class MchtAdminController {
 
     @Autowired
-    public MchtBaseInfoService mchtBaseInfoService;
+    public MchtInfoService mchtInfoService;
 
     @PostMapping("/create")
     @ApiOperation("创建商户基本信息")
@@ -43,11 +37,11 @@ public class MchtBaseInfoController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "MchtBaseInfoCreateParam", dataTypeClass = MchtBaseInfoCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/merchant_base_info/create")
+    @HasUrl(url = "/merchant_base_info/manager/create")
     public ServerResponse mchtBaseInfoCreate(@Validated @RequestBody MchtBaseInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建商户基本信息 接口 : MchtBaseInfoController-mchtBaseInfoCreate");
-        mchtBaseInfoService.mchtBaseInfoCreate(param, securityAuthority);
+        mchtInfoService.mchtBaseInfoCreate(param, securityAuthority);
         return ServerResponse.createBySuccess("创建成功");
     }
 
@@ -57,11 +51,11 @@ public class MchtBaseInfoController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "MchtBaseInfoQueryParam", dataTypeClass = MchtBaseInfoQueryParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/merchant_base_info/query")
+    @HasUrl(url = "/merchant_base_info/manager/query")
     public ServerResponse<PageInfo<MchtBaseInfoVo>> queryMchtBaseInfo(@Validated @RequestBody MchtBaseInfoQueryParam param) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询商户基本信息 接口 : MchtBaseInfoController-queryMchtBaseInfo");
-        PageInfo<MchtBaseInfoVo> pageInfo = mchtBaseInfoService.queryMchtBaseInfo(param);
+        PageInfo<MchtBaseInfoVo> pageInfo = mchtInfoService.queryMchtBaseInfo(param);
         return ServerResponse.createBySuccess("查询成功", pageInfo);
     }
 
@@ -71,11 +65,11 @@ public class MchtBaseInfoController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "MchtBaseInfoUpdateParam", dataTypeClass = MchtBaseInfoUpdateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/merchant_base_info/update")
+    @HasUrl(url = "/merchant_base_info/manager/update")
     public ServerResponse updateMchtBaseInfo(@Validated @RequestBody MchtBaseInfoUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 更新商户基本信息 接口 : MchtBaseInfoController-updateMchtBaseInfo");
-        mchtBaseInfoService.updateMchtBaseInfo(param, securityAuthority);
+        mchtInfoService.updateMchtBaseInfo(param, securityAuthority);
         return ServerResponse.createBySuccess("更新成功");
     }
 
@@ -85,11 +79,11 @@ public class MchtBaseInfoController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "userId", value = "用户id")
     })
-    @HasUrl(url = "/merchant_base_info/query/by_user_id/{userId}")
+    @HasUrl(url = "/merchant_base_info/manager/query/by_user_id/{userId}")
     public ServerResponse<List<MchtBaseInfoVo>> getMchtBaseInfoByUserId(@PathVariable(value = "userId") Long userId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 根据用户id 查询用户关联的商户基本信息 接口 : MchtBaseInfoController-getMchtBaseInfoByUserId");
-        List<MchtBaseInfoVo> mchtBaseInfoList = mchtBaseInfoService.getMchtBaseInfoByUserId(userId, securityAuthority);
+        List<MchtBaseInfoVo> mchtBaseInfoList = mchtInfoService.getMchtBaseInfoByUserId(userId, securityAuthority);
         return ServerResponse.createBySuccess("查询成功", mchtBaseInfoList);
     }
 
@@ -102,12 +96,29 @@ public class MchtBaseInfoController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "mchtBaseId", value = "商户id")
     })
-    @HasUrl(url = "/merchant_base_info/delete/{mchtBaseId}")
+    @HasUrl(url = "/merchant_base_info/manager/delete/{mchtBaseId}")
     public ServerResponse deletaMchtBaseInfo(@PathVariable(value = "mchtBaseId") Long mchtBaseId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 根据用户id 查询用户关联的商户基本信息 接口 : MchtBaseInfoController-deletaMchtBaseInfo");
-        mchtBaseInfoService.deletaMchtBaseInfo(mchtBaseId, securityAuthority);
+        mchtInfoService.deletaMchtBaseInfo(mchtBaseId, securityAuthority);
         return ServerResponse.createBySuccess("删除成功");
     }
 
+
+    /**
+     * 保存商户的福利配置
+     */
+    @PostMapping("/gift_settings/save")
+    @ApiOperation("保存商户的福利配置")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "body", dataType = "MchtGiftSettingsSaveParam", dataTypeClass = MchtGiftSettingsSaveParam.class, name = "param", value = "参数")
+    })
+    @HasUrl(url = "/merchant_base_info/manager/gift_settings/save")
+    public ServerResponse saveMchtGiftSettings(@RequestBody MchtGiftSettingsSaveParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 保存商户的福利配置 接口 : MchtBaseInfoController-deletaMchtBaseInfo");
+        mchtInfoService.saveMchtGiftSettings(param, securityAuthority);
+        return ServerResponse.createBySuccess("保存成功");
+    }
 }

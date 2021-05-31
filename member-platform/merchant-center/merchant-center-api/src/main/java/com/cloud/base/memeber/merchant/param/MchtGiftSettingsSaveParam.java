@@ -1,16 +1,20 @@
-package com.cloud.base.member.merchant.repository.entity;
+package com.cloud.base.memeber.merchant.param;
 
-import java.util.Date;
-import java.io.Serializable;
-
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.Range;
 import tk.mybatis.mapper.annotation.KeySql;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 商户中心-商户福利信息设置(MchtGiftSettings)实体类
@@ -20,23 +24,15 @@ import javax.persistence.*;
  */
 @Setter
 @Getter
-@Table(name = "mcht_gift_settings")
-public class MchtGiftSettings implements Serializable {
+public class MchtGiftSettingsSaveParam implements Serializable {
 
     /**
      * 商户礼物配置注解id
      */
-    @Id
-    @KeySql(useGeneratedKeys = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "id不能为空")
     @ApiModelProperty(value = "商户礼物配置注解id")
     private Long id;
 
-    /**
-     * 商户基本信息id
-     */
-    @ApiModelProperty(value = "商户基本信息id")
-    private Long mchtId;
     /**
      * 消费积分奖励 (消费金额-积分)
      */
@@ -48,7 +44,7 @@ public class MchtGiftSettings implements Serializable {
     @ApiModelProperty(value = "是否有生日福利")
     private Boolean birthdayGiftFlag;
     /**
-     * 生日：1-积分 2-优惠券
+     * 生日：0-未设置 1-积分 2-优惠券
      */
     @ApiModelProperty(value = "生日：0-未设置 1-积分 2-优惠券")
     private Integer birthdayGiftType;
@@ -85,6 +81,7 @@ public class MchtGiftSettings implements Serializable {
     /**
      * 月度：奖励时间(日 例如 1 表示每月一号)
      */
+    @Range(min = 1,max = 31,message = "月度奖励时间发放日必须在1-31之间")
     @ApiModelProperty(value = "月度：奖励时间(日 例如 1 表示每月一号)")
     private Integer monthGiftDay;
     /**
@@ -112,37 +109,4 @@ public class MchtGiftSettings implements Serializable {
      */
     @ApiModelProperty(value = "年度：奖励发放日期 （MM-dd）")
     private String yearGiftMonthDay;
-    /**
-     * 创建时间
-     */
-    @ApiModelProperty(value = "创建时间")
-    private Date createTime;
-    /**
-     * 创建人
-     */
-    @ApiModelProperty(value = "创建人")
-    private Long createBy;
-    /**
-     * 更新时间
-     */
-    @ApiModelProperty(value = "更新时间")
-    private Date updateTime;
-    /**
-     * 更新人
-     */
-    @ApiModelProperty(value = "更新人")
-    private Long updateBy;
-
-
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public enum GiftType {
-        NULL(0,"未设置"),
-        SCORE(1,"积分"),
-        COUPON(2,"优惠券");
-
-        private Integer code;
-        private String msg;
-    }
 }

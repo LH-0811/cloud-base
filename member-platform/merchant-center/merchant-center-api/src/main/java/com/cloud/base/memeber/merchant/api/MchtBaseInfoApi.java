@@ -22,7 +22,7 @@ import java.util.List;
  */
 public interface MchtBaseInfoApi {
 
-    @PostMapping("/merchant_base_info/create11")
+    @PostMapping("/merchant_base_info/manager/create")
     @ApiOperation("创建商户基本信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
