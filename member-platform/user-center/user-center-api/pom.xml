@@ -37,6 +37,12 @@
             <artifactId>dependency-alibaba-cloud</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.cloud.modules</groupId>
+            <artifactId>lh-security-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 

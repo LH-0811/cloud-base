@@ -27,5 +27,18 @@ public class UserRoleCheck {
         return false;
     }
 
+    /**
+     * 判断是否是系统管理员
+     */
+    public static Boolean isMchtAdmin(SecurityAuthority securityAuthority) throws Exception {
+        List<SecurityRole> securityRoleList = securityAuthority.getSecurityRoleList();
+        if (CollectionUtils.isEmpty(securityRoleList)) return false;
+        for (SecurityRole securityRole : securityRoleList) {
+            if (securityRole.getRoleId().equals(RoleConstant.MCHT_ADMIN.getRoleId())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

@@ -16,7 +16,8 @@ import lombok.NoArgsConstructor;
 public enum RoleConstant {
 
 
-    SYS_ADMIN(1L,"ROLE001","系统管理员")
+    SYS_ADMIN(1L,"ROLE001","系统管理员"),
+    MCHT_ADMIN(2L,"ROLE002","商户管理员"),
     ;
 
 
