@@ -40,7 +40,7 @@ public class MchtAdminController {
     @HasUrl(url = "/merchant_base_info/manager/create")
     public ServerResponse mchtBaseInfoCreate(@Validated @RequestBody MchtBaseInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 创建商户基本信息 接口 : MchtBaseInfoController-mchtBaseInfoCreate");
+        log.info("进入 创建商户基本信息 接口 : MchtAdminController-mchtBaseInfoCreate");
         mchtInfoService.mchtBaseInfoCreate(param, securityAuthority);
         return ServerResponse.createBySuccess("创建成功");
     }
@@ -54,7 +54,7 @@ public class MchtAdminController {
     @HasUrl(url = "/merchant_base_info/manager/query")
     public ServerResponse<PageInfo<MchtBaseInfoVo>> queryMchtBaseInfo(@Validated @RequestBody MchtBaseInfoQueryParam param) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 查询商户基本信息 接口 : MchtBaseInfoController-queryMchtBaseInfo");
+        log.info("进入 查询商户基本信息 接口 : MchtAdminController-queryMchtBaseInfo");
         PageInfo<MchtBaseInfoVo> pageInfo = mchtInfoService.queryMchtBaseInfo(param);
         return ServerResponse.createBySuccess("查询成功", pageInfo);
     }
@@ -68,7 +68,7 @@ public class MchtAdminController {
     @HasUrl(url = "/merchant_base_info/manager/update")
     public ServerResponse updateMchtBaseInfo(@Validated @RequestBody MchtBaseInfoUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 更新商户基本信息 接口 : MchtBaseInfoController-updateMchtBaseInfo");
+        log.info("进入 更新商户基本信息 接口 : MchtAdminController-updateMchtBaseInfo");
         mchtInfoService.updateMchtBaseInfo(param, securityAuthority);
         return ServerResponse.createBySuccess("更新成功");
     }
@@ -82,7 +82,7 @@ public class MchtAdminController {
     @HasUrl(url = "/merchant_base_info/manager/query/by_user_id/{userId}")
     public ServerResponse<List<MchtBaseInfoVo>> getMchtBaseInfoByUserId(@PathVariable(value = "userId") Long userId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 根据用户id 查询用户关联的商户基本信息 接口 : MchtBaseInfoController-getMchtBaseInfoByUserId");
+        log.info("进入 根据用户id 查询用户关联的商户基本信息 接口 : MchtAdminController-getMchtBaseInfoByUserId");
         List<MchtBaseInfoVo> mchtBaseInfoList = mchtInfoService.getMchtBaseInfoByUserId(userId, securityAuthority);
         return ServerResponse.createBySuccess("查询成功", mchtBaseInfoList);
     }
@@ -99,7 +99,7 @@ public class MchtAdminController {
     @HasUrl(url = "/merchant_base_info/manager/delete/{mchtBaseId}")
     public ServerResponse deletaMchtBaseInfo(@PathVariable(value = "mchtBaseId") Long mchtBaseId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 根据用户id 查询用户关联的商户基本信息 接口 : MchtBaseInfoController-deletaMchtBaseInfo");
+        log.info("进入 根据用户id 查询用户关联的商户基本信息 接口 : MchtAdminController-deletaMchtBaseInfo");
         mchtInfoService.deletaMchtBaseInfo(mchtBaseId, securityAuthority);
         return ServerResponse.createBySuccess("删除成功");
     }
@@ -117,7 +117,7 @@ public class MchtAdminController {
     @HasUrl(url = "/merchant_base_info/manager/gift_settings/save")
     public ServerResponse saveMchtGiftSettings(@RequestBody MchtGiftSettingsSaveParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 保存商户的福利配置 接口 : MchtBaseInfoController-deletaMchtBaseInfo");
+        log.info("进入 保存商户的福利配置 接口 : MchtAdminController-deletaMchtBaseInfo");
         mchtInfoService.saveMchtGiftSettings(param, securityAuthority);
         return ServerResponse.createBySuccess("保存成功");
     }
