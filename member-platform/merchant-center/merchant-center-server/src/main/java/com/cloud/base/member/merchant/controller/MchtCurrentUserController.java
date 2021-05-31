@@ -52,7 +52,7 @@ public class MchtCurrentUserController {
             @ApiImplicitParam(paramType = "body", dataType = "MchtGiftSettingsSaveParam", dataTypeClass = MchtGiftSettingsSaveParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/merchant_base_info/current_user/gift_settings/save")
-    public ServerResponse saveMchtGiftSettings(@RequestBody MchtGiftSettingsSaveParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse saveMchtGiftSettings(@Validated @RequestBody MchtGiftSettingsSaveParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 保存商户的福利配置 接口 : MchtCurrentUserController-deletaMchtBaseInfo");
         mchtInfoService.saveMchtGiftSettings(param, securityAuthority);
