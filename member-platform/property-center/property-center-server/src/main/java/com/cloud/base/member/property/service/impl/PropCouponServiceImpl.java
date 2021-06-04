@@ -13,6 +13,7 @@ import com.cloud.base.member.property.repository.dao.PropCouponTemplateDao;
 import com.cloud.base.member.property.repository.entity.PropCouponInfo;
 import com.cloud.base.member.property.repository.entity.PropCouponTemplate;
 import com.cloud.base.member.property.service.PropCouponService;
+import com.cloud.base.member.property.vo.PropCouponDetailVo;
 import com.cloud.base.member.property.vo.PropCouponInfoVo;
 import com.cloud.base.member.property.vo.PropCouponTemplateVo;
 import com.cloud.base.memeber.merchant.vo.MchtBaseInfoVo;
@@ -251,7 +252,9 @@ public class PropCouponServiceImpl implements PropCouponService {
     /**
      * 根据模块id查询优惠券信息列表
      */
-    public PageInfo<PropCouponInfoVo> couponInfoQueryByTemplateId(PropCouponInfoQueryParam param, SecurityAuthority securityAuthority) throws Exception {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public PageInfo<PropCouponInfoVo> couponInfoQuery(PropCouponInfoQueryParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 查询优惠券信息列表:param-{}", JSON.toJSONString(param));
         try {
             Example example = new Example(PropCouponInfo.class);
@@ -281,7 +284,7 @@ public class PropCouponServiceImpl implements PropCouponService {
             if (param.getCreateTimeUp() != null) {
                 criteria.andEqualTo("createTime", param.getCreateTimeUp());
             }
-            PageHelper.startPage(param.getPageNum(),param.getPageSize());
+            PageHelper.startPage(param.getPageNum(), param.getPageSize());
             List<PropCouponInfo> propCouponInfos = propCouponInfoDao.selectByExample(example);
             PageInfo pageInfo = new PageInfo(propCouponInfos);
             PageHelper.clearPage();
@@ -298,6 +301,87 @@ public class PropCouponServiceImpl implements PropCouponService {
         }
 
 
+    }
+
+
+    /**
+     * 优惠券消费
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void couponInfoConsume(Long couponInfoId, SecurityAuthority securityAuthority) throws Exception {
+        log.info("开始 优惠券消费 couponInfoId-{}", couponInfoId);
+        PropCouponInfo propCouponInfo = propCouponInfoDao.selectByPrimaryKey(couponInfoId);
+        if (propCouponInfo == null) {
+            throw CommonException.create(ServerResponse.createByError("优惠券信息不存在"));
+        }
+        try {
+            PropCouponInfo updateCouponInfo = new PropCouponInfo();
+            updateCouponInfo.setId(propCouponInfo.getId());
+            updateCouponInfo.setStatus(PropCouponInfo.Status.CONSUMED.getCode());
+            updateCouponInfo.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+            updateCouponInfo.setUpdateTime(new Date());
+            propCouponInfoDao.updateByPrimaryKeySelective(updateCouponInfo);
+            log.info("完成 优惠券消费");
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("优惠券消费失败,请联系管理员"));
+        }
+    }
+
+
+    /**
+     * 优惠券消费
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void couponInfoInvalid(Long couponInfoId, SecurityAuthority securityAuthority) throws Exception {
+        log.info("开始 优惠券失效 couponInfoId-{}", couponInfoId);
+        PropCouponInfo propCouponInfo = propCouponInfoDao.selectByPrimaryKey(couponInfoId);
+        if (propCouponInfo == null) {
+            throw CommonException.create(ServerResponse.createByError("优惠券信息不存在"));
+        }
+        try {
+            PropCouponInfo updateCouponInfo = new PropCouponInfo();
+            updateCouponInfo.setId(propCouponInfo.getId());
+            updateCouponInfo.setStatus(PropCouponInfo.Status.CONSUMED.getCode());
+            updateCouponInfo.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+            updateCouponInfo.setUpdateTime(new Date());
+            propCouponInfoDao.updateByPrimaryKeySelective(updateCouponInfo);
+            log.info("完成 优惠券失效");
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("优惠券失效失败,请联系管理员"));
+        }
+    }
+
+
+    /**
+     * 获取优惠券详情
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public PropCouponDetailVo couponInfoDetailInfo(Long couponInfoId, SecurityAuthority securityAuthority) throws Exception {
+        log.info("开始 获取优惠券详情 couponInfoId-{}", couponInfoId);
+        PropCouponInfo info = propCouponInfoDao.selectByPrimaryKey(couponInfoId);
+        if (info == null) {
+            throw CommonException.create(ServerResponse.createByError("优惠券信息不存在"));
+        }
+        PropCouponTemplate template = propCouponTemplateDao.selectByPrimaryKey(info.getTemplateId());
+        if (template == null) {
+            throw CommonException.create(ServerResponse.createByError("优惠券对应的模板数据不存在"));
+        }
+        try {
+            PropCouponDetailVo detailVo = new PropCouponDetailVo();
+            PropCouponInfoVo infoVo = new PropCouponInfoVo();
+            BeanUtils.copyProperties(info, infoVo);
+            PropCouponTemplateVo templateVo = new PropCouponTemplateVo();
+            BeanUtils.copyProperties(template, templateVo);
+            detailVo.setCouponInfoVo(infoVo);
+            detailVo.setPropCouponTemplateVo(templateVo);
+            log.info("完成 获取优惠券详情");
+            return detailVo;
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("获取优惠券详情失败,请联系管理员"));
+        }
     }
 
 

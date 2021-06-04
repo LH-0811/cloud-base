@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class PropCouponInfoQueryParam {
+public class PropCouponInfoQueryParam  implements Serializable {
 
     /**
      * 优惠券类型（1-线下 2-满减积分抵扣 3-折扣）
