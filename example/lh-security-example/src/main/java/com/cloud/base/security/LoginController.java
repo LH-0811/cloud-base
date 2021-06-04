@@ -30,6 +30,11 @@ public class LoginController {
     }
 
 
+    @GetMapping("/test")
+    public String test() {
+        return  String.valueOf(Thread.currentThread().getId());
+    }
+
     @GetMapping("/url")
     @HasUrl(url = "/url")
     public ServerResponse url() throws Exception {

@@ -1,16 +1,18 @@
-package com.cloud.base.member.property.repository.entity;
+package com.cloud.base.member.property.vo;
 
-import java.util.Date;
-import java.io.Serializable;
-
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import io.swagger.annotations.ApiModelProperty;
 import tk.mybatis.mapper.annotation.KeySql;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 优惠券信息表(PropCouponInfo)实体类
@@ -20,15 +22,11 @@ import javax.persistence.*;
  */
 @Setter
 @Getter
-@Table(name = "prop_coupon_info")
-public class PropCouponInfo implements Serializable {
+public class PropCouponInfoVo implements Serializable {
 
     /**
      * 主键
      */
-    @Id
-    @KeySql(useGeneratedKeys = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "主键")
     private Long id;
     /**
@@ -97,21 +95,4 @@ public class PropCouponInfo implements Serializable {
      */
     @ApiModelProperty(value = "更新人")
     private Long updateBy;
-
-
-    //    0-初始化 1-已消费 2-已过期 3-已失效
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public enum Status {
-        INIT(0, "初始化"),
-        CONSUMED(1, "已消费"),
-        OVERDUE(2, "已过期"),
-        INVALID(3, "已失效");
-
-        private Integer code;
-
-        private String msg;
-
-    }
 }

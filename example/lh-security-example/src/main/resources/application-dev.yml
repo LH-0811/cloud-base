@@ -10,3 +10,9 @@ spring:
     generator:
       # 避免Long类型丢失经度
       WRITE_NUMBERS_AS_STRINGS: true
+lhit:
+  security:
+    server-url-of-check-url: /security/check_url
+    server-url-of-check-perms-code: /security/check_perms_code
+    server-url-of-check-static-res-path: /security/check_static_res_path
+    server-url-of-token-to-authority: /security/token_to_authority
