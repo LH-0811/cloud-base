@@ -32,6 +32,13 @@ public class PropCouponTemplate implements Serializable {
      */
     @ApiModelProperty(value="商户基本信息id")
     private Long mchtBaseInfoId;
+
+    @ApiModelProperty(value="商户名称")
+    private String mchtName;
+
+    @ApiModelProperty(value="商户地址")
+    private String mchtAddress;
+
     /**
      * 优惠券类型（1-线下 2-满减积分抵扣 3-折扣）
      */

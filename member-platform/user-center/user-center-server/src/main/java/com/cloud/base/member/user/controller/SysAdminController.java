@@ -2,15 +2,14 @@ package com.cloud.base.member.user.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
-import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.member.user.feign.MchtBaseInfoApiClient;
+import com.cloud.base.member.user.feign.MchtInfoApiClient;
 import com.cloud.base.member.user.repository.entity.SysRes;
 import com.cloud.base.member.user.repository.entity.SysRole;
 import com.cloud.base.member.user.repository.entity.SysUser;
 import com.cloud.base.member.user.param.*;
 import com.cloud.base.member.user.service.SysAdminService;
-import com.cloud.base.memeber.merchant.param.MchtBaseInfoCreateParam;
+import com.cloud.base.memeber.merchant.param.MchtInfoCreateParam;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -41,7 +40,7 @@ public class SysAdminController extends BaseController {
 
 
     @Autowired
-    private MchtBaseInfoApiClient mchtBaseInfoApiClient;
+    private MchtInfoApiClient mchtBaseInfoApiClient;
 
     /**
      * 系统管理员创建商户基本信息
@@ -53,10 +52,10 @@ public class SysAdminController extends BaseController {
     @ApiOperation("系统管理员创建商户基本信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
-            @ApiImplicitParam(paramType = "body", dataType = "MchtBaseInfoCreateParam", dataTypeClass = MchtBaseInfoCreateParam.class, name = "param", value = "参数")
+            @ApiImplicitParam(paramType = "body", dataType = "MchtBaseInfoCreateParam", dataTypeClass = MchtInfoCreateParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/sys_admin/mcht_base_info/create")
-    public ServerResponse testFeignCreateMchtBaseInfo(@RequestBody MchtBaseInfoCreateParam param,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse testFeignCreateMchtBaseInfo(@RequestBody MchtInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 系统管理员创建商户基本信息 接口 : SysUserController-testFeignCreateMchtBaseInfo ");
         ServerResponse serverResponse = mchtBaseInfoApiClient.mchtBaseInfoCreate(param);

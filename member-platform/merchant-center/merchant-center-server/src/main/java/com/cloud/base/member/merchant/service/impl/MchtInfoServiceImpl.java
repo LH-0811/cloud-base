@@ -6,22 +6,25 @@ import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.common.method.UserRoleCheck;
-import com.cloud.base.member.merchant.repository.dao.MchtBaseInfoDao;
+import com.cloud.base.member.merchant.repository.dao.MchtAddressDao;
+import com.cloud.base.member.merchant.repository.dao.MchtInfoDao;
 import com.cloud.base.member.merchant.repository.dao.MchtGiftSettingsDao;
-import com.cloud.base.member.merchant.repository.entity.MchtBaseInfo;
+import com.cloud.base.member.merchant.repository.entity.MchtAddress;
+import com.cloud.base.member.merchant.repository.entity.MchtInfo;
 import com.cloud.base.member.merchant.repository.entity.MchtGiftSettings;
 import com.cloud.base.member.merchant.service.MchtInfoService;
-import com.cloud.base.memeber.merchant.param.MchtBaseInfoQueryParam;
-import com.cloud.base.memeber.merchant.param.MchtBaseInfoCreateParam;
-import com.cloud.base.memeber.merchant.param.MchtBaseInfoUpdateParam;
+import com.cloud.base.memeber.merchant.param.MchtInfoQueryParam;
+import com.cloud.base.memeber.merchant.param.MchtInfoCreateParam;
+import com.cloud.base.memeber.merchant.param.MchtInfoUpdateParam;
 import com.cloud.base.memeber.merchant.param.MchtGiftSettingsSaveParam;
-import com.cloud.base.memeber.merchant.vo.MchtBaseInfoVo;
+import com.cloud.base.memeber.merchant.vo.MchtInfoVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.assertj.core.util.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,36 +52,59 @@ public class MchtInfoServiceImpl implements MchtInfoService {
     private MchtGiftSettingsDao mchtGiftSettingsDao;
 
     @Autowired
-    private MchtBaseInfoDao mchtBaseInfoDao;
+    private MchtInfoDao mchtInfoDao;
+
+    @Autowired
+    private MchtAddressDao mchtAddressDao;
 
     /**
      * 创建商户基本信息
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void mchtBaseInfoCreate(MchtBaseInfoCreateParam param, SecurityAuthority securityAuthority) throws Exception {
+    public void mchtBaseInfoCreate(MchtInfoCreateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 创建商户基本信息:{}", JSON.toJSONString(param));
         // 检查商户名是否已经存在
         checkMerchantNameExist(param.getMchtName());
 
         // 创建基础信息
-        MchtBaseInfo mchtBaseInfo = new MchtBaseInfo();
+        MchtInfo mchtInfo = new MchtInfo();
         try {
             // 属性对拷
-            BeanUtils.copyProperties(param, mchtBaseInfo);
+            BeanUtils.copyProperties(param, mchtInfo);
             // 设置
-            mchtBaseInfo.setId(idWorker.nextId());
-            mchtBaseInfo.setEnableFlag(false);
-            mchtBaseInfo.setDelFlag(false);
-            mchtBaseInfo.setCreateTime(new Date());
-            mchtBaseInfo.setCreateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
-            mchtBaseInfoDao.insertSelective(mchtBaseInfo);
+            mchtInfo.setId(idWorker.nextId());
+            mchtInfo.setEnableFlag(false);
+            mchtInfo.setDelFlag(false);
+            mchtInfo.setCreateTime(new Date());
+            mchtInfo.setCreateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+            mchtInfoDao.insertSelective(mchtInfo);
+
+            // 获取到商户地址信息
+            MchtAddress selectOneParam = new MchtAddress();
+            selectOneParam.setMchtId(mchtInfo.getId());
+            MchtAddress mchtAddress = mchtAddressDao.selectOne(selectOneParam);
+            if (mchtAddress != null) {
+                Long mchtAddressId = mchtAddress.getMchtId();
+                BeanUtils.copyProperties(param, mchtAddress);
+                mchtAddress.setId(mchtAddressId);
+                mchtAddress.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+                mchtAddress.setUpdateTime(new Date());
+                mchtAddressDao.updateByPrimaryKeySelective(mchtAddress);
+            } else {
+                mchtAddress = new MchtAddress();
+                BeanUtils.copyProperties(param, mchtAddress);
+                mchtAddress.setId(idWorker.nextId());
+                mchtAddress.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+                mchtAddress.setUpdateTime(new Date());
+                mchtAddressDao.insertSelective(mchtAddress);
+            }
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("创建商户基本信息失败,请联系管理员"));
         }
 
         // 初始化福利设置
-        initMchtGiftSettings(mchtBaseInfo.getId());
+        initMchtGiftSettings(mchtInfo.getId());
         log.info("完成 创建商户基本信息");
     }
 
@@ -86,14 +112,37 @@ public class MchtInfoServiceImpl implements MchtInfoService {
      * 查询商户基本信息
      */
     @Override
-    public PageInfo<MchtBaseInfoVo> queryMchtBaseInfo(MchtBaseInfoQueryParam param) throws Exception {
+    public PageInfo<MchtInfoVo> queryMchtBaseInfo(MchtInfoQueryParam param) throws Exception {
         log.info("开始查询商户基本信息:{}", JSON.toJSONString(param));
         try {
-
-            Example example = new Example(MchtBaseInfo.class);
+            List<MchtAddress> mchtAddressesList = Lists.newArrayList();
+            if (StringUtils.isNotEmpty(param.getProvinceCode()) || StringUtils.isNotEmpty(param.getCityCode()) || StringUtils.isNotEmpty(param.getAreaCode()) || param.getLatitude() != null || param.getLongitude() != null) {
+                Example example = new Example(MchtAddress.class);
+                Example.Criteria criteria = example.createCriteria();
+                if (StringUtils.isNotEmpty(param.getProvinceCode())) {
+                    criteria.andEqualTo("provinceCode", param.getProvinceCode());
+                }
+                if (StringUtils.isNotEmpty(param.getCityCode())) {
+                    criteria.andEqualTo("cityCode", param.getCityCode());
+                }
+                if (StringUtils.isNotEmpty(param.getAreaCode())) {
+                    criteria.andEqualTo("areaCode", param.getAreaCode());
+                }
+                if (param.getLongitude() != null) {
+                    criteria.andEqualTo("longitude", param.getLongitude());
+                }
+                if (param.getLatitude() != null) {
+                    criteria.andEqualTo("latitude", param.getLatitude());
+                }
+                mchtAddressesList = mchtAddressDao.selectByExample(example);
+            }
+            Example example = new Example(MchtInfo.class);
             example.setOrderByClause(" create_time desc ");
             Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("delFalg",false);
+            criteria.andEqualTo("delFalg", false);
+            if (CollectionUtils.isNotEmpty(mchtAddressesList)) {
+                criteria.andIn("id", mchtAddressesList.stream().map(ele -> ele.getMchtId()).collect(Collectors.toList()));
+            }
             if (param.getMchtUserId() != null) {
                 criteria.andEqualTo("mchtUserId", param.getMchtUserId());
             }
@@ -110,17 +159,16 @@ public class MchtInfoServiceImpl implements MchtInfoService {
                 criteria.andLessThanOrEqualTo("createTime", param.getCreateTimeUp());
             }
             PageHelper.startPage(param.getPageNum(), param.getPageSize());
-            List<MchtBaseInfo> mchtBaseInfoList = mchtBaseInfoDao.selectByExample(example);
-            PageInfo pageInfo = new PageInfo(mchtBaseInfoList);
+            List<MchtInfo> mchtInfoList = mchtInfoDao.selectByExample(example);
+            PageInfo pageInfo = new PageInfo(mchtInfoList);
             PageHelper.clearPage();
-
             // 转vo返回
-            List<MchtBaseInfoVo> mchtBaseInfoVos = mchtBaseInfoList.stream().map(ele -> {
-                MchtBaseInfoVo mchtBaseInfoVo = new MchtBaseInfoVo();
-                BeanUtils.copyProperties(ele, mchtBaseInfoVo);
-                return mchtBaseInfoVo;
+            List<MchtInfoVo> mchtInfoVos = mchtInfoList.stream().map(ele -> {
+                MchtInfoVo mchtInfoVo = new MchtInfoVo();
+                BeanUtils.copyProperties(ele, mchtInfoVo);
+                return mchtInfoVo;
             }).collect(Collectors.toList());
-            pageInfo.setList(mchtBaseInfoVos);
+            pageInfo.setList(mchtInfoVos);
             log.info("完成 查询商户基本信息");
             return pageInfo;
         } catch (Exception e) {
@@ -133,33 +181,55 @@ public class MchtInfoServiceImpl implements MchtInfoService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateMchtBaseInfo(MchtBaseInfoUpdateParam param, SecurityAuthority securityAuthority) throws Exception {
+    public void updateMchtBaseInfo(MchtInfoUpdateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 更新商户基本信息:{}", JSON.toJSONString(param));
-        if (mchtBaseInfoDao.selectByPrimaryKey(param.getId()) == null) {
+        if (mchtInfoDao.selectByPrimaryKey(param.getId()) == null) {
             throw CommonException.create(ServerResponse.createByError("商户基本信息不存在"));
         }
 
         // 防止横向越权
         if (!UserRoleCheck.isSysAdmin(securityAuthority)) {
-            List<MchtBaseInfo> mchtBaseInfoList = null;
+            List<MchtInfo> mchtInfoList = null;
             try {
-                MchtBaseInfo selectParam = new MchtBaseInfo();
+                MchtInfo selectParam = new MchtInfo();
                 selectParam.setMchtUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
                 selectParam.setDelFlag(false);
-                mchtBaseInfoList = mchtBaseInfoDao.select(selectParam);
+                mchtInfoList = mchtInfoDao.select(selectParam);
             } catch (Exception e) {
                 throw CommonException.create(ServerResponse.createByError("根据用户id 查询用户关联的商户基本信息失败,请联系管理员"));
             }
-            List<Long> mchtBaseInfoIdList = mchtBaseInfoList.stream().map(ele -> ele.getId()).collect(Collectors.toList());
+            List<Long> mchtBaseInfoIdList = mchtInfoList.stream().map(ele -> ele.getId()).collect(Collectors.toList());
             if (!mchtBaseInfoIdList.contains(param.getId())) {
                 throw CommonException.create(ServerResponse.createByError("非法操作，不能修改不属于自己的商户信息"));
             }
         }
 
         try {
-            MchtBaseInfo mchtBaseInfoUpdate = new MchtBaseInfo();
-            BeanUtils.copyProperties(param, mchtBaseInfoUpdate);
-            mchtBaseInfoDao.updateByPrimaryKeySelective(mchtBaseInfoUpdate);
+            MchtInfo mchtInfoUpdate = new MchtInfo();
+            BeanUtils.copyProperties(param, mchtInfoUpdate);
+            mchtInfoDao.updateByPrimaryKeySelective(mchtInfoUpdate);
+
+
+            // 获取到商户地址信息
+            MchtAddress selectOneParam = new MchtAddress();
+            selectOneParam.setMchtId(mchtInfoUpdate.getId());
+            MchtAddress mchtAddress = mchtAddressDao.selectOne(selectOneParam);
+            if (mchtAddress != null) {
+                Long mchtAddressId = mchtAddress.getMchtId();
+                BeanUtils.copyProperties(param, mchtAddress);
+                mchtAddress.setId(mchtAddressId);
+                mchtAddress.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+                mchtAddress.setUpdateTime(new Date());
+                mchtAddressDao.updateByPrimaryKeySelective(mchtAddress);
+            } else {
+                mchtAddress = new MchtAddress();
+                BeanUtils.copyProperties(param, mchtAddress);
+                mchtAddress.setId(idWorker.nextId());
+                mchtAddress.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+                mchtAddress.setUpdateTime(new Date());
+                mchtAddressDao.insertSelective(mchtAddress);
+            }
+
             log.info("完成 更新商户基本信息");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("更新商户基本信息失败，请联系管理员"));
@@ -170,31 +240,31 @@ public class MchtInfoServiceImpl implements MchtInfoService {
      * 根据用户id 查询用户关联的商户基本信息
      */
     @Override
-    public List<MchtBaseInfoVo> getMchtBaseInfoByUserId(Long userId, SecurityAuthority securityAuthority) throws Exception {
+    public List<MchtInfoVo> getMchtBaseInfoByUserId(Long userId, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 根据用户id 查询用户关联的商户基本信息:{}", userId);
-        List<MchtBaseInfo> mchtBaseInfoList = null;
+        List<MchtInfo> mchtInfoList = null;
         try {
-            MchtBaseInfo selectParam = new MchtBaseInfo();
+            MchtInfo selectParam = new MchtInfo();
             selectParam.setMchtUserId(userId);
             selectParam.setEnableFlag(true);
             selectParam.setDelFlag(false);
-            mchtBaseInfoList = mchtBaseInfoDao.select(selectParam);
+            mchtInfoList = mchtInfoDao.select(selectParam);
         } catch (Exception e) {
             throw CommonException.create(ServerResponse.createByError("根据用户id 查询用户关联的商户基本信息失败,请联系管理员"));
         }
 
-        if (CollectionUtils.isEmpty(mchtBaseInfoList)) {
+        if (CollectionUtils.isEmpty(mchtInfoList)) {
             throw CommonException.create(ServerResponse.createByError("当前用户没有可用的关联商户信息"));
         }
         // 转vo
-        List<MchtBaseInfoVo> mchtBaseInfoVoList = mchtBaseInfoList.stream().map(ele -> {
-            MchtBaseInfoVo mchtBaseInfoVo = new MchtBaseInfoVo();
-            BeanUtils.copyProperties(ele, mchtBaseInfoVo);
-            return mchtBaseInfoVo;
+        List<MchtInfoVo> mchtInfoVoList = mchtInfoList.stream().map(ele -> {
+            MchtInfoVo mchtInfoVo = new MchtInfoVo();
+            BeanUtils.copyProperties(ele, mchtInfoVo);
+            return mchtInfoVo;
         }).collect(Collectors.toList());
 
         log.info("完成 根据用户id 查询用户关联的商户基本信息:{}", userId);
-        return mchtBaseInfoVoList;
+        return mchtInfoVoList;
     }
 
     /**
@@ -205,29 +275,29 @@ public class MchtInfoServiceImpl implements MchtInfoService {
         log.info("开始 删除商户基本信息:{}", mchtBaseId);
         // 防止横向越权
         if (!UserRoleCheck.isSysAdmin(securityAuthority)) {
-            List<MchtBaseInfo> mchtBaseInfoList = null;
+            List<MchtInfo> mchtInfoList = null;
             try {
-                MchtBaseInfo selectParam = new MchtBaseInfo();
+                MchtInfo selectParam = new MchtInfo();
                 selectParam.setMchtUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
                 selectParam.setDelFlag(false);
-                mchtBaseInfoList = mchtBaseInfoDao.select(selectParam);
+                mchtInfoList = mchtInfoDao.select(selectParam);
             } catch (Exception e) {
                 throw CommonException.create(ServerResponse.createByError("根据用户id 查询用户关联的商户基本信息失败,请联系管理员"));
             }
-            List<Long> mchtBaseInfoIdList = mchtBaseInfoList.stream().map(ele -> ele.getId()).collect(Collectors.toList());
+            List<Long> mchtBaseInfoIdList = mchtInfoList.stream().map(ele -> ele.getId()).collect(Collectors.toList());
             if (!mchtBaseInfoIdList.contains(mchtBaseId)) {
                 throw CommonException.create(ServerResponse.createByError("非法操作，不能删除不属于自己的商户信息"));
             }
         }
 
         try {
-            MchtBaseInfo delParam = new MchtBaseInfo();
+            MchtInfo delParam = new MchtInfo();
             delParam.setId(mchtBaseId);
             delParam.setDelFlag(true);
-            mchtBaseInfoDao.updateByPrimaryKeySelective(delParam);
+            mchtInfoDao.updateByPrimaryKeySelective(delParam);
             log.info("完成 删除商户基本信息");
         } catch (Exception e) {
-            throw CommonException.create(e,ServerResponse.createByError("删除商户基本信息失败,请联系管理员"));
+            throw CommonException.create(e, ServerResponse.createByError("删除商户基本信息失败,请联系管理员"));
         }
     }
 
@@ -247,13 +317,13 @@ public class MchtInfoServiceImpl implements MchtInfoService {
 
         // 防止横向越权
         if (!UserRoleCheck.isSysAdmin(securityAuthority)) {
-            MchtBaseInfo selectParam = new MchtBaseInfo();
+            MchtInfo selectParam = new MchtInfo();
             selectParam.setDelFlag(false);
             selectParam.setMchtUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
-            List<MchtBaseInfo> mchtBaseInfoList = mchtBaseInfoDao.select(selectParam);
-            if (CollectionUtils.isEmpty(mchtBaseInfoList))
+            List<MchtInfo> mchtInfoList = mchtInfoDao.select(selectParam);
+            if (CollectionUtils.isEmpty(mchtInfoList))
                 throw CommonException.create(ServerResponse.createByError("当前用户下没有商户信息"));
-            List<Long> mchtIdList = mchtBaseInfoList.stream().map(ele -> ele.getId()).collect(Collectors.toList());
+            List<Long> mchtIdList = mchtInfoList.stream().map(ele -> ele.getId()).collect(Collectors.toList());
             if (!mchtIdList.contains(param.getId()))
                 throw CommonException.create(ServerResponse.createByError("非法访问，不能操作不属于自己的福利设置"));
         }
@@ -279,19 +349,40 @@ public class MchtInfoServiceImpl implements MchtInfoService {
 
     }
 
+    /**
+     * 获取商户基本信息
+     */
+    @Override
+    public MchtInfoVo getMchtBaseInfoVoById(Long mchtBaseInfoId) throws Exception {
+        log.info("开始 获取商户基本信息：{}", mchtBaseInfoId);
+        MchtInfo mchtInfo = null;
+        try {
+            mchtInfo = mchtInfoDao.selectByPrimaryKey(mchtBaseInfoId);
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("获取商户基本信息失败，请联系管理员"));
+        }
+        if (mchtInfo == null)
+            throw CommonException.create(ServerResponse.createByError("商户基本信息不存在"));
+        MchtInfoVo mchtInfoVo = new MchtInfoVo();
+        BeanUtils.copyProperties(mchtInfo, mchtInfoVo);
+        log.info("完成 获取商户基本信息");
+        return mchtInfoVo;
+    }
+
+
 // 私有方法 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * 检查商户名是否已经存在
      */
-    public void checkMerchantNameExist(String mchtName) throws Exception {
+    private void checkMerchantNameExist(String mchtName) throws Exception {
         if (StringUtils.isBlank(mchtName)) {
             throw CommonException.create(ServerResponse.createByError("未上传商户名"));
         }
-        MchtBaseInfo checkParam = new MchtBaseInfo();
+        MchtInfo checkParam = new MchtInfo();
         checkParam.setMchtName(mchtName);
         checkParam.setDelFlag(false);
-        if (mchtBaseInfoDao.selectCount(checkParam) > 0) {
+        if (mchtInfoDao.selectCount(checkParam) > 0) {
             throw CommonException.create(ServerResponse.createByError("商户名:" + mchtName + "已经存在"));
         }
     }
@@ -299,12 +390,10 @@ public class MchtInfoServiceImpl implements MchtInfoService {
     /**
      * 给商户基本信息添加默认配置
      */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void initMchtGiftSettings(Long mchtBaseInfoId) throws Exception {
+    private void initMchtGiftSettings(Long mchtBaseInfoId) throws Exception {
         log.info("开始 给商户基本信息添加默认配置：{}", mchtBaseInfoId);
-        MchtBaseInfo mchtBaseInfo = mchtBaseInfoDao.selectByPrimaryKey(mchtBaseInfoId);
-        if (mchtBaseInfo == null)
+        MchtInfo mchtInfo = mchtInfoDao.selectByPrimaryKey(mchtBaseInfoId);
+        if (mchtInfo == null)
             throw CommonException.create(ServerResponse.createByError("商户基本信息不存在"));
         try {
             MchtGiftSettings mchtGiftSettings = new MchtGiftSettings();
@@ -325,8 +414,8 @@ public class MchtInfoServiceImpl implements MchtInfoService {
             mchtGiftSettings.setYearGiftScore(0);
             mchtGiftSettings.setYearGiftCouponsTemplateId(null);
             mchtGiftSettings.setYearGiftMonthDay(null);
-            mchtGiftSettings.setCreateTime(mchtBaseInfo.getCreateTime());
-            mchtGiftSettings.setCreateBy(mchtBaseInfo.getCreateBy());
+            mchtGiftSettings.setCreateTime(mchtInfo.getCreateTime());
+            mchtGiftSettings.setCreateBy(mchtInfo.getCreateBy());
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("给商户基本信息添加默认配置失败,请联系管理员"));
         }
@@ -402,4 +491,5 @@ public class MchtInfoServiceImpl implements MchtInfoService {
         }
 
     }
+
 }

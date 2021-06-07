@@ -4,7 +4,7 @@ import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.property.param.*;
-import com.cloud.base.member.property.service.PropCouponService;
+import com.cloud.base.member.property.service.PropCouponBaseService;
 import com.cloud.base.member.property.vo.PropCouponDetailVo;
 import com.cloud.base.member.property.vo.PropCouponInfoVo;
 import com.cloud.base.member.property.vo.PropCouponTemplateVo;
@@ -24,13 +24,13 @@ import springfox.documentation.annotations.ApiIgnore;
  * @date 2021/6/4
  */
 @Slf4j
-@Api(tags = "优惠券资产管理接口")
+@Api(tags = "优惠券资产 基本信息 管理接口")
 @RestController
-@RequestMapping("/coupon")
-public class CouponController {
+@RequestMapping("/coupon/base")
+public class CouponBaseController {
 
     @Autowired
-    private PropCouponService propCouponService;
+    private PropCouponBaseService propCouponBaseService;
 
 
     /**
@@ -42,11 +42,11 @@ public class CouponController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "PropCouponTemplateCreateParam", dataTypeClass = PropCouponTemplateCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/coupon/template/create")
+    @HasUrl(url = "/coupon/base/template/create")
     public ServerResponse couponTemplateCreate(@Validated @RequestBody PropCouponTemplateCreateParam param, @ApiIgnore SecurityAuthority authority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建优惠券模板 接口 : CouponController-couponTemplateCreate");
-        propCouponService.couponTemplateCreate(param, authority);
+        propCouponBaseService.couponTemplateCreate(param, authority);
         return ServerResponse.createBySuccess("创建优惠券模板完成");
     }
 
@@ -59,11 +59,11 @@ public class CouponController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "PropCouponTemplateUpdateParam", dataTypeClass = PropCouponTemplateUpdateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/coupon/template/update")
+    @HasUrl(url = "/coupon/base/template/update")
     public ServerResponse couponTemplateUpdate(@Validated @RequestBody PropCouponTemplateUpdateParam param, @ApiIgnore SecurityAuthority authority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改优惠券模板 接口 : CouponController-couponTemplateUpdate");
-        propCouponService.couponTemplateUpdate(param, authority);
+        propCouponBaseService.couponTemplateUpdate(param, authority);
         return ServerResponse.createBySuccess("修改优惠券模板完成");
     }
 
@@ -76,11 +76,11 @@ public class CouponController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "templateId", value = "优惠券模板Id")
     })
-    @HasUrl(url = "/coupon/template/delete/{templateId}")
+    @HasUrl(url = "/coupon/base/template/delete/{templateId}")
     public ServerResponse couponTemplateDelete(@PathVariable(value = "templateId") Long templateId, @ApiIgnore SecurityAuthority authority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改优惠券模板 接口 : CouponController-couponTemplateDelete");
-        propCouponService.couponTemplateDelete(templateId, authority);
+        propCouponBaseService.couponTemplateDelete(templateId, authority);
         return ServerResponse.createBySuccess("修改优惠券模板完成");
 
     }
@@ -94,11 +94,11 @@ public class CouponController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "PropCouponTemplateQueryParam", dataTypeClass = PropCouponTemplateQueryParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/coupon/template/query")
+    @HasUrl(url = "/coupon/base/template/query")
     public ServerResponse<PageInfo<PropCouponTemplateVo>> couponTemplateQuery(@Validated @RequestBody PropCouponTemplateQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询优惠券模板 接口 : CouponController-couponTemplateQuery");
-        PageInfo<PropCouponTemplateVo> pageInfo = propCouponService.couponTemplateQuery(param, securityAuthority);
+        PageInfo<PropCouponTemplateVo> pageInfo = propCouponBaseService.couponTemplateQuery(param, securityAuthority);
         return ServerResponse.createBySuccess("查询优惠券模板完成", pageInfo);
     }
 
@@ -111,11 +111,11 @@ public class CouponController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "PropCouponInfoCreateParam", dataTypeClass = PropCouponInfoCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/coupon/info/create")
+    @HasUrl(url = "/coupon/base/info/create")
     public ServerResponse couponInfoCreate(@Validated @RequestBody PropCouponInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建优惠券信息 接口 : CouponController-couponInfoCreate");
-        propCouponService.couponInfoCreate(param, securityAuthority);
+        propCouponBaseService.couponInfoCreate(param, securityAuthority);
         return ServerResponse.createBySuccess("创建优惠券信息完成");
     }
 
@@ -128,11 +128,11 @@ public class CouponController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "PropCouponInfoCreateParam", dataTypeClass = PropCouponInfoCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/coupon/info/query")
+    @HasUrl(url = "/coupon/base/info/query")
     public ServerResponse<PageInfo<PropCouponInfoVo>> couponInfoQuery(@Validated @RequestBody PropCouponInfoQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询优惠券信息列表 接口 : CouponController-couponInfoQuery");
-        PageInfo<PropCouponInfoVo> pageInfo = propCouponService.couponInfoQuery(param, securityAuthority);
+        PageInfo<PropCouponInfoVo> pageInfo = propCouponBaseService.couponInfoQuery(param, securityAuthority);
         return ServerResponse.createBySuccess("查询优惠券信息列表完成", pageInfo);
     }
 
@@ -145,11 +145,11 @@ public class CouponController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "couponInfoId", value = "优惠券信息Id")
     })
-    @HasUrl(url = "/coupon/info/consume/{couponInfoId}")
+    @HasUrl(url = "/coupon/base/info/consume/{couponInfoId}")
     public ServerResponse couponInfoConsume(@PathVariable(value = "couponInfoId") Long couponInfoId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 优惠券消费 接口 : CouponController-couponInfoConsume");
-        propCouponService.couponInfoConsume(couponInfoId, securityAuthority);
+        propCouponBaseService.couponInfoConsume(couponInfoId, securityAuthority);
         return ServerResponse.createBySuccess("优惠券消费完成");
     }
 
@@ -162,11 +162,11 @@ public class CouponController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "couponInfoId", value = "优惠券信息Id")
     })
-    @HasUrl(url = "/coupon/info/invalid/{couponInfoId}")
+    @HasUrl(url = "/coupon/base/info/invalid/{couponInfoId}")
     public ServerResponse couponInfoInvalid(@PathVariable(value = "couponInfoId") Long couponInfoId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 优惠券失效 接口 : CouponController-couponInfoInvalid");
-        propCouponService.couponInfoInvalid(couponInfoId, securityAuthority);
+        propCouponBaseService.couponInfoInvalid(couponInfoId, securityAuthority);
         return ServerResponse.createBySuccess("优惠券失效完成");
     }
 
@@ -179,11 +179,11 @@ public class CouponController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "couponInfoId", value = "优惠券信息Id")
     })
-    @HasUrl(url = "/coupon/info/detail/{couponInfoId}")
+    @HasUrl(url = "/coupon/base/info/detail/{couponInfoId}")
     public ServerResponse<PropCouponDetailVo> couponInfoDetailInfo(@PathVariable(value = "couponInfoId") Long couponInfoId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取优惠券详情 接口 : CouponController-couponInfoDetailInfo");
-        PropCouponDetailVo detailVo = propCouponService.couponInfoDetailInfo(couponInfoId, securityAuthority);
+        PropCouponDetailVo detailVo = propCouponBaseService.couponInfoDetailInfo(couponInfoId, securityAuthority);
         return ServerResponse.createBySuccess("获取优惠券详情完成",detailVo);
     }
 

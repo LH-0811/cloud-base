@@ -1,6 +1,6 @@
 package com.cloud.base.member.merchant.repository.dao;
 
-import com.cloud.base.member.merchant.repository.entity.MchtBaseInfo;
+import com.cloud.base.member.merchant.repository.entity.MchtInfo;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -9,7 +9,7 @@ import tk.mybatis.mapper.common.Mapper;
  * @author lh0811
  * @since 2021-05-26 22:06:00
  */
-public interface MchtBaseInfoDao extends Mapper<MchtBaseInfo> {
+public interface MchtInfoDao extends Mapper<MchtInfo> {
 
 
 }

@@ -6,17 +6,17 @@ import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.common.method.UserRoleCheck;
-import com.cloud.base.member.property.feign.MchtBaseInfoApiClient;
+import com.cloud.base.member.property.feign.MchtApiClient;
 import com.cloud.base.member.property.param.*;
 import com.cloud.base.member.property.repository.dao.PropCouponInfoDao;
 import com.cloud.base.member.property.repository.dao.PropCouponTemplateDao;
 import com.cloud.base.member.property.repository.entity.PropCouponInfo;
 import com.cloud.base.member.property.repository.entity.PropCouponTemplate;
-import com.cloud.base.member.property.service.PropCouponService;
+import com.cloud.base.member.property.service.PropCouponBaseService;
 import com.cloud.base.member.property.vo.PropCouponDetailVo;
 import com.cloud.base.member.property.vo.PropCouponInfoVo;
 import com.cloud.base.member.property.vo.PropCouponTemplateVo;
-import com.cloud.base.memeber.merchant.vo.MchtBaseInfoVo;
+import com.cloud.base.memeber.merchant.vo.MchtInfoVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -38,14 +38,14 @@ import java.util.stream.Collectors;
  * @date 2021/5/31
  */
 @Slf4j
-@Service("propCouponTemplateService")
-public class PropCouponServiceImpl implements PropCouponService {
+@Service("propCouponBaseService")
+public class PropCouponBaseServiceImpl implements PropCouponBaseService {
 
     @Autowired
     private PropCouponTemplateDao propCouponTemplateDao;
 
     @Autowired
-    private MchtBaseInfoApiClient mchtBaseInfoApiClient;
+    private MchtApiClient mchtApiClient;
 
     @Autowired
     private PropCouponInfoDao propCouponInfoDao;
@@ -151,7 +151,7 @@ public class PropCouponServiceImpl implements PropCouponService {
             Example.Criteria criteria = example.createCriteria();
             if (param.getMchtBaseInfoId() == null) {
                 if (!UserRoleCheck.isSysAdmin(securityAuthority)) {
-                    ServerResponse<List<MchtBaseInfoVo>> response = mchtBaseInfoApiClient.getMchtBaseInfoByUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+                    ServerResponse<List<MchtInfoVo>> response = mchtApiClient.getMchtBaseInfoByUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
                     if (!response.isSuccess()) throw CommonException.create(response);
                     if (CollectionUtils.isEmpty(response.getData())) {
                         throw CommonException.create(ServerResponse.createByError("当前用户无关联的商户信息"));
@@ -220,7 +220,7 @@ public class PropCouponServiceImpl implements PropCouponService {
         }
         // 越权检查
         if (!UserRoleCheck.isSysAdmin(securityAuthority)) {
-            ServerResponse<List<MchtBaseInfoVo>> response = mchtBaseInfoApiClient.getMchtBaseInfoByUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+            ServerResponse<List<MchtInfoVo>> response = mchtApiClient.getMchtBaseInfoByUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             if (!response.isSuccess()) {
                 throw CommonException.create(response);
             }
@@ -392,13 +392,13 @@ public class PropCouponServiceImpl implements PropCouponService {
             throw CommonException.create(ServerResponse.createByError("当前用户没有权限进行该操作"));
         }
         if (UserRoleCheck.isMchtAdmin(authority)) {
-            ServerResponse<List<MchtBaseInfoVo>> response = mchtBaseInfoApiClient.getMchtBaseInfoByUserId(Long.valueOf(authority.getSecurityUser().getId()));
+            ServerResponse<List<MchtInfoVo>> response = mchtApiClient.getMchtBaseInfoByUserId(Long.valueOf(authority.getSecurityUser().getId()));
             if (!response.isSuccess()) throw CommonException.create(response);
-            List<MchtBaseInfoVo> mchtBaseInfoVoList = response.getData();
-            if (CollectionUtils.isEmpty(mchtBaseInfoVoList)) {
+            List<MchtInfoVo> mchtInfoVoList = response.getData();
+            if (CollectionUtils.isEmpty(mchtInfoVoList)) {
                 throw CommonException.create(ServerResponse.createByError("该用户无关联的商户基本信息"));
             }
-            List<Long> mchtBaseIdList = mchtBaseInfoVoList.stream().map(ele -> ele.getId()).collect(Collectors.toList());
+            List<Long> mchtBaseIdList = mchtInfoVoList.stream().map(ele -> ele.getId()).collect(Collectors.toList());
             if (!mchtBaseIdList.contains(mchtBaseInfoId))
                 throw CommonException.create(ServerResponse.createByError("非法操作，当前商户不属于操作用户"));
         }

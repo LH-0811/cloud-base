@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -23,7 +24,7 @@ import java.util.Date;
 @Setter
 @Getter
 @ApiModel(description = "商户基本信息查询参数")
-public class MchtBaseInfoQueryParam implements Serializable {
+public class MchtInfoQueryParam implements Serializable {
 
     /**
      * 商户用户id
@@ -54,6 +55,35 @@ public class MchtBaseInfoQueryParam implements Serializable {
      */
     @ApiModelProperty(value="创建时间（止）")
     private Date createTimeUp;
+
+    /**
+     * 省编号
+     */
+    @ApiModelProperty(value="省编号")
+    private String provinceCode;
+
+    /**
+     * 市编号
+     */
+    @ApiModelProperty(value="市编号")
+    private String cityCode;
+
+    /**
+     * 区编号
+     */
+    @ApiModelProperty(value="区编号")
+    private String areaCode;
+
+    /**
+     * 经度
+     */
+    @ApiModelProperty(value="经度")
+    private BigDecimal longitude;
+    /**
+     * 纬度
+     */
+    @ApiModelProperty(value="纬度")
+    private BigDecimal latitude;
 
     /**
      * 页码

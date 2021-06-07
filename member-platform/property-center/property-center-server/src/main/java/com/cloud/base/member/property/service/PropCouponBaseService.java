@@ -9,12 +9,12 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 优惠券模板服务
+ * 优惠券基本信息 服务
  *
  * @author lh0811
  * @date 2021/5/31
  */
-public interface PropCouponService {
+public interface PropCouponBaseService {
     /**
      * 创建优惠券模板
      */

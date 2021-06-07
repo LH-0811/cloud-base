@@ -1,12 +1,17 @@
-package com.cloud.base.member.merchant.repository.entity;
+package com.cloud.base.memeber.merchant.vo;
 
-import java.util.Date;
-import java.io.Serializable;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import io.swagger.annotations.ApiModelProperty;
 import tk.mybatis.mapper.annotation.KeySql;
-import javax.persistence.*;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * 商户中心-商户信息表(MchtBaseInfo)实体类
  *
@@ -15,15 +20,11 @@ import javax.persistence.*;
  */
 @Setter
 @Getter
-@Table(name="mcht_base_info")
-public class MchtBaseInfo implements Serializable {
+public class MchtInfoVo implements Serializable {
 
     /**
      * 商户信息主键
      */
-    @Id
-    @KeySql(useGeneratedKeys = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value="商户信息主键")
     private Long id;
 
@@ -43,20 +44,10 @@ public class MchtBaseInfo implements Serializable {
     @ApiModelProperty(value="商户描述")
     private String mchtDesc;
     /**
-     * 商户地址
-     */
-    @ApiModelProperty(value="商户地址")
-    private String address;
-    /**
      * 是可用
      */
     @ApiModelProperty(value="是可用")
     private Boolean enableFlag;
-    /**
-     * 是可用
-     */
-    @ApiModelProperty(value="是否删除")
-    private Boolean delFlag;
     /**
      * 创建时间
      */

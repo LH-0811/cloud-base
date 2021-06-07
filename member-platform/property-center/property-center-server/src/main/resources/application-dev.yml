@@ -109,3 +109,6 @@ seata:
   service:
 #    vgroup-mapping.my_test_tx_group: default
     grouplist: { "default": "49.232.166.94:8091" }
+logging:
+  com.cloud.base.member.property.repository.dao:
+    level: debug

@@ -20,4 +20,5 @@ public class PropCouponDetailVo  implements Serializable {
     @ApiModelProperty(value = "优惠券信息")
     private PropCouponInfoVo couponInfoVo;
 
+
 }
