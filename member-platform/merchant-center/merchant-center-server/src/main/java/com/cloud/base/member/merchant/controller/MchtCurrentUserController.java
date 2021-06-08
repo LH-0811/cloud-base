@@ -2,6 +2,7 @@ package com.cloud.base.member.merchant.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
+import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.merchant.service.MchtInfoService;
 import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
@@ -76,21 +77,22 @@ public class MchtCurrentUserController {
     }
 
 
-//    /**
-//     * 获取商户基本信息
-//     */
-//    @GetMapping("/{mchtBaseInfoId}")
-//    @ApiOperation("获取商户基本信息")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "mchtBaseInfoId", value = "商户基本信息id")
-//    })
-//    public ServerResponse<MchtInfoVo> getMchtBaseInfoVoById(@PathVariable(value = "mchtBaseInfoId") Long mchtBaseInfoId) throws Exception {
-//        log.info("|-----------------------------------------------|");
-//        log.info("进入 获取商户基本信息 接口 : MchtCommonController-getMchtBaseInfoVoById");
-//        MchtInfoVo mchtInfoVo = mchtInfoService.getMchtBaseInfoVoById(mchtBaseInfoId);
-//        return ServerResponse.createBySuccess("获取成功", mchtInfoVo);
-//    }
-//
-//
+    /**
+     * 用户加入到商户vip
+     */
+    @PostMapping("/join_vip/{mchtId}")
+    @ApiOperation("用户加入到商户vip")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "mchtId", value = "商户id")
+    })
+    @TokenToAuthority
+    public ServerResponse joinToMchtVip(@PathVariable(value = "mchtId") Long mchtId,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+
+        log.info("|-----------------------------------------------|");
+        log.info("进入 用户加入到商户vip 接口 : MchtCurrentUserController-joinToMchtVip");
+        mchtInfoService.joinToMchtVip(mchtId,securityAuthority);
+        return ServerResponse.createBySuccess("操作成功");
+    }
 
 }

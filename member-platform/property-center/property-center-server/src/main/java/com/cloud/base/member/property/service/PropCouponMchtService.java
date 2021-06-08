@@ -51,7 +51,7 @@ public interface PropCouponMchtService {
     void couponInfoConsume(Long couponInfoId, SecurityAuthority securityAuthority) throws Exception;
 
     /**
-     * 优惠券消费
+     * 优惠券失效
      */
     void couponInfoInvalid(Long couponInfoId, SecurityAuthority securityAuthority) throws Exception;
 

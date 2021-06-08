@@ -7,6 +7,7 @@ import com.cloud.base.member.merchant.param.MchtInfoUpdateParam;
 import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.member.merchant.vo.MchtInfoVo;
 import com.github.pagehelper.PageInfo;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -61,4 +62,9 @@ public interface MchtInfoService {
      * 获取当前用户关联商户列表
      */
     List<MchtInfoVo> getMchtInfoOfCurrentUser(SecurityAuthority securityAuthority) throws Exception;
+
+    /**
+     * 用户加入到商户vip
+     */
+    void joinToMchtVip(Long mchtId, SecurityAuthority securityAuthority) throws Exception;
 }

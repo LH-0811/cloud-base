@@ -9,9 +9,11 @@ import com.cloud.base.member.common.method.UserRoleCheck;
 import com.cloud.base.member.merchant.repository.dao.MchtAddressDao;
 import com.cloud.base.member.merchant.repository.dao.MchtInfoDao;
 import com.cloud.base.member.merchant.repository.dao.MchtGiftSettingsDao;
+import com.cloud.base.member.merchant.repository.dao.MchtVipUserDao;
 import com.cloud.base.member.merchant.repository.entity.MchtAddress;
 import com.cloud.base.member.merchant.repository.entity.MchtInfo;
 import com.cloud.base.member.merchant.repository.entity.MchtGiftSettings;
+import com.cloud.base.member.merchant.repository.entity.MchtVipUser;
 import com.cloud.base.member.merchant.service.MchtInfoService;
 import com.cloud.base.member.merchant.param.MchtInfoQueryParam;
 import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
@@ -56,6 +58,10 @@ public class MchtInfoServiceImpl implements MchtInfoService {
 
     @Autowired
     private MchtAddressDao mchtAddressDao;
+
+
+    @Autowired
+    private MchtVipUserDao mchtVipUserDao;
 
     /**
      * 创建商户基本信息
@@ -370,7 +376,6 @@ public class MchtInfoServiceImpl implements MchtInfoService {
     }
 
 
-
     /**
      * 获取当前用户关联商户列表
      */
@@ -385,7 +390,7 @@ public class MchtInfoServiceImpl implements MchtInfoService {
             criteria.andEqualTo("delFlag", false);
             List<MchtInfo> mchtInfos = mchtInfoDao.selectByExample(example);
             List<MchtInfoVo> mchtInfoVoList = Lists.newArrayList();
-            if (CollectionUtils.isNotEmpty(mchtInfos)){
+            if (CollectionUtils.isNotEmpty(mchtInfos)) {
                 mchtInfoVoList = mchtInfos.stream().map(ele -> {
                     MchtInfoVo mchtInfoVo = new MchtInfoVo();
                     BeanUtils.copyProperties(ele, mchtInfoVo);
@@ -393,9 +398,30 @@ public class MchtInfoServiceImpl implements MchtInfoService {
                 }).collect(Collectors.toList());
             }
             log.info("完成 获取当前用户关联商户列表");
-            return  mchtInfoVoList;
-        }catch (Exception e){
-            throw CommonException.create(e,ServerResponse.createByError("获取当前用户关联商户列表失败,请联系管理员"));
+            return mchtInfoVoList;
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("获取当前用户关联商户列表失败,请联系管理员"));
+        }
+    }
+
+
+
+    /**
+     * 用户加入到商户vip
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void joinToMchtVip(Long mchtId, SecurityAuthority securityAuthority) throws Exception {
+        log.info("开始 用户加入到商户vip: mchtId={} userId={}", mchtId, securityAuthority.getSecurityUser().getId());
+        try {
+            MchtVipUser mchtVipUser = new MchtVipUser();
+            mchtVipUser.setId(idWorker.nextId());
+            mchtVipUser.setUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+            mchtVipUser.setMchtId(mchtId);
+            mchtVipUserDao.insertSelective(mchtVipUser);
+            log.info("完成 用户加入到商户vip");
+        } catch (Exception e) {
+            throw CommonException.create(e,ServerResponse.createByError("用户加入到商户vip失败，请联系管理员"));
         }
     }
 

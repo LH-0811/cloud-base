@@ -9,8 +9,10 @@ import com.cloud.base.member.common.method.UserRoleCheck;
 import com.cloud.base.member.property.feign.MchtApiClient;
 import com.cloud.base.member.property.param.*;
 import com.cloud.base.member.property.repository.dao.PropCouponInfoDao;
+import com.cloud.base.member.property.repository.dao.PropCouponStatusHistoryDao;
 import com.cloud.base.member.property.repository.dao.PropCouponTemplateDao;
 import com.cloud.base.member.property.repository.entity.PropCouponInfo;
+import com.cloud.base.member.property.repository.entity.PropCouponStatusHistory;
 import com.cloud.base.member.property.repository.entity.PropCouponTemplate;
 import com.cloud.base.member.property.service.PropCouponMchtService;
 import com.cloud.base.member.property.vo.PropCouponDetailVo;
@@ -49,6 +51,9 @@ public class PropCouponMchtServiceImpl implements PropCouponMchtService {
 
     @Autowired
     private PropCouponInfoDao propCouponInfoDao;
+
+    @Autowired
+    private PropCouponStatusHistoryDao propCouponStatusHistoryDao;
 
     @Autowired
     private IdWorker idWorker;
@@ -231,6 +236,7 @@ public class PropCouponMchtServiceImpl implements PropCouponMchtService {
         }
 
         try {
+            // 优惠券基本信息
             PropCouponInfo propCouponInfo = new PropCouponInfo();
             propCouponInfo.setId(idWorker.nextId());
             propCouponInfo.setUserId(param.getUserId());
@@ -242,6 +248,16 @@ public class PropCouponMchtServiceImpl implements PropCouponMchtService {
             propCouponInfo.setCreateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             propCouponInfo.setCreateTime(new Date());
             propCouponInfoDao.insertSelective(propCouponInfo);
+
+            // 记录优惠券状态信息
+            PropCouponStatusHistory statusHistory = new PropCouponStatusHistory();
+            statusHistory.setId(idWorker.nextId());
+            statusHistory.setCouponInfoId(propCouponInfo.getId());
+            statusHistory.setStatus(propCouponInfo.getStatus());
+            statusHistory.setDelFlag(false);
+            statusHistory.setCreateTime(propCouponInfo.getCreateTime());
+            statusHistory.setCreateBy(propCouponInfo.getCreateBy());
+            propCouponStatusHistoryDao.insertSelective(statusHistory);
             log.info("完成 创建优惠券信息");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("创建优惠券信息失败,请联系管理员"));
@@ -316,12 +332,25 @@ public class PropCouponMchtServiceImpl implements PropCouponMchtService {
             throw CommonException.create(ServerResponse.createByError("优惠券信息不存在"));
         }
         try {
+            // 优惠券状态更新
             PropCouponInfo updateCouponInfo = new PropCouponInfo();
             updateCouponInfo.setId(propCouponInfo.getId());
             updateCouponInfo.setStatus(PropCouponInfo.Status.CONSUMED.getCode());
             updateCouponInfo.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             updateCouponInfo.setUpdateTime(new Date());
             propCouponInfoDao.updateByPrimaryKeySelective(updateCouponInfo);
+
+            // 记录优惠券状态信息
+            PropCouponStatusHistory statusHistory = new PropCouponStatusHistory();
+            statusHistory.setId(idWorker.nextId());
+            statusHistory.setCouponInfoId(propCouponInfo.getId());
+            statusHistory.setStatus(propCouponInfo.getStatus());
+            statusHistory.setDelFlag(false);
+            statusHistory.setCreateTime(propCouponInfo.getCreateTime());
+            statusHistory.setCreateBy(propCouponInfo.getCreateBy());
+            statusHistory.setUpdateBy(propCouponInfo.getUpdateBy());
+            statusHistory.setUpdateTime(propCouponInfo.getUpdateTime());
+            propCouponStatusHistoryDao.insertSelective(statusHistory);
             log.info("完成 优惠券消费");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("优惠券消费失败,请联系管理员"));
@@ -330,7 +359,7 @@ public class PropCouponMchtServiceImpl implements PropCouponMchtService {
 
 
     /**
-     * 优惠券消费
+     * 优惠券失效
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -347,6 +376,18 @@ public class PropCouponMchtServiceImpl implements PropCouponMchtService {
             updateCouponInfo.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             updateCouponInfo.setUpdateTime(new Date());
             propCouponInfoDao.updateByPrimaryKeySelective(updateCouponInfo);
+
+            // 记录优惠券状态信息
+            PropCouponStatusHistory statusHistory = new PropCouponStatusHistory();
+            statusHistory.setId(idWorker.nextId());
+            statusHistory.setCouponInfoId(propCouponInfo.getId());
+            statusHistory.setStatus(propCouponInfo.getStatus());
+            statusHistory.setDelFlag(false);
+            statusHistory.setCreateTime(propCouponInfo.getCreateTime());
+            statusHistory.setCreateBy(propCouponInfo.getCreateBy());
+            statusHistory.setUpdateBy(propCouponInfo.getUpdateBy());
+            statusHistory.setUpdateTime(propCouponInfo.getUpdateTime());
+            propCouponStatusHistoryDao.insertSelective(statusHistory);
             log.info("完成 优惠券失效");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("优惠券失效失败,请联系管理员"));

@@ -1,6 +1,6 @@
 package com.cloud.base.member.property.repository.dao;
 
-import com.cloud.base.member.property.repository.entity.PropSocreHistory;
+import com.cloud.base.member.property.repository.entity.PropScoreHistory;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -9,7 +9,7 @@ import tk.mybatis.mapper.common.Mapper;
  * @author lh0811
  * @since 2021-06-08 20:47:53
  */
-public interface PropSocreHistoryDao extends Mapper<PropSocreHistory> {
+public interface PropScoreHistoryDao extends Mapper<PropScoreHistory> {
 
 
 }
