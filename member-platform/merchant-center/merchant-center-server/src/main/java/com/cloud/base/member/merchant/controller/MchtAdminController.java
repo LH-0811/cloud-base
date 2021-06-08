@@ -35,7 +35,7 @@ public class MchtAdminController {
     @ApiOperation("创建商户基本信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
-            @ApiImplicitParam(paramType = "body", dataType = "MchtBaseInfoCreateParam", dataTypeClass = MchtInfoCreateParam.class, name = "param", value = "参数")
+            @ApiImplicitParam(paramType = "body", dataType = "MchtInfoCreateParam", dataTypeClass = MchtInfoCreateParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/merchant_base_info/manager/create")
     public ServerResponse mchtBaseInfoCreate(@Validated @RequestBody MchtInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -49,7 +49,7 @@ public class MchtAdminController {
     @ApiOperation("查询商户基本信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
-            @ApiImplicitParam(paramType = "body", dataType = "MchtBaseInfoQueryParam", dataTypeClass = MchtInfoQueryParam.class, name = "param", value = "参数")
+            @ApiImplicitParam(paramType = "body", dataType = "MchtInfoQueryParam", dataTypeClass = MchtInfoQueryParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/merchant_base_info/manager/query")
     public ServerResponse<PageInfo<MchtInfoVo>> queryMchtBaseInfo(@Validated @RequestBody MchtInfoQueryParam param) throws Exception {
@@ -63,7 +63,7 @@ public class MchtAdminController {
     @ApiOperation("更新商户基本信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
-            @ApiImplicitParam(paramType = "body", dataType = "MchtBaseInfoUpdateParam", dataTypeClass = MchtInfoUpdateParam.class, name = "param", value = "参数")
+            @ApiImplicitParam(paramType = "body", dataType = "MchtInfoUpdateParam", dataTypeClass = MchtInfoUpdateParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/merchant_base_info/manager/update")
     public ServerResponse updateMchtBaseInfo(@Validated @RequestBody MchtInfoUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {

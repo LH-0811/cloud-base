@@ -22,12 +22,17 @@ public class MchtBaseInfoApiClientFallbackFactory extends FeignFallbackFactory i
         return new MchtInfoApiClient() {
             @Override
             public ServerResponse mchtBaseInfoCreate(MchtInfoCreateParam param) throws Exception {
-                return ServerResponse.createByError("商户中心异常,请稍后再试:" + errMsg(throwable));
+                return ServerResponse.createByError("商户中心异常,创建商户信息失败,请稍后再试:" + errMsg(throwable));
             }
 
             @Override
             public ServerResponse<List<MchtInfoVo>> getMchtBaseInfoByUserId(Long userId) throws Exception {
-                return ServerResponse.createByError("商户中心异常,请稍后再试:" + errMsg(throwable));
+                return ServerResponse.createByError("商户中心异常,获取用户关联商户信息失败,请稍后再试:" + errMsg(throwable));
+            }
+
+            @Override
+            public ServerResponse<MchtInfoVo> getMchtBaseInfoVoById(Long mchtBaseInfoId) throws Exception {
+                return ServerResponse.createByError("商户中心异常,获取商户详情失败,请稍后再试:" + errMsg(throwable));
             }
         };
     }
