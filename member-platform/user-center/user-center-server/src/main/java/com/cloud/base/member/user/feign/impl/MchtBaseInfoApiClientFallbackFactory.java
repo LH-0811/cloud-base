@@ -3,8 +3,8 @@ package com.cloud.base.member.user.feign.impl;
 import com.cloud.base.alibaba_cloud.fallback.FeignFallbackFactory;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.member.user.feign.MchtInfoApiClient;
-import com.cloud.base.memeber.merchant.param.MchtInfoCreateParam;
-import com.cloud.base.memeber.merchant.vo.MchtInfoVo;
+import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
+import com.cloud.base.member.merchant.vo.MchtInfoVo;
 import feign.hystrix.FallbackFactory;
 import org.springframework.stereotype.Component;
 

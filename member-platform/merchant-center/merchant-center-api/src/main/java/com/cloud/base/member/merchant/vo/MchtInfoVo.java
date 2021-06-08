@@ -1,4 +1,4 @@
-package com.cloud.base.memeber.merchant.vo;
+package com.cloud.base.member.merchant.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

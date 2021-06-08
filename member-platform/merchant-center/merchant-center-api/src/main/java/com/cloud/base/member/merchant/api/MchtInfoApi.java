@@ -1,8 +1,8 @@
-package com.cloud.base.memeber.merchant.api;
+package com.cloud.base.member.merchant.api;
 
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.memeber.merchant.param.MchtInfoCreateParam;
-import com.cloud.base.memeber.merchant.vo.MchtInfoVo;
+import com.cloud.base.member.merchant.vo.MchtInfoVo;
+import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;

@@ -2,7 +2,7 @@ package com.cloud.base.member.user.feign;
 
 import com.cloud.base.alibaba_cloud.config.FeignConfiguration;
 import com.cloud.base.member.user.feign.impl.MchtBaseInfoApiClientFallbackFactory;
-import com.cloud.base.memeber.merchant.api.MchtInfoApi;
+import com.cloud.base.member.merchant.api.MchtInfoApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**

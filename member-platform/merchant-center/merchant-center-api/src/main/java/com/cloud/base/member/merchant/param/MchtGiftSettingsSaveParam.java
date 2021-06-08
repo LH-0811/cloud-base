@@ -1,4 +1,4 @@
-package com.cloud.base.memeber.merchant.param;
+package com.cloud.base.member.merchant.param;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

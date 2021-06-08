@@ -16,7 +16,7 @@ import com.cloud.base.member.property.service.PropCouponMchtService;
 import com.cloud.base.member.property.vo.PropCouponDetailVo;
 import com.cloud.base.member.property.vo.PropCouponInfoVo;
 import com.cloud.base.member.property.vo.PropCouponTemplateVo;
-import com.cloud.base.memeber.merchant.vo.MchtInfoVo;
+import com.cloud.base.member.merchant.vo.MchtInfoVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;

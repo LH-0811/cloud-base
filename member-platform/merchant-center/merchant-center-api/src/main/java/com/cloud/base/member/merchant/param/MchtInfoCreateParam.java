@@ -1,4 +1,4 @@
-package com.cloud.base.memeber.merchant.param;
+package com.cloud.base.member.merchant.param;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,36 +9,34 @@ import tk.mybatis.mapper.annotation.KeySql;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 商户中心-商户信息表(MchtBaseInfo)实体类
- *
  * @author lh0811
- * @since 2021-05-26 22:05:58
+ * @date 2021/5/27
  */
-@Setter
 @Getter
-@ApiModel(description = "商户基本信息更新参数")
-public class MchtInfoUpdateParam implements Serializable {
+@Setter
+@ApiModel(description = "商户基本信息创建参数")
+public class MchtInfoCreateParam implements Serializable {
+
 
     /**
-     * 商户信息主键
+     * 商户用户id
      */
-    @NotNull(message = "商户信息id不能为空")
-    @ApiModelProperty(value="商户信息主键",required = true)
-    private Long id;
-
+    @NotNull(message = "商户用户id不能为空")
+    @ApiModelProperty(value="商户用户id",required = true)
+    private Long mchtUserId;
     /**
      * 商户名称
      */
-    @ApiModelProperty(value="商户名称")
+    @NotBlank(message = "商户名称不能为空")
+    @ApiModelProperty(value="商户名称",required = true)
     private String mchtName;
-
     /**
      * 商户描述
      */
@@ -91,14 +89,5 @@ public class MchtInfoUpdateParam implements Serializable {
      */
     @ApiModelProperty(value="纬度")
     private BigDecimal latitude;
-
-
-    /**
-     * 是可用
-     */
-    @ApiModelProperty(value="是可用")
-    private Boolean enableFlag;
-
-
 
 }

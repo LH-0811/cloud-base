@@ -9,7 +9,7 @@ import com.cloud.base.member.user.repository.entity.SysRole;
 import com.cloud.base.member.user.repository.entity.SysUser;
 import com.cloud.base.member.user.param.*;
 import com.cloud.base.member.user.service.SysAdminService;
-import com.cloud.base.memeber.merchant.param.MchtInfoCreateParam;
+import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

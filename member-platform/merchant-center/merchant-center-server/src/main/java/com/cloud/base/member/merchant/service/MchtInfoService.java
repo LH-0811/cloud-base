@@ -1,11 +1,11 @@
 package com.cloud.base.member.merchant.service;
 
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.memeber.merchant.param.MchtInfoCreateParam;
-import com.cloud.base.memeber.merchant.param.MchtInfoQueryParam;
-import com.cloud.base.memeber.merchant.param.MchtInfoUpdateParam;
-import com.cloud.base.memeber.merchant.param.MchtGiftSettingsSaveParam;
-import com.cloud.base.memeber.merchant.vo.MchtInfoVo;
+import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
+import com.cloud.base.member.merchant.param.MchtInfoQueryParam;
+import com.cloud.base.member.merchant.param.MchtInfoUpdateParam;
+import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
+import com.cloud.base.member.merchant.vo.MchtInfoVo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
