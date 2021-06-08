@@ -4,7 +4,7 @@ import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.property.param.*;
-import com.cloud.base.member.property.service.PropCouponBaseService;
+import com.cloud.base.member.property.service.PropCouponMchtService;
 import com.cloud.base.member.property.vo.PropCouponDetailVo;
 import com.cloud.base.member.property.vo.PropCouponInfoVo;
 import com.cloud.base.member.property.vo.PropCouponTemplateVo;
@@ -24,13 +24,13 @@ import springfox.documentation.annotations.ApiIgnore;
  * @date 2021/6/4
  */
 @Slf4j
-@Api(tags = "优惠券资产 基本信息 管理接口")
+@Api(tags = "优惠券资产 基本信息 商户管理接口")
 @RestController
-@RequestMapping("/coupon/base")
-public class CouponBaseController {
+@RequestMapping("/coupon/mcht")
+public class CouponMchtController {
 
     @Autowired
-    private PropCouponBaseService propCouponBaseService;
+    private PropCouponMchtService propCouponMchtService;
 
 
     /**
@@ -46,7 +46,7 @@ public class CouponBaseController {
     public ServerResponse couponTemplateCreate(@Validated @RequestBody PropCouponTemplateCreateParam param, @ApiIgnore SecurityAuthority authority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建优惠券模板 接口 : CouponController-couponTemplateCreate");
-        propCouponBaseService.couponTemplateCreate(param, authority);
+        propCouponMchtService.couponTemplateCreate(param, authority);
         return ServerResponse.createBySuccess("创建优惠券模板完成");
     }
 
@@ -63,7 +63,7 @@ public class CouponBaseController {
     public ServerResponse couponTemplateUpdate(@Validated @RequestBody PropCouponTemplateUpdateParam param, @ApiIgnore SecurityAuthority authority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改优惠券模板 接口 : CouponController-couponTemplateUpdate");
-        propCouponBaseService.couponTemplateUpdate(param, authority);
+        propCouponMchtService.couponTemplateUpdate(param, authority);
         return ServerResponse.createBySuccess("修改优惠券模板完成");
     }
 
@@ -80,7 +80,7 @@ public class CouponBaseController {
     public ServerResponse couponTemplateDelete(@PathVariable(value = "templateId") Long templateId, @ApiIgnore SecurityAuthority authority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改优惠券模板 接口 : CouponController-couponTemplateDelete");
-        propCouponBaseService.couponTemplateDelete(templateId, authority);
+        propCouponMchtService.couponTemplateDelete(templateId, authority);
         return ServerResponse.createBySuccess("修改优惠券模板完成");
 
     }
@@ -98,7 +98,7 @@ public class CouponBaseController {
     public ServerResponse<PageInfo<PropCouponTemplateVo>> couponTemplateQuery(@Validated @RequestBody PropCouponTemplateQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询优惠券模板 接口 : CouponController-couponTemplateQuery");
-        PageInfo<PropCouponTemplateVo> pageInfo = propCouponBaseService.couponTemplateQuery(param, securityAuthority);
+        PageInfo<PropCouponTemplateVo> pageInfo = propCouponMchtService.couponTemplateQuery(param, securityAuthority);
         return ServerResponse.createBySuccess("查询优惠券模板完成", pageInfo);
     }
 
@@ -115,7 +115,7 @@ public class CouponBaseController {
     public ServerResponse couponInfoCreate(@Validated @RequestBody PropCouponInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建优惠券信息 接口 : CouponController-couponInfoCreate");
-        propCouponBaseService.couponInfoCreate(param, securityAuthority);
+        propCouponMchtService.couponInfoCreate(param, securityAuthority);
         return ServerResponse.createBySuccess("创建优惠券信息完成");
     }
 
@@ -132,7 +132,7 @@ public class CouponBaseController {
     public ServerResponse<PageInfo<PropCouponInfoVo>> couponInfoQuery(@Validated @RequestBody PropCouponInfoQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询优惠券信息列表 接口 : CouponController-couponInfoQuery");
-        PageInfo<PropCouponInfoVo> pageInfo = propCouponBaseService.couponInfoQuery(param, securityAuthority);
+        PageInfo<PropCouponInfoVo> pageInfo = propCouponMchtService.couponInfoQuery(param, securityAuthority);
         return ServerResponse.createBySuccess("查询优惠券信息列表完成", pageInfo);
     }
 
@@ -149,7 +149,7 @@ public class CouponBaseController {
     public ServerResponse couponInfoConsume(@PathVariable(value = "couponInfoId") Long couponInfoId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 优惠券消费 接口 : CouponController-couponInfoConsume");
-        propCouponBaseService.couponInfoConsume(couponInfoId, securityAuthority);
+        propCouponMchtService.couponInfoConsume(couponInfoId, securityAuthority);
         return ServerResponse.createBySuccess("优惠券消费完成");
     }
 
@@ -166,7 +166,7 @@ public class CouponBaseController {
     public ServerResponse couponInfoInvalid(@PathVariable(value = "couponInfoId") Long couponInfoId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 优惠券失效 接口 : CouponController-couponInfoInvalid");
-        propCouponBaseService.couponInfoInvalid(couponInfoId, securityAuthority);
+        propCouponMchtService.couponInfoInvalid(couponInfoId, securityAuthority);
         return ServerResponse.createBySuccess("优惠券失效完成");
     }
 
@@ -183,7 +183,7 @@ public class CouponBaseController {
     public ServerResponse<PropCouponDetailVo> couponInfoDetailInfo(@PathVariable(value = "couponInfoId") Long couponInfoId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取优惠券详情 接口 : CouponController-couponInfoDetailInfo");
-        PropCouponDetailVo detailVo = propCouponBaseService.couponInfoDetailInfo(couponInfoId, securityAuthority);
+        PropCouponDetailVo detailVo = propCouponMchtService.couponInfoDetailInfo(couponInfoId, securityAuthority);
         return ServerResponse.createBySuccess("获取优惠券详情完成",detailVo);
     }
 

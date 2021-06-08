@@ -56,4 +56,9 @@ public interface MchtInfoService {
      * 获取商户基本信息
      */
     MchtInfoVo getMchtBaseInfoVoById(Long mchtBaseInfoId) throws Exception;
+
+    /**
+     * 获取当前用户关联商户列表
+     */
+    List<MchtInfoVo> getMchtInfoOfCurrentUser(SecurityAuthority securityAuthority) throws Exception;
 }

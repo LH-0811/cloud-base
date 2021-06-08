@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author lh0811
  * @date 2021/5/31
  */
-public interface PropCouponBaseService {
+public interface PropCouponMchtService {
     /**
      * 创建优惠券模板
      */

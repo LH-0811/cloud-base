@@ -370,6 +370,36 @@ public class MchtInfoServiceImpl implements MchtInfoService {
     }
 
 
+
+    /**
+     * 获取当前用户关联商户列表
+     */
+    @Override
+    public List<MchtInfoVo> getMchtInfoOfCurrentUser(SecurityAuthority securityAuthority) throws Exception {
+        log.info("开始 获取当前用户关联商户列表：{}", securityAuthority.getSecurityUser().getId());
+        try {
+            Example example = new Example(MchtInfo.class);
+            example.setOrderByClause(" create_time desc ");
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("mchtUserId", securityAuthority.getSecurityUser().getId());
+            criteria.andEqualTo("delFlag", false);
+            List<MchtInfo> mchtInfos = mchtInfoDao.selectByExample(example);
+            List<MchtInfoVo> mchtInfoVoList = Lists.newArrayList();
+            if (CollectionUtils.isNotEmpty(mchtInfos)){
+                mchtInfoVoList = mchtInfos.stream().map(ele -> {
+                    MchtInfoVo mchtInfoVo = new MchtInfoVo();
+                    BeanUtils.copyProperties(ele, mchtInfoVo);
+                    return mchtInfoVo;
+                }).collect(Collectors.toList());
+            }
+            log.info("完成 获取当前用户关联商户列表");
+            return  mchtInfoVoList;
+        }catch (Exception e){
+            throw CommonException.create(e,ServerResponse.createByError("获取当前用户关联商户列表失败,请联系管理员"));
+        }
+    }
+
+
 // 私有方法 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**

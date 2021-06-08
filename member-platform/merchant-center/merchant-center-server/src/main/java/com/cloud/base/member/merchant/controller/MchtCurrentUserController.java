@@ -6,6 +6,7 @@ import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.merchant.service.MchtInfoService;
 import com.cloud.base.memeber.merchant.param.MchtInfoCreateParam;
 import com.cloud.base.memeber.merchant.param.MchtGiftSettingsSaveParam;
+import com.cloud.base.memeber.merchant.vo.MchtInfoVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -13,11 +14,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 @Slf4j
 @Api(tags = "商户基本信息当前用户管理接口")
@@ -44,7 +44,6 @@ public class MchtCurrentUserController {
     }
 
 
-
     @PostMapping("/gift_settings/save")
     @ApiOperation("保存商户的福利配置")
     @ApiImplicitParams({
@@ -58,5 +57,40 @@ public class MchtCurrentUserController {
         mchtInfoService.saveMchtGiftSettings(param, securityAuthority);
         return ServerResponse.createBySuccess("保存成功");
     }
+
+
+    /**
+     * 获取当前用户关联商户列表
+     */
+    @PostMapping("/mcht_info_list")
+    @ApiOperation("获取当前用户关联商户列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token")
+    })
+    @HasUrl(url = "/merchant_base_info/current_user/mcht_info_list")
+    public ServerResponse<List<MchtInfoVo>> getMchtInfoOfCurrentUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 获取当前用户关联商户列表 接口 : MchtCurrentUserController-getMchtInfoOfCurrentUser");
+        List<MchtInfoVo> mchtInfoVoList = mchtInfoService.getMchtInfoOfCurrentUser(securityAuthority);
+        return ServerResponse.createBySuccess("获取成功", mchtInfoVoList);
+    }
+
+
+//    /**
+//     * 获取商户基本信息
+//     */
+//    @GetMapping("/{mchtBaseInfoId}")
+//    @ApiOperation("获取商户基本信息")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "mchtBaseInfoId", value = "商户基本信息id")
+//    })
+//    public ServerResponse<MchtInfoVo> getMchtBaseInfoVoById(@PathVariable(value = "mchtBaseInfoId") Long mchtBaseInfoId) throws Exception {
+//        log.info("|-----------------------------------------------|");
+//        log.info("进入 获取商户基本信息 接口 : MchtCommonController-getMchtBaseInfoVoById");
+//        MchtInfoVo mchtInfoVo = mchtInfoService.getMchtBaseInfoVoById(mchtBaseInfoId);
+//        return ServerResponse.createBySuccess("获取成功", mchtInfoVo);
+//    }
+//
+//
 
 }

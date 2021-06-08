@@ -12,7 +12,7 @@ import com.cloud.base.member.property.repository.dao.PropCouponInfoDao;
 import com.cloud.base.member.property.repository.dao.PropCouponTemplateDao;
 import com.cloud.base.member.property.repository.entity.PropCouponInfo;
 import com.cloud.base.member.property.repository.entity.PropCouponTemplate;
-import com.cloud.base.member.property.service.PropCouponBaseService;
+import com.cloud.base.member.property.service.PropCouponMchtService;
 import com.cloud.base.member.property.vo.PropCouponDetailVo;
 import com.cloud.base.member.property.vo.PropCouponInfoVo;
 import com.cloud.base.member.property.vo.PropCouponTemplateVo;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service("propCouponBaseService")
-public class PropCouponBaseServiceImpl implements PropCouponBaseService {
+public class PropCouponMchtServiceImpl implements PropCouponMchtService {
 
     @Autowired
     private PropCouponTemplateDao propCouponTemplateDao;

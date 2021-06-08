@@ -1,26 +1,17 @@
 package com.cloud.base.member.property.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.member.property.param.*;
-import com.cloud.base.member.property.service.PropCouponBaseService;
 import com.cloud.base.member.property.service.PropCouponUserService;
-import com.cloud.base.member.property.vo.PropCouponDetailVo;
-import com.cloud.base.member.property.vo.PropCouponInfoVo;
 import com.cloud.base.member.property.vo.PropCouponOfUserVo;
-import com.cloud.base.member.property.vo.PropCouponTemplateVo;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author lh0811
