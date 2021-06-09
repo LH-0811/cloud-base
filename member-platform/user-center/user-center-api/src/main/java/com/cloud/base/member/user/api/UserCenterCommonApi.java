@@ -30,5 +30,5 @@ public interface UserCenterCommonApi {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "UserOfMchtQueryParam", dataTypeClass = UserOfMchtQueryParam.class, name = "param", value = "参数")
     })
-    public ServerResponse<PageInfo<SysUserVo>> getUserVoListOfMcht(@Validated @RequestBody UserOfMchtQueryParam param) throws Exception;
+    ServerResponse<PageInfo<SysUserVo>> getUserVoListOfMcht(@Validated @RequestBody UserOfMchtQueryParam param) throws Exception;
 }

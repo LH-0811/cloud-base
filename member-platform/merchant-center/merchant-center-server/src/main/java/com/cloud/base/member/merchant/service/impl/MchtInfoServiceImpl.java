@@ -6,6 +6,7 @@ import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.common.method.UserRoleCheck;
+import com.cloud.base.member.merchant.feign.UserCenterCommonApiClient;
 import com.cloud.base.member.merchant.repository.dao.MchtAddressDao;
 import com.cloud.base.member.merchant.repository.dao.MchtInfoDao;
 import com.cloud.base.member.merchant.repository.dao.MchtGiftSettingsDao;
@@ -21,6 +22,8 @@ import com.cloud.base.member.merchant.param.MchtInfoUpdateParam;
 import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.member.merchant.vo.MchtInfoVo;
 import com.cloud.base.member.merchant.vo.MchtVipUserVo;
+import com.cloud.base.member.user.param.UserOfMchtQueryParam;
+import com.cloud.base.member.user.vo.SysUserVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +35,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import springfox.documentation.annotations.ApiIgnore;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
@@ -60,9 +66,12 @@ public class MchtInfoServiceImpl implements MchtInfoService {
     @Autowired
     private MchtAddressDao mchtAddressDao;
 
-
     @Autowired
     private MchtVipUserDao mchtVipUserDao;
+
+    @Autowired
+    private UserCenterCommonApiClient userCenterCommonApiClient;
+
 
     /**
      * 创建商户基本信息
@@ -443,8 +452,32 @@ public class MchtInfoServiceImpl implements MchtInfoService {
             log.info("完成 获取商户vip用户列表");
             return voList;
         } catch (Exception e) {
-            throw CommonException.create(e,ServerResponse.createByError("获取商户vip用户列表失败,请联系管理员"));
+            throw CommonException.create(e, ServerResponse.createByError("获取商户vip用户列表失败,请联系管理员"));
         }
+    }
+
+
+    /**
+     * 查询商户的会员用户列表
+     */
+    @Override
+    public PageInfo<SysUserVo> getVipUserListOfMcht(UserOfMchtQueryParam param, SecurityAuthority securityAuthority) throws Exception {
+        log.info("开始 查询商户的会员用户列表:param={}", JSON.toJSONString(param));
+
+        // 获取到用户关联的商户列表
+        List<MchtInfoVo> mchtInfoVoList = getMchtBaseInfoByUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()), securityAuthority);
+        if (CollectionUtils.isEmpty(mchtInfoVoList)) {
+            throw CommonException.create(ServerResponse.createByError("用户没有关联的商户信息"));
+        }
+        List<Long> mchtIdList = mchtInfoVoList.stream().map(ele -> ele.getId()).collect(Collectors.toList());
+        if (!mchtIdList.contains(param.getMchtId())) {
+            throw CommonException.create(ServerResponse.createByError("查询商户主体不在当前用户下"));
+        }
+        ServerResponse<PageInfo<SysUserVo>> response = userCenterCommonApiClient.getUserVoListOfMcht(param);
+        if (!response.isSuccess()) {
+            throw CommonException.create(response);
+        }
+        return response.getData();
     }
 
 

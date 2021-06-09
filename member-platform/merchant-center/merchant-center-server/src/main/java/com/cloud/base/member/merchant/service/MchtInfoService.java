@@ -7,6 +7,8 @@ import com.cloud.base.member.merchant.param.MchtInfoUpdateParam;
 import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.member.merchant.vo.MchtInfoVo;
 import com.cloud.base.member.merchant.vo.MchtVipUserVo;
+import com.cloud.base.member.user.param.UserOfMchtQueryParam;
+import com.cloud.base.member.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,4 +75,9 @@ public interface MchtInfoService {
      * 获取商户的vip用户列表
      */
     List<MchtVipUserVo> getVipUserOfMcht(Long mchtId) throws Exception;
+
+    /**
+     * 查询商户的会员用户列表
+     */
+    PageInfo<SysUserVo> getVipUserListOfMcht(UserOfMchtQueryParam param, SecurityAuthority securityAuthority) throws Exception;
 }

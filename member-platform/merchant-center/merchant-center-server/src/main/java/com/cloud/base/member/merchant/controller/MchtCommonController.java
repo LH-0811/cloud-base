@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @Api(tags = "商户基本信息通用接口")
 @RestController
-@RequestMapping("/merchant_base_info/common")
+@RequestMapping("/merchant_info/common")
 public class MchtCommonController {
 
     @Autowired

@@ -4,10 +4,14 @@ import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.member.merchant.feign.UserCenterCommonApiClient;
 import com.cloud.base.member.merchant.service.MchtInfoService;
 import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
 import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.member.merchant.vo.MchtInfoVo;
+import com.cloud.base.member.user.param.UserOfMchtQueryParam;
+import com.cloud.base.member.user.vo.SysUserVo;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -23,7 +27,7 @@ import java.util.List;
 @Slf4j
 @Api(tags = "商户基本信息当前用户管理接口")
 @RestController
-@RequestMapping("/merchant_base_info/current_user")
+@RequestMapping("/merchant_info/current_user")
 public class MchtCurrentUserController {
 
     @Autowired
@@ -36,7 +40,7 @@ public class MchtCurrentUserController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "MchtInfoCreateParam", dataTypeClass = MchtInfoCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/merchant_base_info/current_user/create")
+    @HasUrl(url = "/merchant_info/current_user/create")
     public ServerResponse mchtBaseInfoCreate(@Validated @RequestBody MchtInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建商户基本信息 接口 : MchtCurrentUserController-mchtBaseInfoCreate");
@@ -68,7 +72,7 @@ public class MchtCurrentUserController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token")
     })
-    @HasUrl(url = "/merchant_base_info/current_user/mcht_info_list")
+    @HasUrl(url = "/merchant_info/current_user/mcht_info_list")
     public ServerResponse<List<MchtInfoVo>> getMchtInfoOfCurrentUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户关联商户列表 接口 : MchtCurrentUserController-getMchtInfoOfCurrentUser");
@@ -87,12 +91,28 @@ public class MchtCurrentUserController {
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "mchtId", value = "商户id")
     })
     @TokenToAuthority
-    public ServerResponse joinToMchtVip(@PathVariable(value = "mchtId") Long mchtId,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
-
+    public ServerResponse joinToMchtVip(@PathVariable(value = "mchtId") Long mchtId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 用户加入到商户vip 接口 : MchtCurrentUserController-joinToMchtVip");
-        mchtInfoService.joinToMchtVip(mchtId,securityAuthority);
+        mchtInfoService.joinToMchtVip(mchtId, securityAuthority);
         return ServerResponse.createBySuccess("操作成功");
+    }
+
+    /**
+     * 查询商户的会员用户列表
+     */
+    @PostMapping("/vip_user/list")
+    @ApiOperation("查询商户的会员用户列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "body", dataType = "UserOfMchtQueryParam", dataTypeClass = UserOfMchtQueryParam.class, name = "param", value = "参数")
+    })
+    @HasUrl(url = "/merchant_info/current_user/vip_user/list")
+    public ServerResponse<PageInfo<SysUserVo>> getVipUserListOfMcht(@Validated @RequestBody UserOfMchtQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 查询商户的会员用户列表 接口 : MchtCurrentUserController-getVipUserListOfMcht");
+        PageInfo<SysUserVo> pageInfo = mchtInfoService.getVipUserListOfMcht(param, securityAuthority);
+        return ServerResponse.createBySuccess("查询成功",pageInfo);
     }
 
 }

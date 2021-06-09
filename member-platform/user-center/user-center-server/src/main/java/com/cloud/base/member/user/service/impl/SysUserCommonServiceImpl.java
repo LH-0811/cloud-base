@@ -59,6 +59,7 @@ public class SysUserCommonServiceImpl implements SysUserCommonService {
             example.setOrderByClause(" create_time desc ");
             Example.Criteria criteria = example.createCriteria();
             criteria.andIn("id", userIdList);
+            criteria.andEqualTo("delFlag",false);
             if (StringUtils.isNotEmpty(param.getPhone())) {
                 criteria.andEqualTo("phone", param.getPhone());
             }

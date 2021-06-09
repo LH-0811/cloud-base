@@ -23,7 +23,7 @@ public interface MchtInfoApi {
     /**
      * 创建商户基本信息
      */
-    @PostMapping("/merchant_base_info/manager/create")
+    @PostMapping("/merchant_info/manager/create")
     @ApiOperation("创建商户基本信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
@@ -34,7 +34,7 @@ public interface MchtInfoApi {
     /**
      * 根据用户id 查询用户关联的商户基本信息
      */
-    @PostMapping("/merchant_base_info/query/by_user_id/{userId}")
+    @PostMapping("/merchant_info/query/by_user_id/{userId}")
     @ApiOperation("根据用户id 查询用户关联的商户基本信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
@@ -45,7 +45,7 @@ public interface MchtInfoApi {
     /**
      * 获取商户基本信息
      */
-    @GetMapping("/merchant_base_info/common/{mchtBaseInfoId}")
+    @GetMapping("/merchant_info/common/{mchtBaseInfoId}")
     @ApiOperation("获取商户基本信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "mchtBaseInfoId", value = "商户基本信息id")
@@ -55,7 +55,7 @@ public interface MchtInfoApi {
     /**
      * 用户加入到商户vip
      */
-    @PostMapping("/merchant_base_info/current_user/join_vip/{mchtId}")
+    @PostMapping("/merchant_info/current_user/join_vip/{mchtId}")
     @ApiOperation("用户加入到商户vip")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
@@ -66,7 +66,7 @@ public interface MchtInfoApi {
     /**
      * 获取商户的vip用户列表
      */
-    @GetMapping("/merchant_base_info/common/join_vip/user_list/{mchtId}")
+    @GetMapping("/merchant_info/common/join_vip/user_list/{mchtId}")
     @ApiOperation("获取商户的vip用户列表")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),

@@ -18,7 +18,7 @@ public class UserCenterCurrentUserApiClientFallbackFactory extends FeignFallback
         return new UserCenterCurrentUserApiClient() {
             @Override
             public ServerResponse<SysUserVo> getUesrInfo() throws Exception {
-                return ServerResponse.createByError("用户中心异常,请稍后再试:" + errMsg(throwable));
+                return ServerResponse.createByError("用户中心异常,查询用户信息失败,请稍后再试:" + errMsg(throwable));
             }
         };
     }
