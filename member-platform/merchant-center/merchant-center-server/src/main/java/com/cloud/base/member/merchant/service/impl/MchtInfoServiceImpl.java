@@ -20,6 +20,7 @@ import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
 import com.cloud.base.member.merchant.param.MchtInfoUpdateParam;
 import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.member.merchant.vo.MchtInfoVo;
+import com.cloud.base.member.merchant.vo.MchtVipUserVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -404,8 +405,6 @@ public class MchtInfoServiceImpl implements MchtInfoService {
         }
     }
 
-
-
     /**
      * 用户加入到商户vip
      */
@@ -421,7 +420,30 @@ public class MchtInfoServiceImpl implements MchtInfoService {
             mchtVipUserDao.insertSelective(mchtVipUser);
             log.info("完成 用户加入到商户vip");
         } catch (Exception e) {
-            throw CommonException.create(e,ServerResponse.createByError("用户加入到商户vip失败，请联系管理员"));
+            throw CommonException.create(e, ServerResponse.createByError("用户加入到商户vip失败，请联系管理员"));
+        }
+    }
+
+
+    /**
+     * 获取商户的vip用户列表
+     */
+    @Override
+    public List<MchtVipUserVo> getVipUserOfMcht(Long mchtId) throws Exception {
+        log.info("开始 获取商户vip用户列表:mchtId={}", mchtId);
+        try {
+            MchtVipUser selectParam = new MchtVipUser();
+            selectParam.setMchtId(mchtId);
+            List<MchtVipUser> vipUserList = mchtVipUserDao.select(selectParam);
+            List<MchtVipUserVo> voList = vipUserList.stream().map(ele -> {
+                MchtVipUserVo mchtVipUserVo = new MchtVipUserVo();
+                BeanUtils.copyProperties(ele, mchtVipUserVo);
+                return mchtVipUserVo;
+            }).collect(Collectors.toList());
+            log.info("完成 获取商户vip用户列表");
+            return voList;
+        } catch (Exception e) {
+            throw CommonException.create(e,ServerResponse.createByError("获取商户vip用户列表失败,请联系管理员"));
         }
     }
 

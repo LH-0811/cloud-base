@@ -15,13 +15,13 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author lh0811
  * @date 2021/5/23
  */
-public interface UserCenterBaseApi {
+public interface UserCenterCurrentUserApi {
 
 
     /**
      * 获取当前用户信息
      */
-    @GetMapping("/sys_user/current_user_info")
+    @GetMapping("/user_center/current_user/current_user_info")
     @ApiOperation("获取当前基础信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),

@@ -2,6 +2,7 @@ package com.cloud.base.member.user.feign.impl;
 
 import com.cloud.base.alibaba_cloud.fallback.FeignFallbackFactory;
 import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.member.merchant.vo.MchtVipUserVo;
 import com.cloud.base.member.user.feign.MchtInfoApiClient;
 import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
 import com.cloud.base.member.merchant.vo.MchtInfoVo;
@@ -33,6 +34,16 @@ public class MchtBaseInfoApiClientFallbackFactory extends FeignFallbackFactory i
             @Override
             public ServerResponse<MchtInfoVo> getMchtBaseInfoVoById(Long mchtBaseInfoId) throws Exception {
                 return ServerResponse.createByError("商户中心异常,获取商户详情失败,请稍后再试:" + errMsg(throwable));
+            }
+
+            @Override
+            public ServerResponse joinToMchtVip(Long mchtId) throws Exception {
+                return ServerResponse.createByError("商户中心异常,加入商户会员失败,请稍后再试:" + errMsg(throwable));
+            }
+
+            @Override
+            public ServerResponse<List<MchtVipUserVo>> getVipUserOfMcht(Long mchtId) throws Exception {
+                return ServerResponse.createByError("商户中心异常,获取商户会员列表失败,请稍后再试:" + errMsg(throwable));
             }
         };
     }

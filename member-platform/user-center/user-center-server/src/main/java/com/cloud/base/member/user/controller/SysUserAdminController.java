@@ -30,10 +30,10 @@ import java.util.List;
  * @date 2021/1/18
  */
 @Slf4j
-@Api(tags = "系统管理员接口")
+@Api(tags = "用户中心-系统管理员接口")
 @RestController
-@RequestMapping("/sys_admin")
-public class SysAdminController extends BaseController {
+@RequestMapping("/user_center/sys_admin")
+public class SysUserAdminController extends BaseController {
 
     @Autowired
     private SysAdminService sysAdminService;
@@ -55,9 +55,9 @@ public class SysAdminController extends BaseController {
             @ApiImplicitParam(paramType = "body", dataType = "MchtInfoCreateParam", dataTypeClass = MchtInfoCreateParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/sys_admin/mcht_base_info/create")
-    public ServerResponse testFeignCreateMchtBaseInfo(@RequestBody MchtInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse testFeignCreateMchtBaseInfo(@Validated @RequestBody MchtInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 系统管理员创建商户基本信息 接口 : SysUserController-testFeignCreateMchtBaseInfo ");
+        log.info("进入 系统管理员创建商户基本信息 接口 : SysUserAdminController-testFeignCreateMchtBaseInfo ");
         ServerResponse serverResponse = mchtBaseInfoApiClient.mchtBaseInfoCreate(param);
         return serverResponse;
     }
@@ -79,7 +79,7 @@ public class SysAdminController extends BaseController {
     @HasUrl(url = "/sys_admin/sys_user/create")
     public ServerResponse createUser(@Validated @RequestBody SysUserCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 创建用户 接口 : SysUserController-createUser ");
+        log.info("进入 创建用户 接口 : SysUserAdminController-createUser ");
         sysAdminService.createUser(param, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("创建成功");
     }
@@ -99,7 +99,7 @@ public class SysAdminController extends BaseController {
     @HasUrl(url = "/sys_admin/sys_user/update")
     public ServerResponse updateUser(@Validated @RequestBody SysUserUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 修改用户 接口 : SysUserController-updateUser ");
+        log.info("进入 修改用户 接口 : SysUserAdminController-updateUser ");
         sysAdminService.updateUser(param, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("修改成功");
     }
@@ -120,7 +120,7 @@ public class SysAdminController extends BaseController {
     @HasUrl(url = "/sys_admin/sys_user/query")
     public ServerResponse<PageInfo<SysUser>> queryUser(@Validated @RequestBody SysUserQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 查询用户 接口 : SysUserController-queryUser ");
+        log.info("进入 查询用户 接口 : SysUserAdminController-queryUser ");
         PageInfo<SysUser> pageInfo = sysAdminService.queryUser(param, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("查询成功", pageInfo);
     }
@@ -137,7 +137,7 @@ public class SysAdminController extends BaseController {
     @HasUrl(url = "/sys_admin/sys_user/roles/set")
     public ServerResponse setUserRoleList(@Validated @RequestBody SysUserRoleSetParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 设置用户角色列表 接口 : SysUserController-setUserRegions");
+        log.info("进入 设置用户角色列表 接口 : SysUserAdminController-setUserRegions");
         sysAdminService.setUserRoleList(param, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("设置成功");
     }
@@ -155,7 +155,7 @@ public class SysAdminController extends BaseController {
     @HasUrl(url = "/sys_admin/sys_user/delete/{userId}")
     public ServerResponse delUser(@PathVariable(value = "userId") Long userId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 删除用户 接口 : SysUserController-delUser");
+        log.info("进入 删除用户 接口 : SysUserAdminController-delUser");
         sysAdminService.delUser(userId, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("删除成功");
     }

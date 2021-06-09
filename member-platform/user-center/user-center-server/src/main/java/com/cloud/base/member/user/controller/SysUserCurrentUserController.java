@@ -32,10 +32,10 @@ import java.util.List;
  * @date 2021/1/18
  */
 @Slf4j
-@Api(tags = "当前系统用户信息接口")
+@Api(tags = "用户中心-当前系统用户信息接口")
 @RestController
-@RequestMapping("/sys_user")
-public class SysUserController extends BaseController {
+@RequestMapping("/user_center/current_user")
+public class SysUserCurrentUserController extends BaseController {
 
     @Autowired
     private SysUserService sysUserService;
@@ -53,7 +53,7 @@ public class SysUserController extends BaseController {
     })
     public ServerResponse registerUser(@Validated @RequestBody SysUserRegisterParam param) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 注册用户 接口 : SysUserController-registerUser");
+        log.info("进入 注册用户 接口 : SysUserCurrentUserController-registerUser");
         sysUserService.registerUser(param);
         return ServerResponse.createBySuccess("注册成功");
     }
@@ -65,7 +65,7 @@ public class SysUserController extends BaseController {
     })
     public ServerResponse<SecurityAuthority> verificationUserByUsernameAndPwd(@Validated @RequestBody UsernamePasswordVerificationParam param) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 获取当前用户信息 接口 : SysUserController-getUesrInfo");
+        log.info("进入 获取当前用户信息 接口 : SysUserCurrentUserController-getUesrInfo");
         SecurityAuthority securityAuthority = sysUserService.verification(param);
         return ServerResponse.createBySuccess("获取成功", securityAuthority);
     }
@@ -81,7 +81,7 @@ public class SysUserController extends BaseController {
     @TokenToAuthority
     public ServerResponse<SecurityAuthority> getUesrPremsInfo(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 获取当前用户信息 接口 : SysUserController-getUesrInfo");
+        log.info("进入 获取当前用户信息 接口 : SysUserCurrentUserController-getUesrInfo");
         return ServerResponse.createBySuccess("获取成功", securityAuthority);
     }
 
@@ -96,7 +96,7 @@ public class SysUserController extends BaseController {
     @TokenToAuthority
     public ServerResponse<SysUserVo> getUesrInfo(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 获取当前用户信息 接口 : SysUserController-getUesrInfo");
+        log.info("进入 获取当前用户信息 接口 : SysUserCurrentUserController-getUesrInfo");
         SysUser sysUser = sysUserService.getUserByUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         SysUserVo sysUserVo = new SysUserVo();
         BeanUtils.copyProperties(sysUser,sysUserVo);
@@ -117,7 +117,7 @@ public class SysUserController extends BaseController {
     @TokenToAuthority
     public ServerResponse<List<SysRole>> getUserRoleList(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 获取用户角色列表 接口 : SysUserController-getUserRoleList");
+        log.info("进入 获取用户角色列表 接口 : SysUserCurrentUserController-getUserRoleList");
         List<SysRole> roles = sysUserService.getUserRoleList(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         return ServerResponse.createBySuccess("查询成功", roles);
     }
@@ -135,7 +135,7 @@ public class SysUserController extends BaseController {
     @TokenToAuthority
     public ServerResponse<List<SysRes>> getResTreeByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 获取用户资源树 接口 : SysUserController-getResTreeByUser");
+        log.info("进入 获取用户资源树 接口 : SysUserCurrentUserController-getResTreeByUser");
         List<SysRes> resTreeByUser = sysUserService.getResTreeByUser(getCurrentSysUser(securityAuthority).getId());
         return ServerResponse.createBySuccess("查询成功", resTreeByUser);
     }
@@ -153,7 +153,7 @@ public class SysUserController extends BaseController {
     @TokenToAuthority
     public ServerResponse<List<MenuVo>> getMenuTreeByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 获取用户资源树 接口 : SysUserController-getMenuTreeByUser");
+        log.info("进入 获取用户资源树 接口 : SysUserCurrentUserController-getMenuTreeByUser");
         List<MenuVo> menuTreeByUser = sysUserService.getMenuTreeByUser(getCurrentSysUser(securityAuthority).getId());
         return ServerResponse.createBySuccess("查询成功", menuTreeByUser);
     }
@@ -171,7 +171,7 @@ public class SysUserController extends BaseController {
     @TokenToAuthority
     public ServerResponse<List<SysRes>> getResListByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 获取用户资源列表 接口 : SysUserController-getResListByUser");
+        log.info("进入 获取用户资源列表 接口 : SysUserCurrentUserController-getResListByUser");
         List<SysRes> resListByUser = sysUserService.getResListByUser(getCurrentSysUser(securityAuthority).getId());
         return ServerResponse.createBySuccess("查询成功", resListByUser);
     }
@@ -191,7 +191,7 @@ public class SysUserController extends BaseController {
     @TokenToAuthority
     public ServerResponse updateUserPassword(@Validated @RequestBody SysUserUpdatePasswordParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
-        log.info("进入 用户修改密码 接口 : SysUserController-updateUserPassword");
+        log.info("进入 用户修改密码 接口 : SysUserCurrentUserController-updateUserPassword");
         sysUserService.updateUserPassword(param, getCurrentSysUser(securityAuthority).getId());
         return ServerResponse.createBySuccess("修改成功");
     }

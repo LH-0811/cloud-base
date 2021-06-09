@@ -115,7 +115,7 @@ public class MchtAdminController {
             @ApiImplicitParam(paramType = "body", dataType = "MchtGiftSettingsSaveParam", dataTypeClass = MchtGiftSettingsSaveParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/merchant_base_info/manager/gift_settings/save")
-    public ServerResponse saveMchtGiftSettings(@RequestBody MchtGiftSettingsSaveParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse saveMchtGiftSettings(@Validated @RequestBody MchtGiftSettingsSaveParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 保存商户的福利配置 接口 : MchtAdminController-deletaMchtBaseInfo");
         mchtInfoService.saveMchtGiftSettings(param, securityAuthority);

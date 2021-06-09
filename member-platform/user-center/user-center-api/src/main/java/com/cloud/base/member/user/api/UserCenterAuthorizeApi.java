@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 public interface UserCenterAuthorizeApi {
 
-    @PostMapping("/sys_user/verification/username_password")
+    @PostMapping("/user_center/current_user/verification/username_password")
     @ApiOperation("系统用户通过用户名密码认证")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "UsernamePasswordVerificationParam", dataTypeClass = UsernamePasswordVerificationParam.class, name = "param", value = "参数")
