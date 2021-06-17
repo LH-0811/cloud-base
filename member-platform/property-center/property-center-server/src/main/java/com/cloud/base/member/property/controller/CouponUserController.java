@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Api(tags = "优惠券资产 用户接口")
 @RestController
-@RequestMapping("/coupon/user")
+@RequestMapping("/prop/coupon/user")
 public class CouponUserController {
 
     @Autowired

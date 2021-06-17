@@ -6,6 +6,7 @@ import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.common.method.UserRoleCheck;
+import com.cloud.base.member.merchant.feign.PropScoreAccountApiClient;
 import com.cloud.base.member.merchant.feign.UserCenterCommonApiClient;
 import com.cloud.base.member.merchant.repository.dao.MchtAddressDao;
 import com.cloud.base.member.merchant.repository.dao.MchtInfoDao;
@@ -22,6 +23,7 @@ import com.cloud.base.member.merchant.param.MchtInfoUpdateParam;
 import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.member.merchant.vo.MchtInfoVo;
 import com.cloud.base.member.merchant.vo.MchtVipUserVo;
+import com.cloud.base.member.property.param.PropScoreAccountCreateParam;
 import com.cloud.base.member.user.param.UserOfMchtQueryParam;
 import com.cloud.base.member.user.vo.SysUserVo;
 import com.github.pagehelper.PageHelper;
@@ -71,6 +73,9 @@ public class MchtInfoServiceImpl implements MchtInfoService {
 
     @Autowired
     private UserCenterCommonApiClient userCenterCommonApiClient;
+
+    @Autowired
+    private PropScoreAccountApiClient propScoreAccountApiClient;
 
 
     /**
@@ -421,6 +426,16 @@ public class MchtInfoServiceImpl implements MchtInfoService {
     @Transactional(rollbackFor = Exception.class)
     public void joinToMchtVip(Long mchtId, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 用户加入到商户vip: mchtId={} userId={}", mchtId, securityAuthority.getSecurityUser().getId());
+
+        // 创建用户积分账号
+        PropScoreAccountCreateParam propScoreAccountCreateParam = new PropScoreAccountCreateParam();
+        propScoreAccountCreateParam.setMchtId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+        propScoreAccountCreateParam.setUserId(mchtId);
+        ServerResponse response = propScoreAccountApiClient.createPropScoreAccount(propScoreAccountCreateParam);
+        if (!response.isSuccess()) {
+            throw CommonException.create(response);
+        }
+
         try {
             MchtVipUser mchtVipUser = new MchtVipUser();
             mchtVipUser.setId(idWorker.nextId());
@@ -431,6 +446,8 @@ public class MchtInfoServiceImpl implements MchtInfoService {
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("用户加入到商户vip失败，请联系管理员"));
         }
+
+
     }
 
 

@@ -26,6 +26,14 @@
             <artifactId>user-center-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <!--资产中心api-->
+        <dependency>
+            <groupId>com.cloud.member</groupId>
+            <artifactId>property-center-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!--   security     -->
         <dependency>
             <groupId>com.cloud.modules</groupId>

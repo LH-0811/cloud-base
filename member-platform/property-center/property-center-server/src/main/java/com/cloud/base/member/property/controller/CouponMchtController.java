@@ -26,7 +26,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @Api(tags = "优惠券资产 基本信息 商户管理接口")
 @RestController
-@RequestMapping("/coupon/mcht")
+@RequestMapping("/prop/coupon/mcht")
 public class CouponMchtController {
 
     @Autowired

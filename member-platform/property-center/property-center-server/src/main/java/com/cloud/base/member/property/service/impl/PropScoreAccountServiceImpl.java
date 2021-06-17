@@ -11,11 +11,13 @@ import com.cloud.base.member.property.repository.entity.PropScoreAccount;
 import com.cloud.base.member.property.repository.entity.PropScoreHistory;
 import com.cloud.base.member.property.service.PropScoreAccountService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author lh0811
@@ -42,6 +44,18 @@ public class PropScoreAccountServiceImpl implements PropScoreAccountService {
     @Transactional(rollbackFor = Exception.class)
     public void createPropScoreAccount(PropScoreAccountCreateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始  创建用户积分账户");
+
+        PropScoreAccount scoreAccount = new PropScoreAccount();
+        scoreAccount.setUserId(param.getUserId());
+        scoreAccount.setMchtId(param.getMchtId());
+        scoreAccount.setDelFlag(false);
+        List<PropScoreAccount> existAccount = propScoreAccountDao.select(scoreAccount);
+        if (CollectionUtils.isNotEmpty(existAccount)) {
+            log.info("用户={}在商户={}下已经存在账号", param.getUserId(), param.getMchtId());
+            return;
+        }
+
+
         try {
             // 账户基本信息
             PropScoreAccount propScoreAccount = new PropScoreAccount();
@@ -77,9 +91,6 @@ public class PropScoreAccountServiceImpl implements PropScoreAccountService {
             throw CommonException.create(e, ServerResponse.createByError("创建用户积分账户失败,请联系管理员"));
         }
     }
-
-
-
 
 
 }
