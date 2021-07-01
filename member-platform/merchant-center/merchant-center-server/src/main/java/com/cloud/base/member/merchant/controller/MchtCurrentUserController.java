@@ -34,6 +34,9 @@ public class MchtCurrentUserController {
     private MchtInfoService mchtInfoService;
 
 
+    /**
+     * 创建商户基本信息
+     */
     @PostMapping("/create")
     @ApiOperation("创建商户基本信息")
     @ApiImplicitParams({
@@ -48,7 +51,9 @@ public class MchtCurrentUserController {
         return ServerResponse.createBySuccess("创建成功");
     }
 
-
+    /**
+     * 保存商户的福利配置
+     */
     @PostMapping("/gift_settings/save")
     @ApiOperation("保存商户的福利配置")
     @ApiImplicitParams({
@@ -81,38 +86,5 @@ public class MchtCurrentUserController {
     }
 
 
-    /**
-     * 用户加入到商户vip
-     */
-    @PostMapping("/join_vip/{mchtId}")
-    @ApiOperation("用户加入到商户vip")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
-            @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "mchtId", value = "商户id")
-    })
-    @TokenToAuthority
-    public ServerResponse joinToMchtVip(@PathVariable(value = "mchtId") Long mchtId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
-        log.info("|-----------------------------------------------|");
-        log.info("进入 用户加入到商户vip 接口 : MchtCurrentUserController-joinToMchtVip");
-        mchtInfoService.joinToMchtVip(mchtId, securityAuthority);
-        return ServerResponse.createBySuccess("操作成功");
-    }
-
-    /**
-     * 查询商户的会员用户列表
-     */
-    @PostMapping("/vip_user/list")
-    @ApiOperation("查询商户的会员用户列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
-            @ApiImplicitParam(paramType = "body", dataType = "UserOfMchtQueryParam", dataTypeClass = UserOfMchtQueryParam.class, name = "param", value = "参数")
-    })
-    @HasUrl(url = "/merchant_info/current_user/vip_user/list")
-    public ServerResponse<PageInfo<SysUserVo>> getVipUserListOfMcht(@Validated @RequestBody UserOfMchtQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
-        log.info("|-----------------------------------------------|");
-        log.info("进入 查询商户的会员用户列表 接口 : MchtCurrentUserController-getVipUserListOfMcht");
-        PageInfo<SysUserVo> pageInfo = mchtInfoService.getVipUserListOfMcht(param, securityAuthority);
-        return ServerResponse.createBySuccess("查询成功",pageInfo);
-    }
 
 }

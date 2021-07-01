@@ -31,6 +31,9 @@ public class MchtAdminController {
     @Autowired
     public MchtInfoService mchtInfoService;
 
+    /**
+     * 创建商户基本信息
+     */
     @PostMapping("/create")
     @ApiOperation("创建商户基本信息")
     @ApiImplicitParams({
@@ -45,6 +48,9 @@ public class MchtAdminController {
         return ServerResponse.createBySuccess("创建成功");
     }
 
+    /**
+     * 查询商户基本信息
+     */
     @PostMapping("/query")
     @ApiOperation("查询商户基本信息")
     @ApiImplicitParams({
@@ -59,6 +65,9 @@ public class MchtAdminController {
         return ServerResponse.createBySuccess("查询成功", pageInfo);
     }
 
+    /**
+     * 更新商户基本信息
+     */
     @PostMapping("/update")
     @ApiOperation("更新商户基本信息")
     @ApiImplicitParams({
@@ -90,6 +99,9 @@ public class MchtAdminController {
         return ServerResponse.createBySuccess("删除成功");
     }
 
+    /**
+     * 根据用户id 查询用户关联的商户基本信息
+     */
     @PostMapping("/query/by_user_id/{userId}")
     @ApiOperation("根据用户id 查询用户关联的商户基本信息")
     @ApiImplicitParams({

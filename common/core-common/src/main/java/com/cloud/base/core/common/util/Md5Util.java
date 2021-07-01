@@ -1,9 +1,14 @@
 package com.cloud.base.core.common.util;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author lh0811
@@ -41,20 +46,37 @@ public class Md5Util {
         return md5Str;
     }
 
-//    public static void main(String[] args) {
-//        System.out.println("main:"+test());
-//    }
-//
-//    private static int test() {
-//        try {
-//            return 0;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw e;
-//        } finally {
-////            int b = 1 / 0;
-//            System.out.println("finally");
-//        }
-//    }
+    public static void main(String[] args) {
+        String str = "aaa";
+
+        String[] arr = StringUtils.split(str,",");
+
+        List<String> list = Arrays.stream(arr).filter(ele -> !ele.equalsIgnoreCase("aaa")).collect(Collectors.toList());
+
+        String result = StringUtils.join(list,",");
+        System.out.println(result);
+
+
+    }
+
+
+    public static class Student {
+        private Integer tag;
+
+        public Student() {
+        }
+
+        public Student(Integer tag) {
+            this.tag = tag;
+        }
+
+        public Integer getTag() {
+            return tag;
+        }
+
+        public void setTag(Integer tag) {
+            this.tag = tag;
+        }
+    }
 
 }

@@ -6,7 +6,9 @@ import com.cloud.base.core.modules.lh_security.client.component.annotation.Token
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.property.param.PropCouponTemplateCreateParam;
 import com.cloud.base.member.property.param.PropScoreAccountCreateParam;
+import com.cloud.base.member.property.service.PropCouponUserService;
 import com.cloud.base.member.property.service.PropScoreAccountService;
+import com.cloud.base.member.property.vo.PropCouponOfUserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -28,6 +30,9 @@ public class CouponCommonController {
     @Autowired
     private PropScoreAccountService propScoreAccountService;
 
+    @Autowired
+    private PropCouponUserService propCouponUserService;
+
     /**
      * 创建 用户积分账户
      */
@@ -44,4 +49,19 @@ public class CouponCommonController {
     }
 
 
+    /**
+     * 获取当前用户优惠券列表
+     */
+    @PostMapping("/list")
+    @ApiOperation("获取当前用户优惠券列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token")
+    })
+    @TokenToAuthority
+    public ServerResponse<PropCouponOfUserVo> getCouponInfoOfUser(SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 获取当前用户优惠券列表 接口 : CouponController-couponTemplateCreate");
+        PropCouponOfUserVo couponInfoOfUser = propCouponUserService.getCouponInfoOfUser(securityAuthority);
+        return ServerResponse.createBySuccess("获取当前用户优惠券列表",couponInfoOfUser);
+    }
 }
