@@ -3,18 +3,21 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>member-platform</artifactId>
+        <artifactId>cloud-base</artifactId>
         <groupId>com.cloud</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cloud.member</groupId>
-    <artifactId>authorize-center</artifactId>
+    <artifactId>user-center</artifactId>
     <packaging>pom</packaging>
+
     <modules>
-        <module>authorize-center-server</module>
+        <module>user-center-api</module>
+        <module>user-center-server</module>
     </modules>
 
-    <description>认证中心</description>
+    <description>用户中心</description>
+
 </project>

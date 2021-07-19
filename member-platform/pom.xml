@@ -13,8 +13,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>user-center</module>
-        <module>authorize-center</module>
+
+
         <module>merchant-center</module>
         <module>property-center</module>
         <module>member-common</module>

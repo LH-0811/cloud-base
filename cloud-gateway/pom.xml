@@ -22,11 +22,11 @@
 <!--        </dependency>-->
 
         <!--   redis     -->
-        <dependency>
-            <groupId>com.cloud.dependency</groupId>
-            <artifactId>dependency-redis</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.cloud.dependency</groupId>-->
+<!--            <artifactId>dependency-redis</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--        </dependency>-->
         <!--引入sentinel-->
         <dependency>
             <groupId>com.cloud.dependency</groupId>
@@ -34,11 +34,11 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- 引入链路跟踪 -->
-        <dependency>
-            <groupId>com.cloud.dependency</groupId>
-            <artifactId>dependency-sleuth-zipkin</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.cloud.dependency</groupId>-->
+<!--            <artifactId>dependency-sleuth-zipkin</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--        </dependency>-->
 
         <!-- 微服务 -->
         <!--springboot-->
