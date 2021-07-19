@@ -39,6 +39,12 @@ public class SysUserUpdateParam implements Serializable {
     private String username;
 
     /**
+     * 密码
+     */
+    @ApiModelProperty(value = "密码")
+    private String password;
+
+    /**
      * 昵称
      */
     @ApiModelProperty(value = "昵称")
