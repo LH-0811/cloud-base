@@ -20,7 +20,7 @@
         <!-- 通用包 -->
         <dependency>
             <groupId>com.cloud.common</groupId>
-            <artifactId>core-common-sentinel</artifactId>
+            <artifactId>core-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

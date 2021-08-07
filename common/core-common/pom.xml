@@ -91,6 +91,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
+        <!--sentinel-->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-core</artifactId>
+        </dependency>
+
+
     </dependencies>
 
 

@@ -8,17 +8,23 @@ import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.common.util.Md5Util;
+import com.cloud.base.core.common.util.ThreadLog;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRole;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityUser;
+import com.cloud.base.member.user.dto.DeptUserDto;
+import com.cloud.base.member.user.param.SysDeptUserQueryParam;
 import com.cloud.base.member.user.param.SysUserRegisterParam;
 import com.cloud.base.member.user.param.SysUserUpdatePasswordParam;
 import com.cloud.base.member.user.param.UsernamePasswordVerificationParam;
 import com.cloud.base.member.user.repository.dao.*;
+import com.cloud.base.member.user.repository.dao.custom.DeptUserCustomDao;
 import com.cloud.base.member.user.repository.entity.*;
 import com.cloud.base.member.user.vo.MenuVo;
 import com.cloud.base.member.user.service.SysUserService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -58,7 +64,34 @@ public class SysUserServiceImpl implements SysUserService {
     private SysResDao sysResDao;
 
     @Autowired
+    private DeptUserCustomDao deptUserCustomDao;
+
+    @Autowired
     private IdWorker idWorker;
+
+
+    /**
+     * 获取部门角色信息
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    public PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param) throws Exception {
+        ThreadLog.info("开始 获取部门角色信息：param=" + JSON.toJSONString(param));
+        try {
+            PageHelper.startPage(param.getPageNum(), param.getPageSize());
+            List<DeptUserDto> deptUserDtos = deptUserCustomDao.selectDeptUser(param);
+            PageInfo<DeptUserDto> pageInfo = new PageInfo(deptUserDtos);
+            PageHelper.clearPage();
+            ThreadLog.info("完成 开始 获取部门角色信息");
+            // 输出日志
+            ThreadLog.output();
+            return pageInfo;
+        } catch (Exception e) {
+            throw CommonException.create(e,ServerResponse.createByError("获取部门角色信息失败,请联系管理员"));
+        }
+    }
 
     /**
      * 获取用户角色列表
@@ -326,7 +359,7 @@ public class SysUserServiceImpl implements SysUserService {
             securityAuthority.setSecurityResList(securityResList);
         }
         if (!CollectionUtils.isEmpty(userRoleList)) {
-            List<SecurityRole> securityRoleList = userRoleList.stream().map(ele -> new SecurityRole(ele.getId(),ele.getNo(),ele.getName())).collect(Collectors.toList());
+            List<SecurityRole> securityRoleList = userRoleList.stream().map(ele -> new SecurityRole(ele.getId(), ele.getNo(), ele.getName())).collect(Collectors.toList());
             securityAuthority.setSecurityRoleList(securityRoleList);
         }
         log.info("完成 通过用户名密码 获取用户信息 并组装权限信息:{}", JSON.toJSONString(param));
@@ -343,16 +376,16 @@ public class SysUserServiceImpl implements SysUserService {
     @Transactional
     public void registerUser(SysUserRegisterParam param) throws Exception {
         log.info("开始 用户注册:{}", JSON.toJSONString(param));
-        if (!param.getPassword().equals(param.getRepassword())){
+        if (!param.getPassword().equals(param.getRepassword())) {
             throw CommonException.create(ServerResponse.createByError("两次输入密码不一致"));
         }
         try {
             SysUser sysUser = new SysUser();
             sysUser.setId(idWorker.nextId());
             // 属性对拷
-            BeanUtils.copyProperties(param,sysUser);
+            BeanUtils.copyProperties(param, sysUser);
             sysUser.setSalt(RandomStringUtils.random(4));
-            sysUser.setPassword(Md5Util.getMD5Str(param.getPassword(),sysUser.getSalt()));
+            sysUser.setPassword(Md5Util.getMD5Str(param.getPassword(), sysUser.getSalt()));
             sysUser.setActiveFlag(true);
             sysUserDao.insertSelective(sysUser);
             log.info("完成 用户注册");
