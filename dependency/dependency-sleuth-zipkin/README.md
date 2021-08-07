@@ -22,7 +22,11 @@ https://search.maven.org/remote_content?g=io.zipkin&a=zipkin-server&v=LATEST&c=e
 部署获得的jar包：默认端口为9411 可以通过-Dserver.port=9411 来替换端口。
 ```
 nohup java -jar zipkin-server-2.23.2-exec.jar &
+
+nohup java -Dserver.port=9411 -Xms512m -Xmx512m  -jar zipkin-server-2.23.2-exec.jar &
 ```
+
+
 
 ## 3. 在应用服务中增加配置
 ```
