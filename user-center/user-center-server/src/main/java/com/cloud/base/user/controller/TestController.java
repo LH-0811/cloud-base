@@ -2,7 +2,7 @@ package com.cloud.base.user.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.common.util.ThreadLog;
+import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptUserQueryParam;
 import com.cloud.base.user.repository.dao.custom.DeptUserCustomDao;
@@ -60,8 +60,7 @@ public class TestController {
         PageHelper.clearPage();
         // 查询完成
         ThreadLog.info("完成 测试查询部门用户 TestController-selectDeptUser");
-        // 输出当前线程日志
-        ThreadLog.output();
+        int a = 1/0;
         return ServerResponse.createBySuccess("查询成功",pageInfo);
     }
 

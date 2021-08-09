@@ -4,25 +4,22 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cloud.base.core.common.entity.CommonMethod;
-import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.exception.CommonException;
+import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.common.util.Md5Util;
-import com.cloud.base.core.common.util.ThreadLog;
+import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRole;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityUser;
 import com.cloud.base.user.dto.DeptUserDto;
-import com.cloud.base.member.user.param.*;
-import com.cloud.base.member.user.repository.dao.*;
+import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.dao.*;
 import com.cloud.base.user.repository.dao.custom.DeptUserCustomDao;
-import com.cloud.base.member.user.repository.entity.*;
-import com.cloud.base.user.vo.MenuVo;
-import com.cloud.base.user.service.SysUserService;
-import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.entity.*;
+import com.cloud.base.user.service.SysUserService;
+import com.cloud.base.user.vo.MenuVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -92,13 +89,22 @@ public class SysUserServiceImpl implements SysUserService {
             PageInfo<DeptUserDto> pageInfo = new PageInfo(deptUserDtos);
             PageHelper.clearPage();
             ThreadLog.info("完成 开始 获取部门角色信息");
-            // 输出日志
-            ThreadLog.output();
+
             return pageInfo;
         } catch (Exception e) {
             throw CommonException.create(e,ServerResponse.createByError("获取部门角色信息失败,请联系管理员"));
         }
     }
+
+
+    public void createDeptUser() throws Exception {
+
+    }
+
+
+
+
+
 
     /**
      * 获取用户角色列表

@@ -1,7 +1,7 @@
 package com.cloud.base.user.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.common.util.ThreadLog;
+import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.user.dto.DeptUserDto;
@@ -38,8 +38,8 @@ public class SysUserAdminController extends BaseController {
     @Autowired
     private SysUserService sysUserService;
 
-// ///////////////////////////////////用户操作
 
+    // ///////////////////////////////////部门用户操作
     @PostMapping("/sys_user/dept_user_query")
     @ApiOperation("查询部门用户")
     @ApiImplicitParams({
@@ -54,6 +54,10 @@ public class SysUserAdminController extends BaseController {
         return ServerResponse.createBySuccess("查询成功",deptUserDtoPageInfo);
     }
 
+
+
+
+// ///////////////////////////////////用户操作
     /**
      * 创建用户
      *
