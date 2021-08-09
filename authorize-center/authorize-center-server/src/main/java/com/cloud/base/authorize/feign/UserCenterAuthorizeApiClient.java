@@ -2,7 +2,7 @@ package com.cloud.base.authorize.feign;
 
 import com.cloud.base.alibaba_cloud.config.FeignConfiguration;
 import com.cloud.base.authorize.feign.impl.UserCenterAuthorizeApiClientFallbackFactory;
-import com.cloud.base.member.user.api.UserCenterAuthorizeApi;
+import com.cloud.base.user.api.UserCenterAuthorizeApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**

@@ -3,7 +3,7 @@ package com.cloud.base.member.merchant.feign.impl;
 import com.cloud.base.alibaba_cloud.fallback.FeignFallbackFactory;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.member.merchant.feign.UserCenterCurrentUserApiClient;
-import com.cloud.base.member.user.vo.SysUserVo;
+import com.cloud.base.user.vo.SysUserVo;
 import feign.hystrix.FallbackFactory;
 import org.springframework.stereotype.Component;
 

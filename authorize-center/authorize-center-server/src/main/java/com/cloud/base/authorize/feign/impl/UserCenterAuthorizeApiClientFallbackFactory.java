@@ -4,7 +4,7 @@ import com.cloud.base.alibaba_cloud.fallback.FeignFallbackFactory;
 import com.cloud.base.authorize.feign.UserCenterAuthorizeApiClient;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.member.user.param.UsernamePasswordVerificationParam;
+import com.cloud.base.user.param.UsernamePasswordVerificationParam;
 import feign.hystrix.FallbackFactory;
 import org.springframework.stereotype.Component;
 

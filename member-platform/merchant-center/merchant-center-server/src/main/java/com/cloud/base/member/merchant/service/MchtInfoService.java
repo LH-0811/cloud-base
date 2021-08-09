@@ -7,10 +7,9 @@ import com.cloud.base.member.merchant.param.MchtInfoUpdateParam;
 import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.member.merchant.vo.MchtInfoVo;
 import com.cloud.base.member.merchant.vo.MchtVipUserVo;
-import com.cloud.base.member.user.param.UserOfMchtQueryParam;
-import com.cloud.base.member.user.vo.SysUserVo;
+import com.cloud.base.user.param.UserOfMchtQueryParam;
+import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

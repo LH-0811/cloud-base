@@ -2,7 +2,7 @@ package com.cloud.base.member.merchant.feign;
 
 import com.cloud.base.alibaba_cloud.config.FeignConfiguration;
 import com.cloud.base.member.merchant.feign.impl.UserCenterCommonApiClientFallbackFactory;
-import com.cloud.base.member.user.api.UserCenterCommonApi;
+import com.cloud.base.user.api.UserCenterCommonApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**

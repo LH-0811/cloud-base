@@ -5,9 +5,8 @@ import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUr
 import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.merchant.service.MchtInfoService;
-import com.cloud.base.member.merchant.vo.MchtVipUserVo;
-import com.cloud.base.member.user.param.UserOfMchtQueryParam;
-import com.cloud.base.member.user.vo.SysUserVo;
+import com.cloud.base.user.param.UserOfMchtQueryParam;
+import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -18,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.List;
 
 @Slf4j
 @Api(tags = "商户基本信息通用接口")

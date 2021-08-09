@@ -3,6 +3,7 @@ package com.cloud.base.core.common.util;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.aspectj.lang.annotation.Pointcut;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -87,4 +88,9 @@ public class ThreadLog {
     }
 
 
+    public static class ThreadLogAop {
+        @Pointcut("@annotation()")
+        public void logPointCut() {}
+
+    }
 }

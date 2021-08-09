@@ -6,7 +6,7 @@ import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.server.authentication.SecurityVoucherVerification;
-import com.cloud.base.member.user.param.UsernamePasswordVerificationParam;
+import com.cloud.base.user.param.UsernamePasswordVerificationParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

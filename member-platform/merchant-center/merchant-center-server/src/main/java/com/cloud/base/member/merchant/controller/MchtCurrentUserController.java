@@ -2,16 +2,11 @@ package com.cloud.base.member.merchant.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
-import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.member.merchant.feign.UserCenterCommonApiClient;
 import com.cloud.base.member.merchant.service.MchtInfoService;
 import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
 import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.member.merchant.vo.MchtInfoVo;
-import com.cloud.base.member.user.param.UserOfMchtQueryParam;
-import com.cloud.base.member.user.vo.SysUserVo;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
