@@ -21,13 +21,16 @@ import java.util.List;
 public interface SysUserService {
 
     /**
-     * 获取部门角色信息
+     * 获取部门用户信息
      *
      * @param param
      * @return
      * @throws Exception
      */
     PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception;
+
+
+
 
     /**
      * 完成 获取角色

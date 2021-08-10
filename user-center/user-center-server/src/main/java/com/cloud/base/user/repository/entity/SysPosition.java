@@ -8,38 +8,34 @@ import io.swagger.annotations.ApiModelProperty;
 import tk.mybatis.mapper.annotation.KeySql;
 import javax.persistence.*;
 /**
- * 用户中心-部门表(SysDept)实体类
+ * 用户中心-岗位信息(SysPosition)实体类
  *
  * @author lh0811
- * @since 2021-08-07 19:01:55
+ * @since 2021-08-10 21:55:23
  */
 @Setter
 @Getter
-@Table(name="sys_dept")
-public class SysDept implements Serializable {
+@Table(name="sys_position")
+public class SysPosition implements Serializable {
 
     /**
-     * 部门id
+     * 岗位id
      */
     @Id
     @KeySql(useGeneratedKeys = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ApiModelProperty(value="部门id")
+    @ApiModelProperty(value="岗位id")
     private Long id;
 
-
-    @ApiModelProperty(value="父级部门id")
-    private Long parentId;
-
     /**
-     * 部门编号
+     * 岗位编号
      */
-    @ApiModelProperty(value="部门编号")
+    @ApiModelProperty(value="岗位编号")
     private String no;
     /**
-     * 部门名称
+     * 岗位名称
      */
-    @ApiModelProperty(value="部门名称")
+    @ApiModelProperty(value="岗位名称")
     private String name;
     /**
      * 部门备注
