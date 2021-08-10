@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class UserOfMchtQueryParam {
+public class UserOfMchtQueryParam implements Serializable {
 
     @ApiModelProperty(value = "商户id")
     private Long mchtId;

@@ -4,13 +4,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsernamePasswordVerificationParam {
+public class UsernamePasswordVerificationParam implements Serializable {
 
     // 用户名
     @NotBlank(message = "未上传 username")

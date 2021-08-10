@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * @author lh0811
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotNull;
  */
 @Getter
 @Setter
-public class SysUserUpdatePasswordParam {
+public class SysUserUpdatePasswordParam implements Serializable {
 
     @NotNull(message = "未上传 旧密码")
     @ApiModelProperty(value = "旧密码",required = true)

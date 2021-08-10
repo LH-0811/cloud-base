@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * 创建系统角色参数
@@ -18,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SysRoleCreateParam {
+public class SysRoleCreateParam implements Serializable {
 
     @NotNull(message = "角色名称不能为空")
     @ApiModelProperty(value = "角色名称", required = true)

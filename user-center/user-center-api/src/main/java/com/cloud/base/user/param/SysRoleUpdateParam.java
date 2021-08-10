@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * 系统角色修改 bean
@@ -18,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SysRoleUpdateParam {
+public class SysRoleUpdateParam implements Serializable {
 
     @NotNull(message = "角色id不能为空")
     @ApiModelProperty(value = "主键id")

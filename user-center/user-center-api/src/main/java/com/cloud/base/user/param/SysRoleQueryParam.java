@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 /**
  * 系统角色查询 bean
  *
@@ -17,7 +19,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SysRoleQueryParam {
+public class SysRoleQueryParam implements Serializable {
 
 
     @ApiModelProperty(value = "角色名称")

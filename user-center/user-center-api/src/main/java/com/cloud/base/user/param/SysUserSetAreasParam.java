@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * 设置用户区域列表参数
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull;
  */
 @Setter
 @Getter
-public class SysUserSetAreasParam {
+public class SysUserSetAreasParam implements Serializable {
 
     @NotNull(message = "未上传 用户id")
     @ApiModelProperty(value = "用户id",required = true)

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * 系统权限创建参数 bean
@@ -18,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SysResCreateParam {
+public class SysResCreateParam implements Serializable {
 
     @NotNull(message = "父节点id不能为空")
     @ApiModelProperty(value = "父节点id",required = true)
