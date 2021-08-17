@@ -20,17 +20,6 @@ import java.util.List;
  */
 public interface SysUserService {
 
-    /**
-     * 获取部门用户信息
-     *
-     * @param param
-     * @return
-     * @throws Exception
-     */
-    PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception;
-
-
-
 
     /**
      * 完成 获取角色
@@ -54,7 +43,6 @@ public interface SysUserService {
 
     /**
      * 获取用户资源列表
-     *
      */
     List<SysRes> getResListByUser(Long userId) throws Exception;
 
@@ -135,60 +123,5 @@ public interface SysUserService {
      */
     void delUser(Long userId, SysUser sysUser) throws Exception;
 
-// //////////////// 资源管理
-    /**
-     * 创建权限
-     */
-    void createRes(SysResCreateParam param, SysUser sysUser) throws Exception;
-
-    /**
-     * 删除权限信息
-     */
-    void deleteRes(Long resId, SysUser sysUser) throws Exception;
-
-    /**
-     * 获取全部资源树
-     */
-    List<SysRes> getAllResTree() throws Exception;
-
-
-// //////////////// 角色管理
-    /**
-     * 创建系统角色信息
-     */
-    void createRole(SysRoleCreateParam param, SysUser sysUser) throws Exception;
-
-    /**
-     * 修改系统角色信息
-     */
-    void updateRole(SysRoleUpdateParam param, SysUser sysUser) throws Exception;
-
-    /**
-     * 删除系统角色信息
-     */
-    void deleteRole(Long roleId, SysUser sysUser) throws Exception;
-
-    /**
-     * 查询系统角色信息
-     */
-    PageInfo<SysRole> queryRole(SysRoleQueryParam param, SysUser sysUser) throws Exception;
-
-    /**
-     * 获取角色列表
-     *
-     * @return
-     * @throws Exception
-     */
-    List<SysRole> getRoleList() throws Exception;
-
-    /**
-     * 保存角色权限
-     */
-    void saveRoleRes(SysRoleResSaveParam param, SysUser sysUser) throws Exception;
-
-    /**
-     * 查询角色资源列表
-     */
-    List<SysRes> getSysResListByRoleId(Long roleId, SysUser sysUser) throws Exception;
 
 }

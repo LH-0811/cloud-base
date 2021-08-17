@@ -63,47 +63,10 @@ public class SysUserServiceImpl implements SysUserService {
     private SysResDao sysResDao;
 
     @Autowired
-    private DeptUserCustomDao deptUserCustomDao;
-
-    @Autowired
     private SysRegionDao sysRegionDao;
 
     @Autowired
     private IdWorker idWorker;
-
-
-
-    /**
-     * 获取部门角色信息
-     *
-     * @param param
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception {
-        ThreadLog.info("开始 获取部门角色信息：param=" + JSON.toJSONString(param));
-        try {
-            PageHelper.startPage(param.getPageNum(), param.getPageSize());
-            List<DeptUserDto> deptUserDtos = deptUserCustomDao.selectDeptUser(param);
-            PageInfo<DeptUserDto> pageInfo = new PageInfo(deptUserDtos);
-            PageHelper.clearPage();
-            ThreadLog.info("完成 开始 获取部门角色信息");
-
-            return pageInfo;
-        } catch (Exception e) {
-            throw CommonException.create(e,ServerResponse.createByError("获取部门角色信息失败,请联系管理员"));
-        }
-    }
-
-
-    public void createDeptUser() throws Exception {
-
-    }
-
-
-
-
 
 
     /**
@@ -297,6 +260,9 @@ public class SysUserServiceImpl implements SysUserService {
         }
     }
 
+    /**
+     * 根据用户id 获取用户基本信息
+     */
     @Override
     public SysUser getUserByUserId(Long userId) throws Exception {
         log.info("进入 根据用户id获取用户信息接口");
@@ -408,9 +374,6 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
 
-
-
-
     // //////////////// 用户管理
 
     /**
@@ -501,30 +464,30 @@ public class SysUserServiceImpl implements SysUserService {
             }
 
             if (StringUtils.isNotBlank(param.getUsername())) {
-                criteria.andLike("username","%"+param.getUsername()+"%");
+                criteria.andLike("username", "%" + param.getUsername() + "%");
             }
 
-            if (StringUtils.isNotBlank(param.getNickName())){
-                criteria.andLike("nickName","%"+param.getNickName()+"%");
+            if (StringUtils.isNotBlank(param.getNickName())) {
+                criteria.andLike("nickName", "%" + param.getNickName() + "%");
             }
-            if (StringUtils.isNotBlank(param.getPhone())){
-                criteria.andLike("phone","%"+param.getPhone()+"%");
+            if (StringUtils.isNotBlank(param.getPhone())) {
+                criteria.andLike("phone", "%" + param.getPhone() + "%");
             }
-            if (param.getActiveFlag()!=null){
-                criteria.andEqualTo("activeFlag",param.getActiveFlag());
+            if (param.getActiveFlag() != null) {
+                criteria.andEqualTo("activeFlag", param.getActiveFlag());
             }
-            if (param.getLastLoginLow()!=null){
-                criteria.andGreaterThanOrEqualTo("lastLogin",param.getLastLoginLow());
+            if (param.getLastLoginLow() != null) {
+                criteria.andGreaterThanOrEqualTo("lastLogin", param.getLastLoginLow());
             }
-            if (param.getLastLoginUp()!=null){
-                criteria.andLessThanOrEqualTo("lastLogin",param.getLastLoginUp());
+            if (param.getLastLoginUp() != null) {
+                criteria.andLessThanOrEqualTo("lastLogin", param.getLastLoginUp());
             }
 
-            if (param.getCreateTimeLow()!=null){
-                criteria.andGreaterThanOrEqualTo("createTime",param.getCreateTimeLow());
+            if (param.getCreateTimeLow() != null) {
+                criteria.andGreaterThanOrEqualTo("createTime", param.getCreateTimeLow());
             }
-            if (param.getCreateTimeUp()!=null){
-                criteria.andLessThanOrEqualTo("createTime",param.getCreateTimeUp());
+            if (param.getCreateTimeUp() != null) {
+                criteria.andLessThanOrEqualTo("createTime", param.getCreateTimeUp());
             }
 
             PageHelper.startPage(param.getPageNum(), param.getPageSize());
@@ -620,310 +583,5 @@ public class SysUserServiceImpl implements SysUserService {
         }
     }
 
-// //////////////// 资源管理
-
-    /**
-     * 创建资源
-     *
-     * @param param   参数
-     * @param sysUser 系统用户
-     * @throws Exception 异常
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void createRes(SysResCreateParam param, SysUser sysUser) throws Exception {
-        log.info("进入 创建资源:{}", JSON.toJSONString(param));
-        SysRes queryByName = new SysRes();
-        queryByName.setName(param.getName());
-        if (sysResDao.selectCount(queryByName) > 0) {
-            throw CommonException.create(ServerResponse.createByError("权限名称已经存在"));
-        }
-
-        try {
-            SysRes sysRes = new SysRes();
-            sysRes.setId(idWorker.nextId());
-            BeanUtils.copyProperties(param, sysRes);
-            sysRes.setCreateBy(sysUser.getId());
-            sysRes.setCreateTime(new Date());
-
-            SysRes parent = sysResDao.selectByPrimaryKey(sysRes.getParentId());
-            if (parent != null) {
-                sysRes.setRouter(StringUtils.join(Lists.newArrayList(parent.getRouter(), String.valueOf(parent.getId())), ","));
-            } else {
-                sysRes.setRouter("0");
-            }
-            sysResDao.insertSelective(sysRes);
-            log.info("完成 创建资源:{}", JSON.toJSONString(param));
-        } catch (Exception e) {
-            throw CommonException.create(e, ServerResponse.createByError("创建权限失败"));
-        }
-
-    }
-
-
-    /**
-     * 删除资源信息
-     *
-     * @param resId
-     * @param sysUser
-     * @throws Exception
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteRes(Long resId, SysUser sysUser) throws Exception {
-        log.info("进入 删除资源信息:{}", resId);
-        SysRes sysRes = sysResDao.selectByPrimaryKey(resId);
-        if (sysRes == null) {
-            throw CommonException.create(ServerResponse.createByError("权限信息不存在"));
-        }
-        SysRoleRes selectByResId = new SysRoleRes();
-        selectByResId.setResId(resId);
-        if (sysRoleResDao.selectCount(selectByResId) > 0) {
-            throw CommonException.create(ServerResponse.createByError("当前权限已关联角色"));
-        }
-        try {
-            sysResDao.deleteByPrimaryKey(resId);
-            log.info("完成 删除资源信息:{}", resId);
-        } catch (Exception e) {
-            throw CommonException.create(ServerResponse.createByError("删除权限失败"));
-        }
-    }
-
-
-    /**
-     * 获取全部资源树
-     *
-     * @throws Exception 异常
-     */
-    @Override
-    public List<SysRes> getAllResTree() throws Exception {
-        log.info("进入 获取全部资源树");
-        try {
-            // 所有的资源列表
-            List<SysRes> sysResList = sysResDao.selectAll();
-            for (SysRes sysRes : sysResList) {
-                sysRes.setParent(sysResDao.selectByPrimaryKey(sysRes.getParentId()));
-                sysRes.setTitle(sysRes.getName() + "[" + SysRes.Type.getDescByCode(sysRes.getType()) + "]");
-                sysRes.setKey(String.valueOf(sysRes.getId()));
-                sysRes.setPkey(String.valueOf(sysRes.getParentId()));
-            }
-            // 组装未tree数据
-            JSONArray jsonArray = CommonMethod.listToTree(sysResList, "0", "parentId", "id", "children");
-            log.info("完成 获取全部资源树");
-            return jsonArray.toJavaList(SysRes.class);
-        } catch (Exception e) {
-            throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
-        }
-    }
-
-
-// //////////////// 角色管理
-
-    /**
-     * 创建系统角色信息
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void createRole(SysRoleCreateParam param, SysUser sysUser) throws Exception {
-        log.info("进入 SysAdminServiceImpl.createRole:{}", JSON.toJSONString(param));
-        SysRole queryByName = new SysRole();
-        queryByName.setName(param.getName());
-        if (sysRoleDao.selectCount(queryByName) > 0) {
-            throw CommonException.create(ServerResponse.createByError("角色名称已经存在"));
-        }
-
-        try {
-            SysRole sysRole = new SysRole();
-            BeanUtils.copyProperties(param, sysRole);
-            sysRole.setId(idWorker.nextId());
-            sysRole.setCreateTime(new Date());
-            sysRole.setCreateBy(sysUser.getId());
-            sysRoleDao.insertSelective(sysRole);
-            log.info("完成创建");
-        } catch (Exception e) {
-            log.info("完成 SysAdminServiceImpl.createRole:{}", JSON.toJSONString(param));
-            throw CommonException.create(e, ServerResponse.createByError("创建用户失败"));
-        }
-    }
-
-
-    /**
-     * 修改系统角色信息
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateRole(SysRoleUpdateParam param, SysUser sysUser) throws Exception {
-        log.info("进入 SysAdminServiceImpl.updateRole:{}", JSON.toJSONString(param));
-        SysRole sysRole = sysRoleDao.selectByPrimaryKey(param.getId());
-        if (sysRole == null) {
-            log.info("角色信息不存在");
-            throw CommonException.create(ServerResponse.createByError("角色信息不存在"));
-        }
-
-        try {
-            BeanUtils.copyProperties(param, sysRole);
-            sysRole.setUpdateBy(sysUser.getId());
-            sysRole.setUpdateTime(new Date());
-            sysRoleDao.updateByPrimaryKeySelective(sysRole);
-            log.info("完成 SysAdminServiceImpl.updateRole:{}", JSON.toJSONString(param));
-        } catch (Exception e) {
-            log.info("修改角色信息错误");
-            throw CommonException.create(e, ServerResponse.createByError("修改角色信息错误"));
-        }
-    }
-
-
-    /**
-     * 删除系统角色信息
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteRole(Long roleId, SysUser sysUser) throws Exception {
-        log.info("进入 SysAdminServiceImpl.deleteRole:{}", roleId);
-        SysRole sysRole = sysRoleDao.selectByPrimaryKey(roleId);
-        if (sysRole == null) {
-            log.info("角色信息不存在");
-            throw CommonException.create(ServerResponse.createByError("角色信息不存在"));
-        }
-
-
-        SysUserRole queryUserByRoleId = new SysUserRole();
-        queryUserByRoleId.setRoleId(roleId);
-        if (sysUserRoleDao.selectCount(queryUserByRoleId) > 0) {
-            log.info("角色有关联用户不可删除");
-            throw CommonException.create(ServerResponse.createByError("角色有关联用户不可删除"));
-        }
-        try {
-            sysRoleDao.deleteByPrimaryKey(roleId);
-            SysRoleRes deleteByRoleId = new SysRoleRes();
-            deleteByRoleId.setRoleId(roleId);
-            sysRoleResDao.delete(deleteByRoleId);
-            log.info("完成 SysAdminServiceImpl.deleteRole:{}", roleId);
-        } catch (Exception e) {
-            log.info("删除角色失败");
-            throw CommonException.create(e, ServerResponse.createByError("删除角色失败"));
-        }
-    }
-
-    /**
-     * 查询系统角色信息
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public PageInfo<SysRole> queryRole(SysRoleQueryParam param, SysUser sysUser) throws Exception {
-        log.info("进入 SysAdminServiceImpl.queryRole:{}", JSON.toJSONString(param));
-        try {
-            Example example = new Example(SysRole.class);
-            example.setOrderByClause(" create_time desc,update_time desc");
-            Example.Criteria criteria = example.createCriteria();
-
-            if (StringUtils.isNotEmpty(param.getName())) {
-                criteria.andLike("name", "%" + param.getName() + "%");
-            }
-            if (StringUtils.isNotEmpty(param.getNo())) {
-                criteria.andEqualTo("no", param.getNo());
-            }
-            if (param.getStatus() != null) {
-                criteria.andEqualTo("activeFlag", param.getStatus());
-            }
-            PageHelper.startPage(param.getPageNum(), param.getPageSize());
-            List<SysRole> sysRoles = sysRoleDao.selectByExample(example);
-            PageInfo<SysRole> pageInfo = new PageInfo<>(sysRoles);
-            PageHelper.clearPage();
-            log.info("完成 SysAdminServiceImpl.queryRole:{}", JSON.toJSONString(param));
-            return pageInfo;
-        } catch (Exception e) {
-            log.info("查询角色失败");
-            throw CommonException.create(e, ServerResponse.createByError("查询角色失败"));
-        }
-    }
-
-
-    /**
-     * 获取角色列表
-     *
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public List<SysRole> getRoleList() throws Exception {
-        log.info("开始 获取角色列表");
-        try {
-            List<SysRole> roles = sysRoleDao.selectAll();
-            log.info("完成 获取角色列表");
-            return roles;
-        } catch (Exception e) {
-            throw CommonException.create(e, ServerResponse.createByError("获取角色列表失败,请联系管理员"));
-        }
-
-
-    }
-
-    /**
-     * 保存角色权限
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void saveRoleRes(SysRoleResSaveParam param, SysUser sysUser) throws Exception {
-        log.info("进入 SysAdminServiceImpl.saveRoleRes:{}", param);
-        // 检查角色是否存在
-        SysRole sysRole = sysRoleDao.selectByPrimaryKey(param.getRoleId());
-        if (sysRole == null) {
-            throw CommonException.create(ServerResponse.createByError("角色不存在"));
-        }
-        try {
-            // 删除之前的 权限列表
-            SysRoleRes deleteByRoleId = new SysRoleRes();
-            deleteByRoleId.setRoleId(param.getRoleId());
-            sysRoleResDao.delete(deleteByRoleId);
-        } catch (Exception e) {
-            log.info("保存角色权限失败");
-            throw CommonException.create(e, ServerResponse.createByError("保存角色权限失败"));
-        }
-        // 获取到这次要保存的权限
-        param.getResIds().add(0L);
-        Example example = new Example(SysRes.class);
-        example.createCriteria().andIn("id", param.getResIds());
-        List<SysRes> sysPermissions = sysResDao.selectByExample(example);
-        if (!org.apache.commons.collections4.CollectionUtils.isEmpty(sysPermissions)) {
-            // 获取到有效的id 组装成对应的bean
-            List<SysRoleRes> sysRoleResList = sysPermissions.stream().map(ele -> new SysRoleRes(idWorker.nextId(), param.getRoleId(), ele.getId())).collect(Collectors.toList());
-            try {
-                // 保存新的权限列表
-                sysRoleResDao.insertList(sysRoleResList);
-            } catch (Exception e) {
-                log.info("保存角色权限失败");
-                throw CommonException.create(e, ServerResponse.createByError("保存角色权限失败"));
-            }
-        }
-
-    }
-
-    /**
-     * 查询角色资源列表
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<SysRes> getSysResListByRoleId(Long roleId, SysUser sysUser) throws Exception {
-        log.info("进入 查询角色资源列表:{}", roleId);
-        // 检查角色是否存在
-        SysRole sysRole = sysRoleDao.selectByPrimaryKey(roleId);
-        if (sysRole == null) {
-            throw CommonException.create(ServerResponse.createByError("角色不存在"));
-        }
-        try {
-            SysRoleRes selectParam = new SysRoleRes();
-            selectParam.setRoleId(roleId);
-            List<SysRoleRes> roleResList = sysRoleResDao.select(selectParam);
-            if (org.apache.commons.collections4.CollectionUtils.isEmpty(roleResList)) {
-                return Lists.newArrayList();
-            }
-            List<SysRes> sysRes = sysResDao.selectByIdList(roleResList.stream().map(ele -> ele.getResId()).collect(Collectors.toList()));
-            log.info("完成 查询角色资源列表");
-            return sysRes;
-        } catch (Exception e) {
-            throw CommonException.create(e, ServerResponse.createByError("获取角色资源列表失败,请联系管理员"));
-        }
-    }
 
 }

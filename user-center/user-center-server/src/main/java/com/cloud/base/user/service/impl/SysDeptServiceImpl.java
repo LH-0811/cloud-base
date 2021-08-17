@@ -1,22 +1,34 @@
 package com.cloud.base.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.common.util.thread_log.ThreadLog;
+import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptCreateParam;
+import com.cloud.base.user.param.SysDeptUserQueryParam;
 import com.cloud.base.user.repository.dao.SysDeptDao;
+import com.cloud.base.user.repository.dao.SysUserDeptRelationDao;
+import com.cloud.base.user.repository.dao.custom.DeptUserCustomDao;
 import com.cloud.base.user.repository.entity.SysDept;
+import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.repository.entity.SysUserDeptRelation;
 import com.cloud.base.user.service.SysDeptService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 系统部门服务接口 实现
@@ -34,15 +46,20 @@ public class SysDeptServiceImpl implements SysDeptService {
     @Autowired
     private SysDeptDao sysDeptDao;
 
+    @Autowired
+    private DeptUserCustomDao deptUserCustomDao;
 
-    @Override
+    @Autowired
+    private SysUserDeptRelationDao sysUserDeptRelationDao;
+
+
     /**
      * 创建部门 信息
      */
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void createSysDept(SysDeptCreateParam param, SysUser sysUser) throws Exception {
         ThreadLog.info("开始 创建部门信息: param=" + JSON.toJSONString(param));
-
         // 检查父级部门
         SysDept queryParam = new SysDept();
         queryParam.setParentId(param.getParentId());
@@ -51,7 +68,6 @@ public class SysDeptServiceImpl implements SysDeptService {
             ThreadLog.info("退出 父级部门不存在");
             throw CommonException.create(ServerResponse.createByError("父级部门不存在！"));
         }
-
         // 创建部门信息
         try {
             SysDept sysDept = new SysDept();
@@ -70,6 +86,32 @@ public class SysDeptServiceImpl implements SysDeptService {
     }
 
 
+    /**
+     * 获取部门树
+     *
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<SysDept> queryDeptTree(SysUser sysUser) throws Exception {
+        ThreadLog.info("开始 获取部门树");
+        try {
+            // 所有的资源列表
+            List<SysDept> sysDeptList = sysDeptDao.selectAll();
+            for (SysDept sysDept : sysDeptList) {
+                sysDept.setParent(sysDeptDao.selectByPrimaryKey(sysDept.getParentId()));
+                sysDept.setTitle(sysDept.getName() + "[" + sysDept.getNo() + "]");
+                sysDept.setKey(String.valueOf(sysDept.getId()));
+                sysDept.setPkey(String.valueOf(sysDept.getParentId()));
+            }
+            // 组装未tree数据
+            JSONArray jsonArray = CommonMethod.listToTree(sysDeptList, "0", "parentId", "id", "children");
+            ThreadLog.info("完成 获取部门树");
+            return jsonArray.toJavaList(SysDept.class);
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
+        }
+    }
 
     /**
      * 删除部门信息
@@ -78,17 +120,58 @@ public class SysDeptServiceImpl implements SysDeptService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteSysDept(Long deptId, SysUser sysUser) throws Exception {
         ThreadLog.info("开始 删除部门信息: deptId=" + deptId);
+
         // 检查部门是否存在
         SysDept sysDept = sysDeptDao.selectByPrimaryKey(deptId);
         if (sysDept == null) {
             ThreadLog.info("退出 删除部门信息 部门信息不存在");
             throw CommonException.create(ServerResponse.createByError("部门信息不存在"));
         }
+
+        // 检查子部门
+        SysDept queryChild = new SysDept();
+        queryChild.setParentId(deptId);
+        List<SysDept> childrenList = sysDeptDao.select(queryChild);
+        if (CollectionUtils.isNotEmpty(childrenList)) {
+            throw CommonException.create(ServerResponse.createByError("部门下有所属子部门不能删除"));
+        }
+
+        // 检测部门用户
+        SysUserDeptRelation queryRel = new SysUserDeptRelation();
+        queryRel.setDeptId(deptId);
+        List<SysUserDeptRelation> userDeptRelationList = sysUserDeptRelationDao.select(queryRel);
+        if (CollectionUtils.isNotEmpty(userDeptRelationList)) {
+            throw CommonException.create(ServerResponse.createByError("部门下有用户不能删除"));
+        }
+
         try {
             sysDeptDao.deleteByPrimaryKey(deptId);
             ThreadLog.info("完成 删除部门信息");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("删除部门信息失败,请联系管理员！"));
+        }
+    }
+
+
+    /**
+     * 获取部门用户信息
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception {
+        ThreadLog.info("开始 获取部门角色信息：param=" + JSON.toJSONString(param));
+        try {
+            PageHelper.startPage(param.getPageNum(), param.getPageSize());
+            List<DeptUserDto> deptUserDtos = deptUserCustomDao.selectDeptUser(param);
+            PageInfo<DeptUserDto> pageInfo = new PageInfo(deptUserDtos);
+            PageHelper.clearPage();
+            ThreadLog.info("完成 开始 获取部门角色信息");
+            return pageInfo;
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("获取部门角色信息失败,请联系管理员"));
         }
     }
 

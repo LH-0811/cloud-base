@@ -2,6 +2,8 @@ package com.cloud.base.user.repository.entity;
 
 import java.util.Date;
 import java.io.Serializable;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import io.swagger.annotations.ApiModelProperty;
@@ -67,5 +69,26 @@ public class SysDept implements Serializable {
     @ApiModelProperty(value="更新人")
     private Long updateBy;
 
+
+
+    @Transient
+    @ApiModelProperty(value = "子资源列表")
+    private List<SysDept> children;
+
+    @Transient
+    @ApiModelProperty(value = "父节点")
+    private SysDept parent;
+
+    @Transient
+    @ApiModelProperty(value = "标题")
+    private String title;
+
+    @Transient
+    @ApiModelProperty(value = "标题")
+    private String key;
+
+    @Transient
+    @ApiModelProperty(value = "标题")
+    private String pkey;
 
 }
