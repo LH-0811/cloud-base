@@ -1,6 +1,7 @@
 package com.cloud.base.user.repository.dao;
 
 import com.cloud.base.user.repository.entity.SysPosition;
+import tk.mybatis.mapper.additional.idlist.IdListMapper;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -9,7 +10,7 @@ import tk.mybatis.mapper.common.Mapper;
  * @author lh0811
  * @since 2021-08-10 21:55:23
  */
-public interface SysPositionDao extends Mapper<SysPosition> {
+public interface SysPositionDao extends Mapper<SysPosition>, IdListMapper<SysPosition,Long> {
 
 
 }

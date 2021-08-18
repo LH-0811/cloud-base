@@ -17,7 +17,7 @@ public interface UserCenterCurrentUserApi {
     /**
      * 获取当前用户信息
      */
-    @GetMapping("/user_center/current_user/current_user_info")
+    @GetMapping("/sys_user/current_user_info")
     @ApiOperation("获取当前基础信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),

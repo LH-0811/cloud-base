@@ -8,31 +8,28 @@ import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.common.util.Md5Util;
-import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRole;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityUser;
-import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.dao.*;
-import com.cloud.base.user.repository.dao.custom.DeptUserCustomDao;
 import com.cloud.base.user.repository.entity.*;
 import com.cloud.base.user.service.SysUserService;
-import com.cloud.base.user.vo.MenuVo;
+import com.cloud.base.user.vo.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,25 +44,34 @@ import java.util.stream.Collectors;
 @Service("sysUserService")
 public class SysUserServiceImpl implements SysUserService {
 
-    @Autowired
+    @Resource
     private SysUserDao sysUserDao;
 
-    @Autowired
+    @Resource
     private SysRoleResDao sysRoleResDao;
 
-    @Autowired
-    private SysUserRoleDao sysUserRoleDao;
+    @Resource
+    private SysUserRoleRelDao sysUserRoleRelDao;
 
-    @Autowired
+    @Resource
     private SysRoleDao sysRoleDao;
 
-    @Autowired
+    @Resource
     private SysResDao sysResDao;
 
-    @Autowired
-    private SysRegionDao sysRegionDao;
+    @Resource
+    private SysUserPositionRelDao sysUserPositionRelDao;
 
-    @Autowired
+    @Resource
+    private SysUserDeptRelDao sysUserDeptRelDao;
+
+    @Resource
+    private SysDeptDao sysDeptDao;
+
+    @Resource
+    private SysPositionDao sysPositionDao;
+
+    @Resource
     private IdWorker idWorker;
 
 
@@ -80,9 +86,9 @@ public class SysUserServiceImpl implements SysUserService {
             throw CommonException.create(ServerResponse.createByError("角色列表不存在"));
         }
         try {
-            SysUserRole selectParam = new SysUserRole();
+            SysUserRoleRel selectParam = new SysUserRoleRel();
             selectParam.setUserId(userId);
-            List<SysUserRole> userRoleList = sysUserRoleDao.select(selectParam);
+            List<SysUserRoleRel> userRoleList = sysUserRoleRelDao.select(selectParam);
             List<SysRole> sysRoles = sysRoleDao.selectByIdList(userRoleList.stream().map(ele -> ele.getRoleId()).collect(Collectors.toList()));
             log.info("完成  获取用户角色列表");
             return sysRoles;
@@ -127,9 +133,9 @@ public class SysUserServiceImpl implements SysUserService {
         log.info("进入 获取用户资源树");
         try {
             // 获取用户角色
-            SysUserRole roleSelect = new SysUserRole();
+            SysUserRoleRel roleSelect = new SysUserRoleRel();
             roleSelect.setUserId(userId);
-            List<SysUserRole> roleList = sysUserRoleDao.select(roleSelect);
+            List<SysUserRoleRel> roleList = sysUserRoleRelDao.select(roleSelect);
             if (CollectionUtils.isEmpty(roleList)) {
                 return Lists.newArrayList();
             }
@@ -169,9 +175,9 @@ public class SysUserServiceImpl implements SysUserService {
         log.info("进入 获取用户菜单树");
         try {
             // 获取用户角色
-            SysUserRole roleSelect = new SysUserRole();
+            SysUserRoleRel roleSelect = new SysUserRoleRel();
             roleSelect.setUserId(userId);
-            List<SysUserRole> roleList = sysUserRoleDao.select(roleSelect);
+            List<SysUserRoleRel> roleList = sysUserRoleRelDao.select(roleSelect);
             if (CollectionUtils.isEmpty(roleList)) {
                 return Lists.newArrayList();
             }
@@ -233,9 +239,9 @@ public class SysUserServiceImpl implements SysUserService {
         log.info("进入  获取用户资源列表");
         try {
             // 获取用户角色
-            SysUserRole roleSelect = new SysUserRole();
+            SysUserRoleRel roleSelect = new SysUserRoleRel();
             roleSelect.setUserId(userId);
-            List<SysUserRole> roleList = sysUserRoleDao.select(roleSelect);
+            List<SysUserRoleRel> roleList = sysUserRoleRelDao.select(roleSelect);
             if (CollectionUtils.isEmpty(roleList)) {
                 return Lists.newArrayList();
             }
@@ -345,35 +351,6 @@ public class SysUserServiceImpl implements SysUserService {
         return securityAuthority;
     }
 
-
-    /**
-     * 注册用户
-     *
-     * @throws Exception
-     */
-    @Override
-    @Transactional
-    public void registerUser(SysUserRegisterParam param) throws Exception {
-        log.info("开始 用户注册:{}", JSON.toJSONString(param));
-        if (!param.getPassword().equals(param.getRepassword())) {
-            throw CommonException.create(ServerResponse.createByError("两次输入密码不一致"));
-        }
-        try {
-            SysUser sysUser = new SysUser();
-            sysUser.setId(idWorker.nextId());
-            // 属性对拷
-            BeanUtils.copyProperties(param, sysUser);
-            sysUser.setSalt(RandomStringUtils.random(4));
-            sysUser.setPassword(Md5Util.getMD5Str(param.getPassword(), sysUser.getSalt()));
-            sysUser.setActiveFlag(true);
-            sysUserDao.insertSelective(sysUser);
-            log.info("完成 用户注册");
-        } catch (Exception e) {
-            throw CommonException.create(e, ServerResponse.createByError("用户注册失败,请联系管理员"));
-        }
-    }
-
-
     // //////////////// 用户管理
 
     /**
@@ -402,6 +379,7 @@ public class SysUserServiceImpl implements SysUserService {
         }
 
         try {
+            // 保存用户信息
             SysUser sysUserNew = new SysUser();
             BeanUtils.copyProperties(param, sysUserNew);
             sysUserNew.setId(idWorker.nextId());
@@ -415,6 +393,19 @@ public class SysUserServiceImpl implements SysUserService {
             sysUserNew.setCreateBy(sysUser.getId());
             sysUserNew.setCreateTime(new Date());
             sysUserDao.insertSelective(sysUserNew);
+
+            // 保存用户岗位信息
+            if (CollectionUtils.isNotEmpty(param.getPositionIdList())) {
+                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), sysUserNew.getId(), ele)).collect(Collectors.toList());
+                sysUserPositionRelDao.insertList(sysUserPositionRelList);
+            }
+
+            // 保存用户角色信息
+            if (CollectionUtils.isNotEmpty(param.getRoleIdList())) {
+                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), sysUserNew.getId(), ele)).collect(Collectors.toList());
+                sysUserRoleRelDao.insertList(sysUserRoleRelList);
+            }
+
             log.info("完成 创建用户");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("创建用户失败,请联系管理员"));
@@ -433,9 +424,35 @@ public class SysUserServiceImpl implements SysUserService {
     public void updateUser(SysUserUpdateParam param, SysUser sysUser) throws Exception {
         log.info("开始 修改用户");
         try {
+            // 更新用户信息
             SysUser updateUser = new SysUser();
             BeanUtils.copyProperties(param, updateUser);
+            updateUser.setUpdateBy(sysUser.getId());
+            updateUser.setUpdateTime(new Date());
             sysUserDao.updateByPrimaryKeySelective(updateUser);
+
+            // 保存用户岗位信息
+            if (CollectionUtils.isNotEmpty(param.getPositionIdList())) {
+
+                SysUserPositionRel delParam = new SysUserPositionRel();
+                delParam.setUserId(param.getId());
+                sysUserPositionRelDao.delete(delParam);
+
+                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), param.getId(), ele)).collect(Collectors.toList());
+                sysUserPositionRelDao.insertList(sysUserPositionRelList);
+            }
+
+            // 保存用户角色信息
+            if (CollectionUtils.isNotEmpty(param.getRoleIdList())) {
+
+                SysUserRoleRel delParam = new SysUserRoleRel();
+                delParam.setUserId(param.getId());
+                sysUserRoleRelDao.delete(delParam);
+
+                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), param.getId(), ele)).collect(Collectors.toList());
+                sysUserRoleRelDao.insertList(sysUserRoleRelList);
+            }
+
             log.info("完成 修改用户");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("修改用户失败,请联系管理员"));
@@ -451,22 +468,19 @@ public class SysUserServiceImpl implements SysUserService {
      * @throws Exception
      */
     @Override
-    public PageInfo<SysUser> queryUser(SysUserQueryParam param, SysUser sysUser) throws Exception {
+    public PageInfo<SysUserVo> queryUser(SysUserQueryParam param, SysUser sysUser) throws Exception {
         log.info("开始 查询用户");
         try {
             Example example = new Example(SysUser.class);
             example.setOrderByClause(" create_time desc ");
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("delFlag", false);
-
             if (param.getUserType() != null) {
                 criteria.andEqualTo("userType", param.getUserType());
             }
-
             if (StringUtils.isNotBlank(param.getUsername())) {
                 criteria.andLike("username", "%" + param.getUsername() + "%");
             }
-
             if (StringUtils.isNotBlank(param.getNickName())) {
                 criteria.andLike("nickName", "%" + param.getNickName() + "%");
             }
@@ -482,83 +496,76 @@ public class SysUserServiceImpl implements SysUserService {
             if (param.getLastLoginUp() != null) {
                 criteria.andLessThanOrEqualTo("lastLogin", param.getLastLoginUp());
             }
-
             if (param.getCreateTimeLow() != null) {
                 criteria.andGreaterThanOrEqualTo("createTime", param.getCreateTimeLow());
             }
             if (param.getCreateTimeUp() != null) {
                 criteria.andLessThanOrEqualTo("createTime", param.getCreateTimeUp());
             }
-
             PageHelper.startPage(param.getPageNum(), param.getPageSize());
             List<SysUser> sysUsers = sysUserDao.selectByExample(example);
             PageInfo pageInfo = new PageInfo(sysUsers);
             PageHelper.clearPage();
+
+            // 补充vo信息
+            List<SysUser> sysUserList = pageInfo.getList();
+            List<SysUserVo> sysUserVoStream = sysUserList.stream().map(ele -> {
+                SysUserVo sysUserVo = new SysUserVo();
+                BeanUtils.copyProperties(ele, sysUserVo);
+
+                // 部门信息
+                SysUserDeptRel sysUserDeptRelParam = new SysUserDeptRel();
+                sysUserDeptRelParam.setUserId(ele.getId());
+                SysUserDeptRel sysUserDeptRel = sysUserDeptRelDao.selectOne(sysUserDeptRelParam);
+                if (sysUserDeptRel != null) {
+                    SysDept sysDept = sysDeptDao.selectByPrimaryKey(sysUserDeptRel.getDeptId());
+                    SysDeptVo sysDeptVo = new SysDeptVo();
+                    BeanUtils.copyProperties(sysDept, sysDeptVo);
+                    sysUserVo.setDeptInfo(sysDeptVo);
+                }
+
+                // 岗位信息
+                SysUserPositionRel sysUserPositionRelParam = new SysUserPositionRel();
+                sysUserPositionRelParam.setUserId(ele.getId());
+                List<SysUserPositionRel> sysUserPositionRelList = sysUserPositionRelDao.select(sysUserPositionRelParam);
+                if (CollectionUtils.isNotEmpty(sysUserPositionRelList)) {
+                    List<Long> positionIdList = sysUserPositionRelList.stream().map(userPositionRel -> userPositionRel.getPositionId()).collect(Collectors.toList());
+                    List<SysPosition> sysPositions = sysPositionDao.selectByIdList(positionIdList);
+                    if (CollectionUtils.isNotEmpty(sysPositions)) {
+                        List<SysPositionVo> sysPositionVoList = sysPositions.stream().map(sysPosition -> {
+                            SysPositionVo sysPositionVo = new SysPositionVo();
+                            BeanUtils.copyProperties(sysPosition, sysPositionVo);
+                            return sysPositionVo;
+                        }).collect(Collectors.toList());
+                        sysUserVo.setPositionList(sysPositionVoList);
+                    }
+                }
+
+                // 角色信息
+                SysUserRoleRel sysUserRoleRelParam = new SysUserRoleRel();
+                sysUserRoleRelParam.setUserId(ele.getId());
+                List<SysUserRoleRel> sysUserRoleRelList = sysUserRoleRelDao.select(sysUserRoleRelParam);
+                if (CollectionUtils.isNotEmpty(sysUserRoleRelList)) {
+                    List<Long> sysRoleIdList = sysUserRoleRelList.stream().map(sysUserRoleRel -> sysUserRoleRel.getRoleId()).collect(Collectors.toList());
+                    List<SysRole> sysRoles = sysRoleDao.selectByIdList(sysRoleIdList);
+                    if (CollectionUtils.isNotEmpty(sysRoles)) {
+                        List<SysRoleVo> sysRoleVoList = sysRoles.stream().map(sysRole -> {
+                            SysRoleVo sysRoleVo = new SysRoleVo();
+                            BeanUtils.copyProperties(sysRole, sysRoleVo);
+                            return sysRoleVo;
+                        }).collect(Collectors.toList());
+                        sysUserVo.setRoleList(sysRoleVoList);
+                    }
+                }
+                return sysUserVo;
+            }).collect(Collectors.toList());
+            pageInfo.setList(sysUserVoStream);
             log.info("完成 查询用户");
             return pageInfo;
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("查询用户失败,请联系管理员"));
         }
     }
-
-    /**
-     * 设置用户角色列表
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void setUserRoleList(SysUserRoleSetParam param, SysUser sysUser) throws Exception {
-        log.info("开始 设置用户角色列表");
-        SysUser currentUser = sysUserDao.selectByPrimaryKey(param.getSysUserId());
-        if (currentUser == null || currentUser.getDelFlag()) {
-            throw CommonException.create(ServerResponse.createByError("用户信息不存在"));
-        }
-
-        try {
-            // 删除原关联
-            SysUserRole delParam = new SysUserRole();
-            delParam.setUserId(param.getSysUserId());
-            sysUserRoleDao.delete(delParam);
-        } catch (Exception e) {
-            throw CommonException.create(ServerResponse.createByError("设置用户角色列表失败，请联系管理员"));
-        }
-
-        // 获取到要添加的角色列表
-        List<SysRole> roles = Lists.newArrayList();
-        roles = sysRoleDao.selectByIdList(param.getRoleIds());
-        List<SysRole> postMgrRole = roles.stream().filter(ele -> ele.getId().equals(Long.valueOf(2)) || ele.getId().equals(Long.valueOf(4)) || ele.getId().equals(Long.valueOf(5))).collect(Collectors.toList());
-        List<SysRole> girdMgrRole = roles.stream().filter(ele -> ele.getId().equals(Long.valueOf(3))).collect(Collectors.toList());
-        if (!CollectionUtils.isEmpty(param.getRoleIds())) {
-            if (girdMgrRole.size() > 0) {
-                if (StringUtils.isEmpty(param.getRegionCode())) {
-                    throw CommonException.create(ServerResponse.createByError("未上传区域信息"));
-                }
-                SysRegion region = sysRegionDao.selectByPrimaryKey(param.getRegionCode());
-                if (region == null) {
-                    throw CommonException.create(ServerResponse.createByError("地区信息不存在"));
-                }
-            }
-        }
-
-
-        // 增加新的关联关系
-        if (!CollectionUtils.isEmpty(roles)) {
-            try {
-                List<SysUserRole> sysUserRoleList = roles.stream().map(ele -> {
-                    SysUserRole sysUserRole = new SysUserRole();
-                    sysUserRole.setId(idWorker.nextId());
-                    sysUserRole.setUserId(param.getSysUserId());
-                    sysUserRole.setRoleId(ele.getId());
-                    return sysUserRole;
-                }).collect(Collectors.toList());
-                sysUserRoleDao.insertList(sysUserRoleList);
-                log.info("完成 设置用户角色列表");
-            } catch (Exception e) {
-                throw CommonException.create(e, ServerResponse.createByError("设置用户角色信息失败,请联系管理员"));
-            }
-        }
-
-    }
-
 
     /**
      * 删除用户

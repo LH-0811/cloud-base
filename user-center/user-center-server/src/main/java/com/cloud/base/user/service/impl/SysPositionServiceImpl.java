@@ -79,7 +79,6 @@ public class SysPositionServiceImpl implements SysPositionService {
     }
 
 
-
     /**
      * 查询岗位信息
      */

@@ -1,6 +1,6 @@
 package com.cloud.base.user.repository.dao;
 
-import com.cloud.base.user.repository.entity.SysUserDeptRelation;
+import com.cloud.base.user.repository.entity.SysUserDeptRel;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -9,7 +9,7 @@ import tk.mybatis.mapper.common.Mapper;
  * @author lh0811
  * @since 2021-08-10 21:55:23
  */
-public interface SysUserDeptRelationDao extends Mapper<SysUserDeptRelation> {
+public interface SysUserDeptRelDao extends Mapper<SysUserDeptRel> {
 
 
 }

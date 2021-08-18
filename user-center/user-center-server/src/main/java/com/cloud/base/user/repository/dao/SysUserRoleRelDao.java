@@ -1,6 +1,6 @@
 package com.cloud.base.user.repository.dao;
 
-import com.cloud.base.user.repository.entity.SysUserRole;
+import com.cloud.base.user.repository.entity.SysUserRoleRel;
 import tk.mybatis.mapper.additional.insert.InsertListMapper;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -10,7 +10,7 @@ import tk.mybatis.mapper.common.Mapper;
  * @author lh0811
  * @since 2021-01-18 10:29:35
  */
-public interface SysUserRoleDao extends Mapper<SysUserRole>, InsertListMapper<SysUserRole> {
+public interface SysUserRoleRelDao extends Mapper<SysUserRoleRel>, InsertListMapper<SysUserRoleRel> {
 
 
 }

@@ -12,7 +12,7 @@ import com.cloud.base.user.param.SysRoleUpdateParam;
 import com.cloud.base.user.repository.dao.SysResDao;
 import com.cloud.base.user.repository.dao.SysRoleDao;
 import com.cloud.base.user.repository.dao.SysRoleResDao;
-import com.cloud.base.user.repository.dao.SysUserRoleDao;
+import com.cloud.base.user.repository.dao.SysUserRoleRelDao;
 import com.cloud.base.user.repository.entity.*;
 import com.cloud.base.user.service.SysRoleService;
 import com.github.pagehelper.PageHelper;
@@ -46,7 +46,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     private SysRoleResDao sysRoleResDao;
 
     @Autowired
-    private SysUserRoleDao sysUserRoleDao;
+    private SysUserRoleRelDao sysUserRoleRelDao;
 
     @Autowired
     private SysResDao sysResDao;
@@ -124,9 +124,9 @@ public class SysRoleServiceImpl implements SysRoleService {
         }
 
 
-        SysUserRole queryUserByRoleId = new SysUserRole();
+        SysUserRoleRel queryUserByRoleId = new SysUserRoleRel();
         queryUserByRoleId.setRoleId(roleId);
-        if (sysUserRoleDao.selectCount(queryUserByRoleId) > 0) {
+        if (sysUserRoleRelDao.selectCount(queryUserByRoleId) > 0) {
             ThreadLog.info("角色有关联用户不可删除");
             throw CommonException.create(ServerResponse.createByError("角色有关联用户不可删除"));
         }

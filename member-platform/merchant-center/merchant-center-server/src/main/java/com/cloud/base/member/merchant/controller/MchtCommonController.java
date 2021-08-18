@@ -29,23 +29,6 @@ public class MchtCommonController {
 
 
     /**
-     * 查询商户的会员用户列表
-     */
-    @PostMapping("/vip_user/list")
-    @ApiOperation("查询商户的会员用户列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
-            @ApiImplicitParam(paramType = "body", dataType = "UserOfMchtQueryParam", dataTypeClass = UserOfMchtQueryParam.class, name = "param", value = "参数")
-    })
-    @HasUrl(url = "/merchant_info/current_user/vip_user/list")
-    public ServerResponse<PageInfo<SysUserVo>> getVipUserListOfMcht(@Validated @RequestBody UserOfMchtQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
-        log.info("|-----------------------------------------------|");
-        log.info("进入 查询商户的会员用户列表 接口 : MchtCurrentUserController-getVipUserListOfMcht");
-        PageInfo<SysUserVo> pageInfo = mchtInfoService.getVipUserListOfMcht(param, securityAuthority);
-        return ServerResponse.createBySuccess("查询成功",pageInfo);
-    }
-
-    /**
      * 用户加入到商户vip
      */
     @PostMapping("/join_mcht/{mchtId}")

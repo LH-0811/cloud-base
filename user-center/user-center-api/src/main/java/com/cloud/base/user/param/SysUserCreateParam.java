@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 系统-系统用户表(SysUser)实体类
@@ -22,20 +23,19 @@ import java.util.Date;
 @Getter
 public class SysUserCreateParam implements Serializable {
 
-    /**
-     * 用户类型 1-系统管理员 2-商户 3-C端客户
-     */
-    @NotNull(message = "用户类型不能为空")
-    @Range(min = 1,max = 3,message = "用户类型不合法")
-    @ApiModelProperty(value = "用户类型 1-系统管理员 2-商户 3-C端客户",required = true)
-    private Integer userType;
 
     /**
-     * 用户名
+     * 昵称
      */
-    @NotBlank(message = "未上传 用户名")
-    @ApiModelProperty(value = "用户名",required = true)
-    private String username;
+    @ApiModelProperty(value = "昵称")
+    private String nickName;
+
+    /**
+     * 所属部门id
+     */
+    @NotBlank(message = "未上传 所属部门id")
+    @ApiModelProperty(value = "所属部门id",required = true)
+    private Long deptId;
 
     /**
      * 电话
@@ -51,9 +51,42 @@ public class SysUserCreateParam implements Serializable {
     private String eMail;
 
     /**
-     * 昵称
+     * 用户名
      */
-    @ApiModelProperty(value = "昵称")
-    private String nickName;
+    @NotBlank(message = "未上传 用户名")
+    @ApiModelProperty(value = "用户名",required = true)
+    private String username;
+
+
+    /**
+     * 性别 0-保密 1-男 2-女
+     */
+    @ApiModelProperty(value = "性别 0-保密 1-男 2-女")
+    private Integer gender;
+
+    /**
+     * 岗位id列表
+     */
+    @ApiModelProperty(value = "岗位id列表")
+    private List<Long> positionIdList;
+
+    /**
+     * 岗位id列表
+     */
+    @ApiModelProperty(value = "角色id列表")
+    private List<Long> roleIdList;
+
+    /**
+     * 是否可用
+     */
+    @ApiModelProperty(value = "是否可用")
+    private Boolean activeFlag;
+
+
+
+
+
+
+
 
 }

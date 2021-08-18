@@ -1,29 +1,34 @@
 package com.cloud.base.user.repository.entity;
 
 import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import io.swagger.annotations.ApiModelProperty;
 import tk.mybatis.mapper.annotation.KeySql;
 import javax.persistence.*;
 /**
- * 用户中心-用户部门信息关系表(SysUserDeptRelation)实体类
+ * 用户中心-用户岗位信息关系表(SysUserPositionRelation)实体类
  *
  * @author lh0811
  * @since 2021-08-10 21:55:23
  */
 @Setter
 @Getter
-@Table(name="sys_user_dept_relation")
-public class SysUserDeptRelation implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name="sys_user_position_rel")
+public class SysUserPositionRel implements Serializable {
 
     /**
-     * 用户部门关系id
+     * 用户岗位关系id
      */
     @Id
     @KeySql(useGeneratedKeys = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ApiModelProperty(value="用户部门关系id")
+    @ApiModelProperty(value="用户岗位关系id")
     private Long id;
 
     /**
@@ -32,10 +37,10 @@ public class SysUserDeptRelation implements Serializable {
     @ApiModelProperty(value="用户id")
     private Long userId;
     /**
-     * 部门id
+     * 岗位id
      */
-    @ApiModelProperty(value="部门id")
-    private Long deptId;
+    @ApiModelProperty(value="岗位id")
+    private Long positionId;
 
 
 }

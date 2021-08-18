@@ -5,9 +5,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 系统-系统用户表(SysUser)实体类
@@ -26,23 +28,12 @@ public class SysUserUpdateParam implements Serializable {
     @ApiModelProperty(value="系统用户id",required = true)
     private Long id;
 
-    /**
-     * 用户类型 1-系统管理员 2-商户 3-C端客户
-     */
-    @ApiModelProperty(value = "用户类型 1-系统管理员 2-商户 3-C端客户")
-    private Integer userType;
 
     /**
      * 用户名
      */
     @ApiModelProperty(value = "用户名")
     private String username;
-
-    /**
-     * 密码
-     */
-    @ApiModelProperty(value = "密码")
-    private String password;
 
     /**
      * 昵称
@@ -67,6 +58,26 @@ public class SysUserUpdateParam implements Serializable {
      */
     @ApiModelProperty(value = "是否可用")
     private Boolean activeFlag;
+
+
+
+    /**
+     * 性别 0-保密 1-男 2-女
+     */
+    @ApiModelProperty(value = "性别 0-保密 1-男 2-女")
+    private Integer gender;
+
+    /**
+     * 岗位id列表
+     */
+    @ApiModelProperty(value = "岗位id列表")
+    private List<Long> positionIdList;
+
+    /**
+     * 岗位id列表
+     */
+    @ApiModelProperty(value = "角色id列表")
+    private List<Long> roleIdList;
 
 
 

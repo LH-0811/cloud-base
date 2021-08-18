@@ -36,12 +36,6 @@ public class SysUser implements Serializable {
     private Long id;
 
     /**
-     * 用户类型 1-系统管理员 2-商户 3-C端客户
-     */
-    @ApiModelProperty(value = "用户类型 1-系统管理员 2-商户 3-C端客户")
-    private Integer userType;
-
-    /**
      * 用户名
      */
     @ApiModelProperty(value = "用户名")
@@ -52,6 +46,10 @@ public class SysUser implements Serializable {
     @JsonIgnore
     @ApiModelProperty(value = "用户密码")
     private String password;
+
+    @ApiModelProperty(value = "性别 0-保密 1-男 2-女")
+    private Integer gender;
+
     /**
      * 密码盐
      */
@@ -115,17 +113,17 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "更新人")
     private Long updateBy;
 
+
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public enum UserType {
-        ADMIN(1, "管理员用户"),
-        MERCHANT(2, "商户用户"),
-        CLIENT(3, "客户端用户");
+    public enum Gender {
+
+        SECRET(0,"保密"),
+        MAN(1,"男"),
+        WOMAN(2,"女");
 
         private Integer code;
-        private String name;
+        private String desc;
     }
-
-
 }

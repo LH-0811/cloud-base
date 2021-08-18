@@ -8,24 +8,22 @@ import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.member.common.method.UserRoleCheck;
 import com.cloud.base.member.merchant.feign.PropScoreAccountApiClient;
 import com.cloud.base.member.merchant.feign.UserCenterCommonApiClient;
+import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
+import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
+import com.cloud.base.member.merchant.param.MchtInfoQueryParam;
+import com.cloud.base.member.merchant.param.MchtInfoUpdateParam;
 import com.cloud.base.member.merchant.repository.dao.MchtAddressDao;
-import com.cloud.base.member.merchant.repository.dao.MchtInfoDao;
 import com.cloud.base.member.merchant.repository.dao.MchtGiftSettingsDao;
+import com.cloud.base.member.merchant.repository.dao.MchtInfoDao;
 import com.cloud.base.member.merchant.repository.dao.MchtVipUserDao;
 import com.cloud.base.member.merchant.repository.entity.MchtAddress;
-import com.cloud.base.member.merchant.repository.entity.MchtInfo;
 import com.cloud.base.member.merchant.repository.entity.MchtGiftSettings;
+import com.cloud.base.member.merchant.repository.entity.MchtInfo;
 import com.cloud.base.member.merchant.repository.entity.MchtVipUser;
 import com.cloud.base.member.merchant.service.MchtInfoService;
-import com.cloud.base.member.merchant.param.MchtInfoQueryParam;
-import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
-import com.cloud.base.member.merchant.param.MchtInfoUpdateParam;
-import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.member.merchant.vo.MchtInfoVo;
 import com.cloud.base.member.merchant.vo.MchtVipUserVo;
 import com.cloud.base.member.property.param.PropScoreAccountCreateParam;
-import com.cloud.base.user.param.UserOfMchtQueryParam;
-import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -471,28 +469,6 @@ public class MchtInfoServiceImpl implements MchtInfoService {
     }
 
 
-    /**
-     * 查询商户的会员用户列表
-     */
-    @Override
-    public PageInfo<SysUserVo> getVipUserListOfMcht(UserOfMchtQueryParam param, SecurityAuthority securityAuthority) throws Exception {
-        log.info("开始 查询商户的会员用户列表:param={}", JSON.toJSONString(param));
-
-        // 获取到用户关联的商户列表
-        List<MchtInfoVo> mchtInfoVoList = getMchtBaseInfoByUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()), securityAuthority);
-        if (CollectionUtils.isEmpty(mchtInfoVoList)) {
-            throw CommonException.create(ServerResponse.createByError("用户没有关联的商户信息"));
-        }
-        List<Long> mchtIdList = mchtInfoVoList.stream().map(ele -> ele.getId()).collect(Collectors.toList());
-        if (!mchtIdList.contains(param.getMchtId())) {
-            throw CommonException.create(ServerResponse.createByError("查询商户主体不在当前用户下"));
-        }
-        ServerResponse<PageInfo<SysUserVo>> response = userCenterCommonApiClient.getUserVoListOfMcht(param);
-        if (!response.isSuccess()) {
-            throw CommonException.create(response);
-        }
-        return response.getData();
-    }
 
 
 // 私有方法 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

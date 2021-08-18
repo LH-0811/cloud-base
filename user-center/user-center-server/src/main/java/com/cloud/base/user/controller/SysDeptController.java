@@ -62,10 +62,10 @@ public class SysDeptController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
     @HasUrl(url = "/sys_dept/query_tree")
-    public ServerResponse<List<SysDept>> queryDeptTree(@ApiIgnore SysUser sysUser) throws Exception {
+    public ServerResponse<List<SysDept>> queryDeptTree(@RequestParam(value = "deptName") String deptName, @ApiIgnore SysUser sysUser) throws Exception {
         ThreadLog.info("|-----------------------------------------------|");
         ThreadLog.info("进入 获取部门树 接口 : SysDeptController-queryDeptTree ");
-        List<SysDept> sysDeptList = sysDeptService.queryDeptTree(sysUser);
+        List<SysDept> sysDeptList = sysDeptService.queryDeptTree(deptName, sysUser);
         return ServerResponse.createBySuccess("查询成功", sysDeptList);
     }
 

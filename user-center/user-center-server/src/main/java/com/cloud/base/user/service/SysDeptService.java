@@ -28,7 +28,7 @@ public interface SysDeptService {
      * @return
      * @throws Exception
      */
-    List<SysDept> queryDeptTree(SysUser sysUser) throws Exception;
+    List<SysDept> queryDeptTree(String deptName,SysUser sysUser) throws Exception;
 
     /**
      * 删除部门信息

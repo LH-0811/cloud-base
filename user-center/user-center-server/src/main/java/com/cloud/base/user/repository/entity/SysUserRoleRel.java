@@ -1,7 +1,9 @@
 package com.cloud.base.user.repository.entity;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tk.mybatis.mapper.annotation.KeySql;
 
@@ -19,8 +21,10 @@ import java.io.Serializable;
  */
 @Setter
 @Getter
-@Table(name="sys_user_role")
-public class SysUserRole implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name="sys_user_role_rel")
+public class SysUserRoleRel implements Serializable {
 
     /**
      * 用户-角色关系表

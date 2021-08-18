@@ -8,6 +8,7 @@ import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysRole;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.vo.MenuVo;
+import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -74,14 +75,6 @@ public interface SysUserService {
      */
     SecurityAuthority verification(UsernamePasswordVerificationParam param) throws Exception;
 
-    /**
-     * 注册用户
-     *
-     * @throws Exception
-     */
-    void registerUser(SysUserRegisterParam param) throws Exception;
-
-
 // //////////////// 用户管理
 
 
@@ -111,12 +104,8 @@ public interface SysUserService {
      * @return
      * @throws Exception
      */
-    PageInfo<SysUser> queryUser(SysUserQueryParam param, SysUser sysUser) throws Exception;
+    PageInfo<SysUserVo> queryUser(SysUserQueryParam param, SysUser sysUser) throws Exception;
 
-    /**
-     * 设置用户角色列表
-     */
-    void setUserRoleList(SysUserRoleSetParam param, SysUser sysUser) throws Exception;
 
     /**
      * 删除用户

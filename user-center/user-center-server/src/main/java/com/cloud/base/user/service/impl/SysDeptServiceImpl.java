@@ -11,21 +11,22 @@ import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptCreateParam;
 import com.cloud.base.user.param.SysDeptUserQueryParam;
 import com.cloud.base.user.repository.dao.SysDeptDao;
-import com.cloud.base.user.repository.dao.SysUserDeptRelationDao;
+import com.cloud.base.user.repository.dao.SysUserDeptRelDao;
 import com.cloud.base.user.repository.dao.custom.DeptUserCustomDao;
 import com.cloud.base.user.repository.entity.SysDept;
-import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysUser;
-import com.cloud.base.user.repository.entity.SysUserDeptRelation;
+import com.cloud.base.user.repository.entity.SysUserDeptRel;
 import com.cloud.base.user.service.SysDeptService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
@@ -50,7 +51,7 @@ public class SysDeptServiceImpl implements SysDeptService {
     private DeptUserCustomDao deptUserCustomDao;
 
     @Autowired
-    private SysUserDeptRelationDao sysUserDeptRelationDao;
+    private SysUserDeptRelDao sysUserDeptRelDao;
 
 
     /**
@@ -93,11 +94,16 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @throws Exception
      */
     @Override
-    public List<SysDept> queryDeptTree(SysUser sysUser) throws Exception {
+    public List<SysDept> queryDeptTree(String deptName, SysUser sysUser) throws Exception {
         ThreadLog.info("开始 获取部门树");
         try {
+            Example example = new Example(SysDept.class);
+            Example.Criteria criteria = example.createCriteria();
+            if (StringUtils.isNotBlank(deptName)) {
+                criteria.andLike("name","%"+deptName+"%");
+            }
             // 所有的资源列表
-            List<SysDept> sysDeptList = sysDeptDao.selectAll();
+            List<SysDept> sysDeptList = sysDeptDao.selectByExample(example);
             for (SysDept sysDept : sysDeptList) {
                 sysDept.setParent(sysDeptDao.selectByPrimaryKey(sysDept.getParentId()));
                 sysDept.setTitle(sysDept.getName() + "[" + sysDept.getNo() + "]");
@@ -137,9 +143,9 @@ public class SysDeptServiceImpl implements SysDeptService {
         }
 
         // 检测部门用户
-        SysUserDeptRelation queryRel = new SysUserDeptRelation();
+        SysUserDeptRel queryRel = new SysUserDeptRel();
         queryRel.setDeptId(deptId);
-        List<SysUserDeptRelation> userDeptRelationList = sysUserDeptRelationDao.select(queryRel);
+        List<SysUserDeptRel> userDeptRelationList = sysUserDeptRelDao.select(queryRel);
         if (CollectionUtils.isNotEmpty(userDeptRelationList)) {
             throw CommonException.create(ServerResponse.createByError("部门下有用户不能删除"));
         }

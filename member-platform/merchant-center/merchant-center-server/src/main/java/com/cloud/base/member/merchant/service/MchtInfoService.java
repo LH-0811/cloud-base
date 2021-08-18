@@ -1,14 +1,12 @@
 package com.cloud.base.member.merchant.service;
 
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.member.merchant.param.MchtInfoCreateParam;
 import com.cloud.base.member.merchant.param.MchtInfoQueryParam;
 import com.cloud.base.member.merchant.param.MchtInfoUpdateParam;
-import com.cloud.base.member.merchant.param.MchtGiftSettingsSaveParam;
 import com.cloud.base.member.merchant.vo.MchtInfoVo;
 import com.cloud.base.member.merchant.vo.MchtVipUserVo;
-import com.cloud.base.user.param.UserOfMchtQueryParam;
-import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -75,8 +73,4 @@ public interface MchtInfoService {
      */
     List<MchtVipUserVo> getVipUserOfMcht(Long mchtId) throws Exception;
 
-    /**
-     * 查询商户的会员用户列表
-     */
-    PageInfo<SysUserVo> getVipUserListOfMcht(UserOfMchtQueryParam param, SecurityAuthority securityAuthority) throws Exception;
 }

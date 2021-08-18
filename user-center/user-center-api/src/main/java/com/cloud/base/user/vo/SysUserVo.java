@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author lh0811
@@ -23,12 +24,6 @@ public class SysUserVo {
      */
     @ApiModelProperty(value = "系统用户id")
     private Long id;
-
-    /**
-     * 用户类型 1-系统管理员 2-商户 3-C端客户
-     */
-    @ApiModelProperty(value = "用户类型 1-系统管理员 2-商户 3-C端客户")
-    private Integer userType;
 
     /**
      * 用户名
@@ -66,26 +61,17 @@ public class SysUserVo {
     @ApiModelProperty(value = "最后登录时间")
     private Date lastLogin;
 
-    /**
-     * 创建时间
-     */
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
-    /**
-     * 更新时间
-     */
-    @ApiModelProperty(value = "更新时间")
-    private Date updateTime;
-    /**
-     * 创建人
-     */
-    @ApiModelProperty(value = "创建人")
-    private Long createBy;
-    /**
-     * 更新人
-     */
-    @ApiModelProperty(value = "更新人")
-    private Long updateBy;
+
+    @ApiModelProperty(value = "部门信息")
+    private SysDeptVo deptInfo;
+
+    @ApiModelProperty(value = "岗位信息")
+    private List<SysPositionVo> positionList;
+
+    @ApiModelProperty(value = "角色信息")
+    private List<SysRoleVo> roleList;
 
 
 }
