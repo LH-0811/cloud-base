@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 系统角色修改 bean
@@ -32,9 +33,15 @@ public class SysRoleUpdateParam implements Serializable {
     private String no;
 
     @ApiModelProperty(value = "状态 是否可用")
-    private Boolean status;
+    private Boolean activeFlag;
+
+    @ApiModelProperty(value = "排序 (升序)")
+    private Integer sortNum;
 
     @ApiModelProperty(value = "备注")
     private String notes;
+
+    @ApiModelProperty(value = "资源id列表")
+    private List<Long> resIdList;
 
 }

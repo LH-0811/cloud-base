@@ -46,7 +46,11 @@ public class SysRole implements Serializable {
      * 是否可用
      */
     @ApiModelProperty(value="是否可用")
-    private Boolean status;
+    private Boolean activeFlag;
+
+    @ApiModelProperty(value = "排序 (升序)")
+    private Integer sortNum;
+
     /**
      * 角色备注
      */

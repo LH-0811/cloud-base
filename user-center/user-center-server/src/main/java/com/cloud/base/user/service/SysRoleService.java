@@ -7,6 +7,7 @@ import com.cloud.base.user.param.SysRoleUpdateParam;
 import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysRole;
 import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.vo.SysRoleVo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public interface SysRoleService {
     /**
      * 查询系统角色信息
      */
-    PageInfo<SysRole> queryRole(SysRoleQueryParam param, SysUser sysUser) throws Exception;
+    PageInfo<SysRoleVo> queryRole(SysRoleQueryParam param, SysUser sysUser) throws Exception;
 
     /**
      * 获取角色列表
@@ -48,12 +49,8 @@ public interface SysRoleService {
      * @return
      * @throws Exception
      */
-    List<SysRole> getRoleList() throws Exception;
+    List<SysRole> getRoleList(String roleName) throws Exception;
 
-    /**
-     * 保存角色权限
-     */
-    void saveRoleRes(SysRoleResSaveParam param, SysUser sysUser) throws Exception;
 
     /**
      * 查询角色资源列表

@@ -10,7 +10,7 @@ import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.user.param.SysResCreateParam;
 import com.cloud.base.user.repository.dao.*;
 import com.cloud.base.user.repository.entity.SysRes;
-import com.cloud.base.user.repository.entity.SysRoleRes;
+import com.cloud.base.user.repository.entity.SysRoleResRel;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.SysResService;
 import com.google.common.collect.Lists;
@@ -31,7 +31,7 @@ import java.util.List;
 public class SysResServiceImpl implements SysResService {
 
     @Autowired
-    private SysRoleResDao sysRoleResDao;
+    private SysRoleResRelDao sysRoleResRelDao;
 
     @Autowired
     private SysResDao sysResDao;
@@ -96,9 +96,9 @@ public class SysResServiceImpl implements SysResService {
         if (sysRes == null) {
             throw CommonException.create(ServerResponse.createByError("权限信息不存在"));
         }
-        SysRoleRes selectByResId = new SysRoleRes();
+        SysRoleResRel selectByResId = new SysRoleResRel();
         selectByResId.setResId(resId);
-        if (sysRoleResDao.selectCount(selectByResId) > 0) {
+        if (sysRoleResRelDao.selectCount(selectByResId) > 0) {
             throw CommonException.create(ServerResponse.createByError("当前权限已关联角色"));
         }
         try {

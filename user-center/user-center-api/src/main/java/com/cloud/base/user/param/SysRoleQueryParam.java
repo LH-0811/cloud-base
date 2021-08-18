@@ -29,7 +29,7 @@ public class SysRoleQueryParam implements Serializable {
     private String no;
 
     @ApiModelProperty(value = "状态 是否可用")
-    private Boolean status;
+    private Boolean activeFlag;
 
     @ApiModelProperty(value = "页码 默认1")
     private Integer pageNum= CommonEntity.pageNum;

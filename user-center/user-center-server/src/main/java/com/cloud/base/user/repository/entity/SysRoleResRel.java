@@ -21,10 +21,10 @@ import java.io.Serializable;
  */
 @Setter
 @Getter
-@Table(name="sys_role_res")
+@Table(name="sys_role_res_rel")
 @NoArgsConstructor
 @AllArgsConstructor
-public class SysRoleRes implements Serializable {
+public class SysRoleResRel implements Serializable {
 
     /**
      * 角色权限关系id

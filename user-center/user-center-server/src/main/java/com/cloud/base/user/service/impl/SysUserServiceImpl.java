@@ -48,7 +48,7 @@ public class SysUserServiceImpl implements SysUserService {
     private SysUserDao sysUserDao;
 
     @Resource
-    private SysRoleResDao sysRoleResDao;
+    private SysRoleResRelDao sysRoleResRelDao;
 
     @Resource
     private SysUserRoleRelDao sysUserRoleRelDao;
@@ -141,14 +141,14 @@ public class SysUserServiceImpl implements SysUserService {
             }
             // 角色id列表
             List<Long> roleIds = roleList.stream().map(ele -> ele.getRoleId()).collect(Collectors.toList());
-            Example example = new Example(SysRoleRes.class);
+            Example example = new Example(SysRoleResRel.class);
             example.createCriteria().andIn("roleId", roleIds);
-            List<SysRoleRes> sysRoleRes = sysRoleResDao.selectByExample(example);
-            if (CollectionUtils.isEmpty(sysRoleRes)) {
+            List<SysRoleResRel> sysRoleReRels = sysRoleResRelDao.selectByExample(example);
+            if (CollectionUtils.isEmpty(sysRoleReRels)) {
                 return Lists.newArrayList();
             }
             // 资源id列表
-            List<Long> resIds = sysRoleRes.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
+            List<Long> resIds = sysRoleReRels.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
 
             // 所有的资源列表
             List<SysRes> sysResList = sysResDao.selectByIdList(resIds);
@@ -187,14 +187,14 @@ public class SysUserServiceImpl implements SysUserService {
             if (roleIds.contains(1L)) {
                 resIds = sysResDao.selectAll().stream().map(ele -> ele.getId()).collect(Collectors.toList());
             } else {
-                Example example = new Example(SysRoleRes.class);
+                Example example = new Example(SysRoleResRel.class);
                 example.createCriteria().andIn("roleId", roleIds);
-                List<SysRoleRes> sysRoleRes = sysRoleResDao.selectByExample(example);
-                if (CollectionUtils.isEmpty(sysRoleRes)) {
+                List<SysRoleResRel> sysRoleReRels = sysRoleResRelDao.selectByExample(example);
+                if (CollectionUtils.isEmpty(sysRoleReRels)) {
                     return Lists.newArrayList();
                 }
                 // 资源id列表
-                resIds = sysRoleRes.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
+                resIds = sysRoleReRels.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
             }
 
             // 所有的资源列表
@@ -247,14 +247,14 @@ public class SysUserServiceImpl implements SysUserService {
             }
             // 角色id列表
             List<Long> roleIds = roleList.stream().map(ele -> ele.getRoleId()).collect(Collectors.toList());
-            Example example = new Example(SysRoleRes.class);
+            Example example = new Example(SysRoleResRel.class);
             example.createCriteria().andIn("roleId", roleIds);
-            List<SysRoleRes> sysRoleRes = sysRoleResDao.selectByExample(example);
-            if (CollectionUtils.isEmpty(sysRoleRes)) {
+            List<SysRoleResRel> sysRoleReRels = sysRoleResRelDao.selectByExample(example);
+            if (CollectionUtils.isEmpty(sysRoleReRels)) {
                 return Lists.newArrayList();
             }
             // 资源id列表
-            List<Long> resIds = sysRoleRes.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
+            List<Long> resIds = sysRoleReRels.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
 
             // 所有的资源列表
             List<SysRes> sysRes = sysResDao.selectByIdList(resIds);

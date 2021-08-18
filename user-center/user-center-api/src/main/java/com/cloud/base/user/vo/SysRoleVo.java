@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author lh0811
@@ -24,6 +25,10 @@ public class SysRoleVo {
      */
     @ApiModelProperty(value="角色名称")
     private String name;
+
+    @ApiModelProperty(value = "排序 (升序)")
+    private Integer sortNum;
+
     /**
      * 角色编码
      */
@@ -33,12 +38,15 @@ public class SysRoleVo {
      * 是否可用
      */
     @ApiModelProperty(value="是否可用")
-    private Boolean status;
+    private Boolean activeFlag;
     /**
      * 角色备注
      */
     @ApiModelProperty(value="角色备注")
     private String notes;
+
+    @ApiModelProperty(value="角色资源列表")
+    private List<SysResVo> sysResList;
     /**
      * 创建时间
      */

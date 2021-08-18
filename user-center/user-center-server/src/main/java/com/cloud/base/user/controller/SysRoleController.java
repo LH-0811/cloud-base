@@ -12,6 +12,7 @@ import com.cloud.base.user.service.SysDeptService;
 import com.cloud.base.user.service.SysResService;
 import com.cloud.base.user.service.SysRoleService;
 import com.cloud.base.user.service.SysUserService;
+import com.cloud.base.user.vo.SysRoleVo;
 import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -105,10 +106,10 @@ public class SysRoleController extends BaseController {
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleQueryParam", dataTypeClass = SysRoleQueryParam.class, name = "param", value = "参数")
     })
     @HasUrl(url = "/sys_role/query")
-    public ServerResponse<PageInfo<SysRole>> queryRole(@Validated @RequestBody SysRoleQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<PageInfo<SysRoleVo>> queryRole(@Validated @RequestBody SysRoleQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询系统角色信息 接口 : SysAdminController-queryRole ");
-        PageInfo<SysRole> pageInfo = sysRoleService.queryRole(param, getCurrentSysUser(securityAuthority));
+        PageInfo<SysRoleVo> pageInfo = sysRoleService.queryRole(param, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("查询成功", pageInfo);
     }
 
@@ -121,28 +122,11 @@ public class SysRoleController extends BaseController {
     @GetMapping("/query/all_list")
     @ApiOperation("获取角色列表")
     @HasUrl(url = "/sys_role/query/all_list")
-    public ServerResponse<List<SysRole>> getRoleList(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysRole>> getRoleList(@RequestParam(value = "roleName") String roleName,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取角色列表 接口 : SysAdminController-getRoleList ");
-        List<SysRole> roleList = sysRoleService.getRoleList();
+        List<SysRole> roleList = sysRoleService.getRoleList(roleName);
         return ServerResponse.createBySuccess("查询成功", roleList);
-    }
-
-    /**
-     * 保存角色权限
-     */
-    @PostMapping("/save_res")
-    @ApiOperation("保存角色资源（权限）")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
-            @ApiImplicitParam(paramType = "body", dataType = "SysRoleResSaveParam", dataTypeClass = SysRoleResSaveParam.class, name = "param", value = "参数")
-    })
-    @HasUrl(url = "/sys_role/save_res")
-    public ServerResponse saveRoleRes(@Validated @RequestBody SysRoleResSaveParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
-        log.info("|-----------------------------------------------|");
-        log.info("进入 保存角色资源（权限） 接口 : SysAdminController-queryRole ");
-        sysRoleService.saveRoleRes(param, getCurrentSysUser(securityAuthority));
-        return ServerResponse.createBySuccess("保存成功");
     }
 
     /**

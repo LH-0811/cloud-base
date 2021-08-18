@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 创建系统角色参数
@@ -29,8 +30,14 @@ public class SysRoleCreateParam implements Serializable {
     private String no;
 
     @ApiModelProperty(value = "状态 是否可用默认可用", required = true)
-    private Boolean status = true;
+    private Boolean activeFlag = true;
+
+    @ApiModelProperty(value = "排序 (升序)")
+    private Integer sortNum;
 
     @ApiModelProperty(value = "备注")
     private String notes;
+
+    @ApiModelProperty(value = "资源id列表")
+    private List<Long> resIdList;
 }

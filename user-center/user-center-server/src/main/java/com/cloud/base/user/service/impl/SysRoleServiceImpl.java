@@ -7,17 +7,19 @@ import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.user.param.SysRoleCreateParam;
 import com.cloud.base.user.param.SysRoleQueryParam;
-import com.cloud.base.user.param.SysRoleResSaveParam;
 import com.cloud.base.user.param.SysRoleUpdateParam;
 import com.cloud.base.user.repository.dao.SysResDao;
 import com.cloud.base.user.repository.dao.SysRoleDao;
-import com.cloud.base.user.repository.dao.SysRoleResDao;
+import com.cloud.base.user.repository.dao.SysRoleResRelDao;
 import com.cloud.base.user.repository.dao.SysUserRoleRelDao;
 import com.cloud.base.user.repository.entity.*;
 import com.cloud.base.user.service.SysRoleService;
+import com.cloud.base.user.vo.SysResVo;
+import com.cloud.base.user.vo.SysRoleVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     private SysRoleDao sysRoleDao;
 
     @Autowired
-    private SysRoleResDao sysRoleResDao;
+    private SysRoleResRelDao sysRoleResRelDao;
 
     @Autowired
     private SysUserRoleRelDao sysUserRoleRelDao;
@@ -70,12 +72,20 @@ public class SysRoleServiceImpl implements SysRoleService {
         }
 
         try {
+            // 创建角色信息
             SysRole sysRole = new SysRole();
             BeanUtils.copyProperties(param, sysRole);
             sysRole.setId(idWorker.nextId());
             sysRole.setCreateTime(new Date());
             sysRole.setCreateBy(sysUser.getId());
             sysRoleDao.insertSelective(sysRole);
+
+            // 添加角色与资源之间的关系
+            if (CollectionUtils.isNotEmpty(param.getResIdList())) {
+                List<SysRoleResRel> sysRoleResRelList = param.getResIdList().stream().map(resId -> new SysRoleResRel(idWorker.nextId(), sysRole.getId(), resId)).collect(Collectors.toList());
+                sysRoleResRelDao.insertList(sysRoleResRelList);
+            }
+
             ThreadLog.info("完成创建");
         } catch (Exception e) {
             ThreadLog.info("完成 SysAdminServiceImpl.createRole:" + JSON.toJSONString(param));
@@ -102,6 +112,17 @@ public class SysRoleServiceImpl implements SysRoleService {
             sysRole.setUpdateBy(sysUser.getId());
             sysRole.setUpdateTime(new Date());
             sysRoleDao.updateByPrimaryKeySelective(sysRole);
+
+            // 添加角色与资源之间的关系
+            if (CollectionUtils.isNotEmpty(param.getResIdList())) {
+                SysRoleResRel delParam = new SysRoleResRel();
+                delParam.setRoleId(param.getId());
+                sysRoleResRelDao.delete(delParam);
+
+                List<SysRoleResRel> sysRoleResRelList = param.getResIdList().stream().map(resId -> new SysRoleResRel(idWorker.nextId(), sysRole.getId(), resId)).collect(Collectors.toList());
+                sysRoleResRelDao.insertList(sysRoleResRelList);
+            }
+
             ThreadLog.info("完成 SysAdminServiceImpl.updateRole:" + JSON.toJSONString(param));
         } catch (Exception e) {
             ThreadLog.info("修改角色信息错误");
@@ -132,9 +153,9 @@ public class SysRoleServiceImpl implements SysRoleService {
         }
         try {
             sysRoleDao.deleteByPrimaryKey(roleId);
-            SysRoleRes deleteByRoleId = new SysRoleRes();
+            SysRoleResRel deleteByRoleId = new SysRoleResRel();
             deleteByRoleId.setRoleId(roleId);
-            sysRoleResDao.delete(deleteByRoleId);
+            sysRoleResRelDao.delete(deleteByRoleId);
             ThreadLog.info("完成 SysAdminServiceImpl.deleteRole:" + roleId);
         } catch (Exception e) {
             ThreadLog.info("删除角色失败");
@@ -147,11 +168,11 @@ public class SysRoleServiceImpl implements SysRoleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public PageInfo<SysRole> queryRole(SysRoleQueryParam param, SysUser sysUser) throws Exception {
+    public PageInfo<SysRoleVo> queryRole(SysRoleQueryParam param, SysUser sysUser) throws Exception {
         ThreadLog.info("进入 SysAdminServiceImpl.queryRole:" + JSON.toJSONString(param));
         try {
             Example example = new Example(SysRole.class);
-            example.setOrderByClause(" create_time desc,update_time desc");
+            example.setOrderByClause(" sort_num asc,create_time desc ");
             Example.Criteria criteria = example.createCriteria();
 
             if (StringUtils.isNotEmpty(param.getName())) {
@@ -160,13 +181,38 @@ public class SysRoleServiceImpl implements SysRoleService {
             if (StringUtils.isNotEmpty(param.getNo())) {
                 criteria.andEqualTo("no", param.getNo());
             }
-            if (param.getStatus() != null) {
-                criteria.andEqualTo("activeFlag", param.getStatus());
+            if (param.getActiveFlag() != null) {
+                criteria.andEqualTo("activeFlag", param.getActiveFlag());
             }
             PageHelper.startPage(param.getPageNum(), param.getPageSize());
             List<SysRole> sysRoles = sysRoleDao.selectByExample(example);
-            PageInfo<SysRole> pageInfo = new PageInfo<>(sysRoles);
+            PageInfo pageInfo = new PageInfo<>(sysRoles);
             PageHelper.clearPage();
+
+            // 增加vo信息
+            List<SysRole> roleList = pageInfo.getList();
+            List<SysRoleVo> roleVoList = roleList.stream().map(role -> {
+                SysRoleVo sysRoleVo = new SysRoleVo();
+                BeanUtils.copyProperties(role, sysRoleVo);
+
+                // 设置角色资源列表
+                SysRoleResRel queryParam = new SysRoleResRel();
+                queryParam.setRoleId(role.getId());
+                List<SysRoleResRel> sysRoleResRels = sysRoleResRelDao.select(queryParam);
+                if (CollectionUtils.isNotEmpty(sysRoleResRels)) {
+                    List<Long> resIds = sysRoleResRels.stream().map(sysRoleResRel -> sysRoleResRel.getResId()).collect(Collectors.toList());
+                    List<SysRes> sysResList = sysResDao.selectByIdList(resIds);
+                    List<SysResVo> sysResVoList = sysResList.stream().map(sysRes -> {
+                        SysResVo sysResVo = new SysResVo();
+                        BeanUtils.copyProperties(sysRes, sysResVo);
+                        return sysResVo;
+                    }).collect(Collectors.toList());
+                    sysRoleVo.setSysResList(sysResVoList);
+                }
+                return sysRoleVo;
+            }).collect(Collectors.toList());
+            pageInfo.setList(roleVoList);
+
             ThreadLog.info("完成 SysAdminServiceImpl.queryRole:" + JSON.toJSONString(param));
             return pageInfo;
         } catch (Exception e) {
@@ -183,58 +229,20 @@ public class SysRoleServiceImpl implements SysRoleService {
      * @throws Exception
      */
     @Override
-    public List<SysRole> getRoleList() throws Exception {
+    public List<SysRole> getRoleList(String roleName) throws Exception {
         ThreadLog.info("开始 获取角色列表");
-        ;
         try {
-            List<SysRole> roles = sysRoleDao.selectAll();
+            Example example = new Example(SysRole.class);
+            example.setOrderByClause(" sort_num asc,create_time desc ");
+            if (StringUtils.isNotBlank(roleName)) {
+                example.createCriteria().andEqualTo("name", roleName);
+            }
+            List<SysRole> roles = sysRoleDao.selectByExample(example);
             ThreadLog.info("完成 获取角色列表");
             return roles;
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取角色列表失败,请联系管理员"));
         }
-
-
-    }
-
-    /**
-     * 保存角色权限
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void saveRoleRes(SysRoleResSaveParam param, SysUser sysUser) throws Exception {
-        ThreadLog.info("进入 SysAdminServiceImpl.saveRoleRes:" + param);
-        // 检查角色是否存在
-        SysRole sysRole = sysRoleDao.selectByPrimaryKey(param.getRoleId());
-        if (sysRole == null) {
-            throw CommonException.create(ServerResponse.createByError("角色不存在"));
-        }
-        try {
-            // 删除之前的 权限列表
-            SysRoleRes deleteByRoleId = new SysRoleRes();
-            deleteByRoleId.setRoleId(param.getRoleId());
-            sysRoleResDao.delete(deleteByRoleId);
-        } catch (Exception e) {
-            ThreadLog.info("保存角色权限失败");
-            throw CommonException.create(e, ServerResponse.createByError("保存角色权限失败"));
-        }
-        // 获取到这次要保存的权限
-        param.getResIds().add(0L);
-        Example example = new Example(SysRes.class);
-        example.createCriteria().andIn("id", param.getResIds());
-        List<SysRes> sysPermissions = sysResDao.selectByExample(example);
-        if (!org.apache.commons.collections4.CollectionUtils.isEmpty(sysPermissions)) {
-            // 获取到有效的id 组装成对应的bean
-            List<SysRoleRes> sysRoleResList = sysPermissions.stream().map(ele -> new SysRoleRes(idWorker.nextId(), param.getRoleId(), ele.getId())).collect(Collectors.toList());
-            try {
-                // 保存新的权限列表
-                sysRoleResDao.insertList(sysRoleResList);
-            } catch (Exception e) {
-                ThreadLog.info("保存角色权限失败");
-                throw CommonException.create(e, ServerResponse.createByError("保存角色权限失败"));
-            }
-        }
-
     }
 
     /**
@@ -250,9 +258,9 @@ public class SysRoleServiceImpl implements SysRoleService {
             throw CommonException.create(ServerResponse.createByError("角色不存在"));
         }
         try {
-            SysRoleRes selectParam = new SysRoleRes();
+            SysRoleResRel selectParam = new SysRoleResRel();
             selectParam.setRoleId(roleId);
-            List<SysRoleRes> roleResList = sysRoleResDao.select(selectParam);
+            List<SysRoleResRel> roleResList = sysRoleResRelDao.select(selectParam);
             if (org.apache.commons.collections4.CollectionUtils.isEmpty(roleResList)) {
                 return Lists.newArrayList();
             }
