@@ -1,19 +1,15 @@
 package com.cloud.base.user.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.user.dto.DeptUserDto;
-import com.cloud.base.user.param.*;
+import com.cloud.base.user.param.SysRoleCreateParam;
+import com.cloud.base.user.param.SysRoleQueryParam;
+import com.cloud.base.user.param.SysRoleUpdateParam;
 import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysRole;
-import com.cloud.base.user.service.SysDeptService;
-import com.cloud.base.user.service.SysResService;
 import com.cloud.base.user.service.SysRoleService;
-import com.cloud.base.user.service.SysUserService;
 import com.cloud.base.user.vo.SysRoleVo;
-import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -122,7 +118,7 @@ public class SysRoleController extends BaseController {
     @GetMapping("/query/all_list")
     @ApiOperation("获取角色列表")
     @HasUrl
-    public ServerResponse<List<SysRole>> getRoleList(@RequestParam(value = "roleName") String roleName,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysRole>> getRoleList(@RequestParam(value = "roleName",required = false) String roleName,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取角色列表 接口 : SysAdminController-getRoleList ");
         List<SysRole> roleList = sysRoleService.getRoleList(roleName);

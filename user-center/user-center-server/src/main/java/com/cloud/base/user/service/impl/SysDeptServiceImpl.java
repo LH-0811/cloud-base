@@ -6,7 +6,6 @@ import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
-import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptCreateParam;
 import com.cloud.base.user.param.SysDeptUserQueryParam;
@@ -60,13 +59,13 @@ public class SysDeptServiceImpl implements SysDeptService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createSysDept(SysDeptCreateParam param, SysUser sysUser) throws Exception {
-        ThreadLog.info("开始 创建部门信息: param=" + JSON.toJSONString(param));
+        log.info("开始 创建部门信息: param=" + JSON.toJSONString(param));
         // 检查父级部门
         SysDept queryParam = new SysDept();
         queryParam.setParentId(param.getParentId());
         SysDept parentDept = sysDeptDao.selectOne(queryParam);
         if (parentDept == null) {
-            ThreadLog.info("退出 父级部门不存在");
+            log.info("退出 父级部门不存在");
             throw CommonException.create(ServerResponse.createByError("父级部门不存在！"));
         }
         // 创建部门信息
@@ -79,7 +78,7 @@ public class SysDeptServiceImpl implements SysDeptService {
             sysDept.setCreateBy(sysUser.getId());
             sysDept.setCreateTime(new Date());
             sysDeptDao.insertSelective(sysDept);
-            ThreadLog.info("完成 创建部门信息");
+            log.info("完成 创建部门信息");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("创建部门信息失败,请联系管理员！"));
         }
@@ -95,7 +94,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Override
     public List<SysDept> queryDeptTree(String deptName, SysUser sysUser) throws Exception {
-        ThreadLog.info("开始 获取部门树");
+        log.info("开始 获取部门树");
         try {
             Example example = new Example(SysDept.class);
             Example.Criteria criteria = example.createCriteria();
@@ -112,7 +111,7 @@ public class SysDeptServiceImpl implements SysDeptService {
             }
             // 组装未tree数据
             JSONArray jsonArray = CommonMethod.listToTree(sysDeptList, "0", "parentId", "id", "children");
-            ThreadLog.info("完成 获取部门树");
+            log.info("完成 获取部门树");
             return jsonArray.toJavaList(SysDept.class);
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
@@ -125,12 +124,12 @@ public class SysDeptServiceImpl implements SysDeptService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteSysDept(Long deptId, SysUser sysUser) throws Exception {
-        ThreadLog.info("开始 删除部门信息: deptId=" + deptId);
+        log.info("开始 删除部门信息: deptId=" + deptId);
 
         // 检查部门是否存在
         SysDept sysDept = sysDeptDao.selectByPrimaryKey(deptId);
         if (sysDept == null) {
-            ThreadLog.info("退出 删除部门信息 部门信息不存在");
+            log.info("退出 删除部门信息 部门信息不存在");
             throw CommonException.create(ServerResponse.createByError("部门信息不存在"));
         }
 
@@ -152,7 +151,7 @@ public class SysDeptServiceImpl implements SysDeptService {
 
         try {
             sysDeptDao.deleteByPrimaryKey(deptId);
-            ThreadLog.info("完成 删除部门信息");
+            log.info("完成 删除部门信息");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("删除部门信息失败,请联系管理员！"));
         }
@@ -168,13 +167,13 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Override
     public PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception {
-        ThreadLog.info("开始 获取部门角色信息：param=" + JSON.toJSONString(param));
+        log.info("开始 获取部门角色信息：param=" + JSON.toJSONString(param));
         try {
             PageHelper.startPage(param.getPageNum(), param.getPageSize());
             List<DeptUserDto> deptUserDtos = deptUserCustomDao.selectDeptUser(param);
             PageInfo<DeptUserDto> pageInfo = new PageInfo(deptUserDtos);
             PageHelper.clearPage();
-            ThreadLog.info("完成 开始 获取部门角色信息");
+            log.info("完成 开始 获取部门角色信息");
             return pageInfo;
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取部门角色信息失败,请联系管理员"));

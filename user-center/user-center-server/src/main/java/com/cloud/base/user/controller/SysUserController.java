@@ -1,19 +1,14 @@
 package com.cloud.base.user.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.user.dto.DeptUserDto;
+import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysRole;
 import com.cloud.base.user.repository.entity.SysUser;
-import com.cloud.base.user.service.SysDeptService;
-import com.cloud.base.user.service.SysResService;
-import com.cloud.base.user.service.SysRoleService;
 import com.cloud.base.user.service.SysUserService;
-import com.cloud.base.user.param.*;
 import com.cloud.base.user.vo.MenuVo;
 import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;

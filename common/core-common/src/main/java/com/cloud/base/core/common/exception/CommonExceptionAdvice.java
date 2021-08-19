@@ -4,7 +4,6 @@ import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
 import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -52,7 +51,7 @@ public class CommonExceptionAdvice {
             Tracer.trace(e);
         }
         // 输出控制台打印日志
-        ThreadLog.err(CommonMethod.getTrace(e));
+        log.error(CommonMethod.getTrace(e));
 
         // 返回前端提示信息
         return ServerResponse.createByError(500, "未知错误！");

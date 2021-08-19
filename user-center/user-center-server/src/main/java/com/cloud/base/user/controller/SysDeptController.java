@@ -1,8 +1,8 @@
 package com.cloud.base.user.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptCreateParam;
 import com.cloud.base.user.param.SysDeptUserQueryParam;
@@ -30,6 +30,7 @@ import java.util.List;
 @Api(tags = "用户中心-部门管理接口")
 @RestController
 @RequestMapping("/sys_dept")
+@HasUrl
 public class SysDeptController extends BaseController {
 
     @Autowired
@@ -44,11 +45,10 @@ public class SysDeptController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysDeptCreateParam", dataTypeClass = SysDeptCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl
-    public ServerResponse createSysDept(@Validated @RequestBody SysDeptCreateParam param, @ApiIgnore SysUser sysUser) throws Exception {
-        ThreadLog.info("|-----------------------------------------------|");
-        ThreadLog.info("进入 创建部门信息 接口 : SysDeptController-createSysDept ");
-        sysDeptService.createSysDept(param, sysUser);
+    public ServerResponse createSysDept(@Validated @RequestBody SysDeptCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 创建部门信息 接口 : SysDeptController-createSysDept ");
+        sysDeptService.createSysDept(param, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("创建成功");
     }
 
@@ -61,11 +61,10 @@ public class SysDeptController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    @HasUrl
-    public ServerResponse<List<SysDept>> queryDeptTree(@RequestParam(value = "deptName") String deptName, @ApiIgnore SysUser sysUser) throws Exception {
-        ThreadLog.info("|-----------------------------------------------|");
-        ThreadLog.info("进入 获取部门树 接口 : SysDeptController-queryDeptTree ");
-        List<SysDept> sysDeptList = sysDeptService.queryDeptTree(deptName, sysUser);
+    public ServerResponse<List<SysDept>> queryDeptTree(@RequestParam(value = "deptName",required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 获取部门树 接口 : SysDeptController-queryDeptTree ");
+        List<SysDept> sysDeptList = sysDeptService.queryDeptTree(deptName, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("查询成功", sysDeptList);
     }
 
@@ -78,11 +77,10 @@ public class SysDeptController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "deptId", value = "部门id")
     })
-    @HasUrl
-    public ServerResponse deleteSysDept(@PathVariable(value = "deptId") Long deptId, @ApiIgnore SysUser sysUser) throws Exception {
-        ThreadLog.info("|-----------------------------------------------|");
-        ThreadLog.info("进入 删除部门信息 接口 : SysDeptController-deleteSysDept ");
-        sysDeptService.deleteSysDept(deptId, sysUser);
+    public ServerResponse deleteSysDept(@PathVariable(value = "deptId") Long deptId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 删除部门信息 接口 : SysDeptController-deleteSysDept ");
+        sysDeptService.deleteSysDept(deptId, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("删除成功");
     }
 
@@ -96,11 +94,10 @@ public class SysDeptController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysDeptUserQueryParam", dataTypeClass = SysDeptUserQueryParam.class, name = "param", value = "参数")
     })
-    @HasUrl
-    public ServerResponse<PageInfo<DeptUserDto>> selectDeptUser(@Validated @RequestBody SysDeptUserQueryParam param, @ApiIgnore SysUser sysUser) throws Exception {
-        ThreadLog.info("|-----------------------------------------------|");
-        ThreadLog.info("进入 获取部门用户信息 接口 : SysDeptController-selectDeptUser ");
-        PageInfo<DeptUserDto> deptUserDtoPageInfo = sysDeptService.selectDeptUser(param, sysUser);
+    public ServerResponse<PageInfo<DeptUserDto>> selectDeptUser(@Validated @RequestBody SysDeptUserQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 获取部门用户信息 接口 : SysDeptController-selectDeptUser ");
+        PageInfo<DeptUserDto> deptUserDtoPageInfo = sysDeptService.selectDeptUser(param, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("查询成功", deptUserDtoPageInfo);
     }
 

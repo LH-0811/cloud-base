@@ -1,13 +1,11 @@
 package com.cloud.base.user.controller;
 
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
-import com.cloud.base.user.param.SysDeptCreateParam;
+import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.user.param.SysPositionCreateParam;
 import com.cloud.base.user.param.SysPositionQueryParam;
 import com.cloud.base.user.repository.entity.SysPosition;
-import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.SysPositionService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -44,10 +42,10 @@ public class SysPositionController extends BaseController {
             @ApiImplicitParam(paramType = "body", dataType = "SysPositionCreateParam", dataTypeClass = SysPositionCreateParam.class, name = "param", value = "参数")
     })
     @HasUrl
-    public ServerResponse createPosition(@Validated @RequestBody SysPositionCreateParam param, @ApiIgnore SysUser sysUser) throws Exception {
-        ThreadLog.info("|-----------------------------------------------|");
-        ThreadLog.info("进入 创建岗位信息 接口 : SysPositionController-createPosition ");
-        sysPositionService.createPosition(param, sysUser);
+    public ServerResponse createPosition(@Validated @RequestBody SysPositionCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 创建岗位信息 接口 : SysPositionController-createPosition ");
+        sysPositionService.createPosition(param, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("创建成功");
     }
 
@@ -61,10 +59,10 @@ public class SysPositionController extends BaseController {
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "positionId", value = "岗位id")
     })
     @HasUrl
-    public ServerResponse deletePosition(@PathVariable(value = "positionId") Long positionId, @ApiIgnore SysUser sysUser) throws Exception {
-        ThreadLog.info("|-----------------------------------------------|");
-        ThreadLog.info("进入 删除岗位信息 接口 : SysPositionController-deletePosition ");
-        sysPositionService.deletePosition(positionId, sysUser);
+    public ServerResponse deletePosition(@PathVariable(value = "positionId") Long positionId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 删除岗位信息 接口 : SysPositionController-deletePosition ");
+        sysPositionService.deletePosition(positionId, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("删除成功");
     }
 
@@ -78,10 +76,10 @@ public class SysPositionController extends BaseController {
             @ApiImplicitParam(paramType = "body", dataType = "SysPositionQueryParam", dataTypeClass = SysPositionQueryParam.class, name = "param", value = "参数")
     })
     @HasUrl
-    public ServerResponse<PageInfo<SysPosition>> queryPosition(@Validated @RequestBody SysPositionQueryParam param, @ApiIgnore SysUser sysUser) throws Exception {
-        ThreadLog.info("|-----------------------------------------------|");
-        ThreadLog.info("进入 查询岗位信息 接口 : SysPositionController-queryPosition ");
-        PageInfo<SysPosition> sysPositionPageInfo = sysPositionService.queryPosition(param, sysUser);
+    public ServerResponse<PageInfo<SysPosition>> queryPosition(@Validated @RequestBody SysPositionQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 查询岗位信息 接口 : SysPositionController-queryPosition ");
+        PageInfo<SysPosition> sysPositionPageInfo = sysPositionService.queryPosition(param, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("删除成功", sysPositionPageInfo);
     }
 

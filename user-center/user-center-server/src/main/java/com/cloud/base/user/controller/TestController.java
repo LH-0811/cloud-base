@@ -2,7 +2,6 @@ package com.cloud.base.user.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptUserQueryParam;
 import com.cloud.base.user.repository.dao.custom.DeptUserCustomDao;
@@ -50,16 +49,16 @@ public class TestController {
             @ApiImplicitParam(paramType = "body", dataType = "SysDeptUserQueryParam", dataTypeClass = SysDeptUserQueryParam.class, name = "param", value = "参数")
     })
     public ServerResponse<PageInfo<DeptUserDto>> selectDeptUser(@RequestBody SysDeptUserQueryParam param) throws Exception {
-        ThreadLog.info("userSentinel:1"+userSentinel1);
-        ThreadLog.info("userSentinel:2"+userSentinel2);
-        ThreadLog.info("开始 测试查询部门用户 TestController-selectDeptUser: param="+JSON.toJSONString(param));
+        log.info("userSentinel:1"+userSentinel1);
+        log.info("userSentinel:2"+userSentinel2);
+        log.info("开始 测试查询部门用户 TestController-selectDeptUser: param="+JSON.toJSONString(param));
         // 查询
         PageHelper.startPage(param.getPageNum(), param.getPageSize());
         List<DeptUserDto> deptUserDtos = deptUserCustomDao.selectDeptUser(param);
         PageInfo pageInfo = new PageInfo(deptUserDtos);
         PageHelper.clearPage();
         // 查询完成
-        ThreadLog.info("完成 测试查询部门用户 TestController-selectDeptUser");
+        log.info("完成 测试查询部门用户 TestController-selectDeptUser");
         int a = 1/0;
         return ServerResponse.createBySuccess("查询成功",pageInfo);
     }

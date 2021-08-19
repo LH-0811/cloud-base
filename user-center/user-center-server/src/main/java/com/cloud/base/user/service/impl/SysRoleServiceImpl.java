@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
-import com.cloud.base.core.common.util.thread_log.ThreadLog;
 import com.cloud.base.user.param.SysRoleCreateParam;
 import com.cloud.base.user.param.SysRoleQueryParam;
 import com.cloud.base.user.param.SysRoleUpdateParam;
@@ -19,6 +18,7 @@ import com.cloud.base.user.vo.SysRoleVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
  * @author lh0811
  * @date 2021/8/17
  */
+@Slf4j
 @Service("sysRoleService")
 public class SysRoleServiceImpl implements SysRoleService {
 
@@ -64,7 +65,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createRole(SysRoleCreateParam param, SysUser sysUser) throws Exception {
-        ThreadLog.info("进入 SysAdminServiceImpl.createRole:" + JSON.toJSONString(param));
+        log.info("进入 SysAdminServiceImpl.createRole:" + JSON.toJSONString(param));
         SysRole queryByName = new SysRole();
         queryByName.setName(param.getName());
         if (sysRoleDao.selectCount(queryByName) > 0) {
@@ -86,9 +87,9 @@ public class SysRoleServiceImpl implements SysRoleService {
                 sysRoleResRelDao.insertList(sysRoleResRelList);
             }
 
-            ThreadLog.info("完成创建");
+            log.info("完成创建");
         } catch (Exception e) {
-            ThreadLog.info("完成 SysAdminServiceImpl.createRole:" + JSON.toJSONString(param));
+            log.info("完成 SysAdminServiceImpl.createRole:" + JSON.toJSONString(param));
             throw CommonException.create(e, ServerResponse.createByError("创建用户失败"));
         }
     }
@@ -100,10 +101,10 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateRole(SysRoleUpdateParam param, SysUser sysUser) throws Exception {
-        ThreadLog.info("进入 SysAdminServiceImpl.updateRole:" + JSON.toJSONString(param));
+        log.info("进入 SysAdminServiceImpl.updateRole:" + JSON.toJSONString(param));
         SysRole sysRole = sysRoleDao.selectByPrimaryKey(param.getId());
         if (sysRole == null) {
-            ThreadLog.info("角色信息不存在");
+            log.info("角色信息不存在");
             throw CommonException.create(ServerResponse.createByError("角色信息不存在"));
         }
 
@@ -123,9 +124,9 @@ public class SysRoleServiceImpl implements SysRoleService {
                 sysRoleResRelDao.insertList(sysRoleResRelList);
             }
 
-            ThreadLog.info("完成 SysAdminServiceImpl.updateRole:" + JSON.toJSONString(param));
+            log.info("完成 SysAdminServiceImpl.updateRole:" + JSON.toJSONString(param));
         } catch (Exception e) {
-            ThreadLog.info("修改角色信息错误");
+            log.info("修改角色信息错误");
             throw CommonException.create(e, ServerResponse.createByError("修改角色信息错误"));
         }
     }
@@ -137,10 +138,10 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteRole(Long roleId, SysUser sysUser) throws Exception {
-        ThreadLog.info("进入 SysAdminServiceImpl.deleteRole:" + roleId);
+        log.info("进入 SysAdminServiceImpl.deleteRole:" + roleId);
         SysRole sysRole = sysRoleDao.selectByPrimaryKey(roleId);
         if (sysRole == null) {
-            ThreadLog.info("角色信息不存在");
+            log.info("角色信息不存在");
             throw CommonException.create(ServerResponse.createByError("角色信息不存在"));
         }
 
@@ -148,7 +149,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         SysUserRoleRel queryUserByRoleId = new SysUserRoleRel();
         queryUserByRoleId.setRoleId(roleId);
         if (sysUserRoleRelDao.selectCount(queryUserByRoleId) > 0) {
-            ThreadLog.info("角色有关联用户不可删除");
+            log.info("角色有关联用户不可删除");
             throw CommonException.create(ServerResponse.createByError("角色有关联用户不可删除"));
         }
         try {
@@ -156,9 +157,9 @@ public class SysRoleServiceImpl implements SysRoleService {
             SysRoleResRel deleteByRoleId = new SysRoleResRel();
             deleteByRoleId.setRoleId(roleId);
             sysRoleResRelDao.delete(deleteByRoleId);
-            ThreadLog.info("完成 SysAdminServiceImpl.deleteRole:" + roleId);
+            log.info("完成 SysAdminServiceImpl.deleteRole:" + roleId);
         } catch (Exception e) {
-            ThreadLog.info("删除角色失败");
+            log.info("删除角色失败");
             throw CommonException.create(e, ServerResponse.createByError("删除角色失败"));
         }
     }
@@ -169,7 +170,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PageInfo<SysRoleVo> queryRole(SysRoleQueryParam param, SysUser sysUser) throws Exception {
-        ThreadLog.info("进入 SysAdminServiceImpl.queryRole:" + JSON.toJSONString(param));
+        log.info("进入 SysAdminServiceImpl.queryRole:" + JSON.toJSONString(param));
         try {
             Example example = new Example(SysRole.class);
             example.setOrderByClause(" sort_num asc,create_time desc ");
@@ -213,10 +214,10 @@ public class SysRoleServiceImpl implements SysRoleService {
             }).collect(Collectors.toList());
             pageInfo.setList(roleVoList);
 
-            ThreadLog.info("完成 SysAdminServiceImpl.queryRole:" + JSON.toJSONString(param));
+            log.info("完成 SysAdminServiceImpl.queryRole:" + JSON.toJSONString(param));
             return pageInfo;
         } catch (Exception e) {
-            ThreadLog.info("查询角色失败");
+            log.info("查询角色失败");
             throw CommonException.create(e, ServerResponse.createByError("查询角色失败"));
         }
     }
@@ -230,7 +231,7 @@ public class SysRoleServiceImpl implements SysRoleService {
      */
     @Override
     public List<SysRole> getRoleList(String roleName) throws Exception {
-        ThreadLog.info("开始 获取角色列表");
+        log.info("开始 获取角色列表");
         try {
             Example example = new Example(SysRole.class);
             example.setOrderByClause(" sort_num asc,create_time desc ");
@@ -238,7 +239,7 @@ public class SysRoleServiceImpl implements SysRoleService {
                 example.createCriteria().andEqualTo("name", roleName);
             }
             List<SysRole> roles = sysRoleDao.selectByExample(example);
-            ThreadLog.info("完成 获取角色列表");
+            log.info("完成 获取角色列表");
             return roles;
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取角色列表失败,请联系管理员"));
@@ -251,7 +252,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<SysRes> getSysResListByRoleId(Long roleId, SysUser sysUser) throws Exception {
-        ThreadLog.info("进入 查询角色资源列表:" + roleId);
+        log.info("进入 查询角色资源列表:" + roleId);
         // 检查角色是否存在
         SysRole sysRole = sysRoleDao.selectByPrimaryKey(roleId);
         if (sysRole == null) {
@@ -265,7 +266,7 @@ public class SysRoleServiceImpl implements SysRoleService {
                 return Lists.newArrayList();
             }
             List<SysRes> sysRes = sysResDao.selectByIdList(roleResList.stream().map(ele -> ele.getResId()).collect(Collectors.toList()));
-            ThreadLog.info("完成 查询角色资源列表");
+            log.info("完成 查询角色资源列表");
             return sysRes;
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取角色资源列表失败,请联系管理员"));

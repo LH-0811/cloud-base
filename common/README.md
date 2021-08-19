@@ -65,17 +65,17 @@ public class ExampleParam {
         @ApiImplicitParam(paramType = "body", dataType = "SysDeptUserQueryParam", dataTypeClass = SysDeptUserQueryParam.class, name = "param", value = "参数")
 })
 public ServerResponse<PageInfo<DeptUserDto>> selectDeptUser(@RequestBody SysDeptUserQueryParam param) throws Exception {
-    ThreadLog.info().input("开始 测试查询部门用户 TestController-selectDeptUser: param="+JSON.toJSONString(param));
+    log.info().input("开始 测试查询部门用户 TestController-selectDeptUser: param="+JSON.toJSONString(param));
     // 查询
     PageHelper.startPage(param.getPageNum(), param.getPageSize());
     List<DeptUserDto> deptUserDtos = deptUserCustomDao.selectDeptUser(param);
     PageInfo pageInfo = new PageInfo(deptUserDtos);
     PageHelper.clearPage();
     // 查询完成
-    ThreadLog.info().input("完成 测试查询部门用户 TestController-selectDeptUser");
+    log.info().input("完成 测试查询部门用户 TestController-selectDeptUser");
 
     // 输出当前线程日志
-    ThreadLog.info().output();
+    log.info().output();
     return ServerResponse.createBySuccess("查询成功",pageInfo);
 }
 

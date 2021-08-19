@@ -28,7 +28,7 @@ public class HasUrlAop {
     @Autowired
     private SecurityClient securityClient;
 
-    @Pointcut("@annotation(com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl)")
+    @Pointcut("@within(com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl)")
     public void annotationPointCut() {
     }
 
@@ -39,7 +39,7 @@ public class HasUrlAop {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         HasUrl annotation = signature.getMethod().getAnnotation(HasUrl.class);
         String url = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getRequestURI();
-        if (StringUtils.isNotBlank(url)) {
+        if (StringUtils.isBlank(url)) {
             throw CommonException.create(ServerResponse.createByError("使用HasUrl标志的方法必须在请求上下文中:"+signature.getDeclaringType().getName()+"."+signature.getMethod().getName()));
         }
         // 判断是否有静态资源权限并返回权限信息
