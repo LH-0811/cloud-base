@@ -26,6 +26,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "用户中心-岗位管理接口")
 @RestController
 @RequestMapping("/sys_position")
+@HasUrl
 public class SysPositionController extends BaseController {
 
     @Autowired
@@ -41,7 +42,6 @@ public class SysPositionController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysPositionCreateParam", dataTypeClass = SysPositionCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl
     public ServerResponse createPosition(@Validated @RequestBody SysPositionCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建岗位信息 接口 : SysPositionController-createPosition ");
@@ -58,7 +58,6 @@ public class SysPositionController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "positionId", value = "岗位id")
     })
-    @HasUrl
     public ServerResponse deletePosition(@PathVariable(value = "positionId") Long positionId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除岗位信息 接口 : SysPositionController-deletePosition ");
@@ -75,7 +74,6 @@ public class SysPositionController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysPositionQueryParam", dataTypeClass = SysPositionQueryParam.class, name = "param", value = "参数")
     })
-    @HasUrl
     public ServerResponse<PageInfo<SysPosition>> queryPosition(@Validated @RequestBody SysPositionQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询岗位信息 接口 : SysPositionController-queryPosition ");

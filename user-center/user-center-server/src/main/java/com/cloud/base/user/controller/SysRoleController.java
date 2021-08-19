@@ -33,6 +33,7 @@ import java.util.List;
 @Api(tags = "用户中心-角色管理接口")
 @RestController
 @RequestMapping("/sys_role")
+@HasUrl
 public class SysRoleController extends BaseController {
 
 
@@ -50,7 +51,6 @@ public class SysRoleController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleCreateParam", dataTypeClass = SysRoleCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl
     public ServerResponse createRole(@Validated @RequestBody SysRoleCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建系统角色信息 接口 : SysAdminController-createRole ");
@@ -67,7 +67,6 @@ public class SysRoleController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleUpdateParam", dataTypeClass = SysRoleUpdateParam.class, name = "param", value = "参数")
     })
-    @HasUrl
     public ServerResponse updateRole(@Validated @RequestBody SysRoleUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改系统角色信息 接口 : SysAdminController-updateRole ");
@@ -84,7 +83,6 @@ public class SysRoleController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "roleId", value = "角色id")
     })
-    @HasUrl
     public ServerResponse deleteRole(@PathVariable(name = "roleId") Long roleId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除系统角色信息 接口 : SysAdminController-deleteRole ");
@@ -101,7 +99,6 @@ public class SysRoleController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleQueryParam", dataTypeClass = SysRoleQueryParam.class, name = "param", value = "参数")
     })
-    @HasUrl
     public ServerResponse<PageInfo<SysRoleVo>> queryRole(@Validated @RequestBody SysRoleQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询系统角色信息 接口 : SysAdminController-queryRole ");
@@ -117,7 +114,6 @@ public class SysRoleController extends BaseController {
      */
     @GetMapping("/query/all_list")
     @ApiOperation("获取角色列表")
-    @HasUrl
     public ServerResponse<List<SysRole>> getRoleList(@RequestParam(value = "roleName",required = false) String roleName,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取角色列表 接口 : SysAdminController-getRoleList ");
@@ -134,7 +130,6 @@ public class SysRoleController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "roleId", value = "角色Id")
     })
-    @HasUrl
     public ServerResponse<List<SysRes>> getSysResListByRoleId(@PathVariable(name = "roleId") Long roleId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询角色资源列表 接口 : SysAdminController-getSysResListByRoleId ");

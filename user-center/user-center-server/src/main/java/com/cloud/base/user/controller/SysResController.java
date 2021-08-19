@@ -36,6 +36,7 @@ import java.util.List;
 @Api(tags = "用户中心-资源管理接口")
 @RestController
 @RequestMapping("/sys_res")
+@HasUrl
 public class SysResController extends BaseController {
 
     @Autowired
@@ -50,7 +51,6 @@ public class SysResController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysResCreateParam", dataTypeClass = SysResCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl
     public ServerResponse createRes(@Validated @RequestBody SysResCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建权限 接口 : SysAdminController-createRes ");
@@ -67,7 +67,6 @@ public class SysResController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysResCreateParam", dataTypeClass = SysResCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl
     public ServerResponse deleteRes(@PathVariable(value = "resId") Long resId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除权限信息 接口 : SysAdminController-deleteRes ");
@@ -84,7 +83,6 @@ public class SysResController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    @HasUrl
     public ServerResponse<List<SysRes>> getAllResTree(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取全部资源树 接口 : SysAdminController-getAllResTree ");

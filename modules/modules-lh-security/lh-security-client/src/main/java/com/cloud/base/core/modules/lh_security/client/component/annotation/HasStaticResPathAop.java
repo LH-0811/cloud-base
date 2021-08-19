@@ -21,7 +21,7 @@ public class HasStaticResPathAop {
     @Autowired
     private SecurityClient securityClient;
 
-    @Pointcut("@annotation(com.cloud.base.core.modules.lh_security.client.component.annotation.HasStaticResPath)")
+    @Pointcut("@within(com.cloud.base.core.modules.lh_security.client.component.annotation.HasStaticResPath)")
     public void annotationPointCut() {
     }
 
