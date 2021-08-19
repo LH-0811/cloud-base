@@ -38,7 +38,7 @@ public class MchtCurrentUserController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "MchtInfoCreateParam", dataTypeClass = MchtInfoCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/merchant_info/current_user/create")
+    @HasUrl
     public ServerResponse mchtBaseInfoCreate(@Validated @RequestBody MchtInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建商户基本信息 接口 : MchtCurrentUserController-mchtBaseInfoCreate");
@@ -55,7 +55,7 @@ public class MchtCurrentUserController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "MchtGiftSettingsSaveParam", dataTypeClass = MchtGiftSettingsSaveParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/merchant_base_info/current_user/gift_settings/save")
+    @HasUrl
     public ServerResponse saveMchtGiftSettings(@Validated @RequestBody MchtGiftSettingsSaveParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 保存商户的福利配置 接口 : MchtCurrentUserController-deletaMchtBaseInfo");
@@ -72,7 +72,7 @@ public class MchtCurrentUserController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token")
     })
-    @HasUrl(url = "/merchant_info/current_user/mcht_info_list")
+    @HasUrl
     public ServerResponse<List<MchtInfoVo>> getMchtInfoOfCurrentUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户关联商户列表 接口 : MchtCurrentUserController-getMchtInfoOfCurrentUser");

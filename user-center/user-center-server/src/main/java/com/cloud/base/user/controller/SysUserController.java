@@ -57,7 +57,7 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserCreateParam", dataTypeClass = SysUserCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/sys_user/create")
+    @HasUrl
     public ServerResponse createUser(@Validated @RequestBody SysUserCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建用户 接口 : SysUserAdminController-createUser ");
@@ -77,7 +77,7 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserUpdateParam", dataTypeClass = SysUserUpdateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/sys_user/update")
+    @HasUrl
     public ServerResponse updateUser(@Validated @RequestBody SysUserUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改用户 接口 : SysUserAdminController-updateUser ");
@@ -98,7 +98,7 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserQueryParam", dataTypeClass = SysUserQueryParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/sys_user/query")
+    @HasUrl
     public ServerResponse<PageInfo<SysUserVo>> queryUser(@Validated @RequestBody SysUserQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询用户 接口 : SysUserAdminController-queryUser ");
@@ -115,7 +115,7 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "userId", value = "用户id")
     })
-    @HasUrl(url = "/sys_user/delete/{userId}")
+    @HasUrl
     public ServerResponse delUser(@PathVariable(value = "userId") Long userId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除用户 接口 : SysUserAdminController-delUser");

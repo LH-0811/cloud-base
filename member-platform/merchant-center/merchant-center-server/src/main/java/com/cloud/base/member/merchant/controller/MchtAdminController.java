@@ -40,7 +40,7 @@ public class MchtAdminController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "MchtInfoCreateParam", dataTypeClass = MchtInfoCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/merchant_info/manager/create")
+    @HasUrl
     public ServerResponse mchtBaseInfoCreate(@Validated @RequestBody MchtInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建商户基本信息 接口 : MchtAdminController-mchtBaseInfoCreate");
@@ -57,7 +57,7 @@ public class MchtAdminController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "MchtInfoQueryParam", dataTypeClass = MchtInfoQueryParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/merchant_info/manager/query")
+    @HasUrl
     public ServerResponse<PageInfo<MchtInfoVo>> queryMchtBaseInfo(@Validated @RequestBody MchtInfoQueryParam param) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询商户基本信息 接口 : MchtAdminController-queryMchtBaseInfo");
@@ -74,7 +74,7 @@ public class MchtAdminController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "MchtInfoUpdateParam", dataTypeClass = MchtInfoUpdateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/merchant_info/manager/update")
+    @HasUrl
     public ServerResponse updateMchtBaseInfo(@Validated @RequestBody MchtInfoUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 更新商户基本信息 接口 : MchtAdminController-updateMchtBaseInfo");
@@ -91,7 +91,7 @@ public class MchtAdminController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "mchtBaseId", value = "商户id")
     })
-    @HasUrl(url = "/merchant_info/manager/delete/{mchtBaseId}")
+    @HasUrl
     public ServerResponse deletaMchtBaseInfo(@PathVariable(value = "mchtBaseId") Long mchtBaseId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 根据用户id 查询用户关联的商户基本信息 接口 : MchtAdminController-deletaMchtBaseInfo");
@@ -108,7 +108,7 @@ public class MchtAdminController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "userId", value = "用户id")
     })
-    @HasUrl(url = "/merchant_info/manager/query/by_user_id/{userId}")
+    @HasUrl
     public ServerResponse<List<MchtInfoVo>> getMchtBaseInfoByUserId(@PathVariable(value = "userId") Long userId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 根据用户id 查询用户关联的商户基本信息 接口 : MchtAdminController-getMchtBaseInfoByUserId");
@@ -126,7 +126,7 @@ public class MchtAdminController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "MchtGiftSettingsSaveParam", dataTypeClass = MchtGiftSettingsSaveParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/merchant_info/manager/gift_settings/save")
+    @HasUrl
     public ServerResponse saveMchtGiftSettings(@Validated @RequestBody MchtGiftSettingsSaveParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 保存商户的福利配置 接口 : MchtAdminController-deletaMchtBaseInfo");

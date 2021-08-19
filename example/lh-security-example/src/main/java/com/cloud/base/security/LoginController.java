@@ -36,7 +36,7 @@ public class LoginController {
     }
 
     @GetMapping("/url")
-    @HasUrl(url = "/url")
+    @HasUrl
     public ServerResponse url() throws Exception {
         return ServerResponse.createBySuccess("成功");
     }

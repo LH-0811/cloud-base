@@ -12,6 +12,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author lh0811
@@ -34,14 +38,12 @@ public class HasUrlAop {
         log.debug("进入HasUrlAop切面");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         HasUrl annotation = signature.getMethod().getAnnotation(HasUrl.class);
-
-        String url = annotation.url();
-        if (StringUtils.isBlank(url))
-            throw CommonException.create(ServerResponse.createByError("使用@HasUrl注解，必须填写url。"));
-
+        String url = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getRequestURI();
+        if (StringUtils.isNotBlank(url)) {
+            throw CommonException.create(ServerResponse.createByError("使用HasUrl标志的方法必须在请求上下文中:"+signature.getDeclaringType().getName()+"."+signature.getMethod().getName()));
+        }
         // 判断是否有静态资源权限并返回权限信息
         SecurityAuthority securityAuthority = securityClient.hasUrl(url);
-
         // 替换入参
         Object[] args = joinPoint.getArgs();
         for (int i = 0; i < args.length; i++) {

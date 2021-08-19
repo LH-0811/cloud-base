@@ -44,7 +44,7 @@ public class SysDeptController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysDeptCreateParam", dataTypeClass = SysDeptCreateParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/sys_dept/create")
+    @HasUrl
     public ServerResponse createSysDept(@Validated @RequestBody SysDeptCreateParam param, @ApiIgnore SysUser sysUser) throws Exception {
         ThreadLog.info("|-----------------------------------------------|");
         ThreadLog.info("进入 创建部门信息 接口 : SysDeptController-createSysDept ");
@@ -61,7 +61,7 @@ public class SysDeptController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    @HasUrl(url = "/sys_dept/query_tree")
+    @HasUrl
     public ServerResponse<List<SysDept>> queryDeptTree(@RequestParam(value = "deptName") String deptName, @ApiIgnore SysUser sysUser) throws Exception {
         ThreadLog.info("|-----------------------------------------------|");
         ThreadLog.info("进入 获取部门树 接口 : SysDeptController-queryDeptTree ");
@@ -78,7 +78,7 @@ public class SysDeptController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "deptId", value = "部门id")
     })
-    @HasUrl(url = "/sys_dept/delete/*")
+    @HasUrl
     public ServerResponse deleteSysDept(@PathVariable(value = "deptId") Long deptId, @ApiIgnore SysUser sysUser) throws Exception {
         ThreadLog.info("|-----------------------------------------------|");
         ThreadLog.info("进入 删除部门信息 接口 : SysDeptController-deleteSysDept ");
@@ -96,7 +96,7 @@ public class SysDeptController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysDeptUserQueryParam", dataTypeClass = SysDeptUserQueryParam.class, name = "param", value = "参数")
     })
-    @HasUrl(url = "/sys_dept/user/query")
+    @HasUrl
     public ServerResponse<PageInfo<DeptUserDto>> selectDeptUser(@Validated @RequestBody SysDeptUserQueryParam param, @ApiIgnore SysUser sysUser) throws Exception {
         ThreadLog.info("|-----------------------------------------------|");
         ThreadLog.info("进入 获取部门用户信息 接口 : SysDeptController-selectDeptUser ");

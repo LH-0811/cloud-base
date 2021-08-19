@@ -47,7 +47,7 @@ spring:
   cloud:
     nacos: # 配置nacos
       discovery: # 服务发现地址
-        server-addr: 49.232.166.94:8848 # nacos 启动地址
+        server-addr: 127.0.0.1:8848 # nacos 启动地址
     sentinel: # 配置sentinel
       enabled: true
       transport:
