@@ -44,12 +44,6 @@ public class DeptUserDto {
     private Long userId;
 
     /**
-     * 用户类型 1-系统管理员 2-商户 3-C端客户
-     */
-    @ApiModelProperty(value = "用户类型 1-系统管理员 2-商户 3-C端客户")
-    private Integer userType;
-
-    /**
      * 用户名
      */
     @ApiModelProperty(value = "用户名")

@@ -22,7 +22,6 @@ public interface DeptUserCustomDao {
             "\tsys_dept.`no` AS deptNo,\n" +
             "\tsys_dept.`name` AS deptName,\n" +
             "\tsys_user.`id` AS userId,\n" +
-            "\tsys_user.`user_type` AS userType,\n" +
             "\tsys_user.`username` AS username,\n" +
             "\tsys_user.`nick_name` AS nickName,\n" +
             "\tsys_user.phone AS phone,\n" +
