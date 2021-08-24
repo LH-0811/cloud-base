@@ -33,8 +33,8 @@ public interface DeptUserCustomDao {
             "\tsys_user.update_time AS updateTime \n" +
             "FROM\n" +
             "\tsys_user\n" +
-            "\tLEFT JOIN sys_user_dept_relation ON sys_user.`id` = sys_user_dept_relation.`user_id`\n" +
-            "\tLEFT JOIN sys_dept ON sys_user_dept_relation.`dept_id` = sys_dept.`id` \n" +
+            "\tLEFT JOIN sys_user_dept_rel ON sys_user.`id` = sys_user_dept_rel.`user_id`\n" +
+            "\tLEFT JOIN sys_dept ON sys_user_dept_rel.`dept_id` = sys_dept.`id` \n" +
             "WHERE\n" +
             "\tsys_user.del_flag = 0 \n" +
 
