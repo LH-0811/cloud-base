@@ -22,7 +22,7 @@ public class HasPermsCodeAop {
     private SecurityClient securityClient;
 
 
-    @Pointcut("@within(com.cloud.base.core.modules.lh_security.client.component.annotation.HasPermsCode)")
+    @Pointcut("@within(com.cloud.base.core.modules.lh_security.client.component.annotation.HasPermsCode) || @annotation(com.cloud.base.core.modules.lh_security.client.component.annotation.HasPermsCode)")
     public void annotationPointCut() {
     }
 

@@ -198,7 +198,7 @@ public class SysUserServiceImpl implements SysUserService {
             }
 
             // 所有的资源列表
-            List<SysRes> sysResList = sysResDao.selectByIdList(resIds).stream().filter(ele -> ele.getType().equals(1) || ele.getType().equals(2)).collect(Collectors.toList());
+            List<SysRes> sysResList = sysResDao.selectByIdList(resIds).stream().filter(ele -> ele.getType().equals(SysRes.Type.MENU.getCode()) ).collect(Collectors.toList());
             for (SysRes sysRes : sysResList) {
                 sysRes.setParent(sysResDao.selectByPrimaryKey(sysRes.getParentId()));
                 sysRes.setTitle(sysRes.getName() + "[" + SysRes.Type.getDescByCode(sysRes.getType()) + "]");

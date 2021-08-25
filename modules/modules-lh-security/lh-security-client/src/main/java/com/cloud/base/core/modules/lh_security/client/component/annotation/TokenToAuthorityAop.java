@@ -22,7 +22,7 @@ public class TokenToAuthorityAop implements Ordered {
     @Autowired
     private SecurityClient securityClient;
 
-    @Pointcut("@within(com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority)")
+    @Pointcut("@within(com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority) || @annotation(com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority)")
     public void annotationPointCut() {
     }
 

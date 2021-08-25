@@ -126,7 +126,6 @@ public class SysUserController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "UsernamePasswordVerificationParam", dataTypeClass = UsernamePasswordVerificationParam.class, name = "param", value = "参数")
     })
-    @HasUrl
     public ServerResponse<SecurityAuthority> verificationUserByUsernameAndPwd(@Validated @RequestBody UsernamePasswordVerificationParam param) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserCurrentUserController-getUesrInfo");
@@ -189,7 +188,7 @@ public class SysUserController extends BaseController {
      *
      * @throws Exception 异常
      */
-    @PostMapping("/res_tree/get")
+    @GetMapping("/res_tree/get")
     @ApiOperation("获取用户资源树")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
@@ -207,7 +206,7 @@ public class SysUserController extends BaseController {
      *
      * @throws Exception
      */
-    @PostMapping("/menu_tree/get")
+    @GetMapping("/menu_tree/get")
     @ApiOperation("获取用户菜单树")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),

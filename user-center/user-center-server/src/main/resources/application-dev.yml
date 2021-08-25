@@ -111,5 +111,6 @@ seata:
 #    vgroup-mapping.my_test_tx_group: default
     grouplist: { "default": "49.232.166.94:8091" }
 logging:
-  com.cloud.base.member.user.repository.dao:
-    level: debug
+  level:
+    com.cloud.base.user.repository.dao:  debug
+    com.alibaba.nacos: error

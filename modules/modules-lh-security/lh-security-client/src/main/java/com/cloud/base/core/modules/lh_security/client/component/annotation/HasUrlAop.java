@@ -28,7 +28,7 @@ public class HasUrlAop {
     @Autowired
     private SecurityClient securityClient;
 
-    @Pointcut("@within(com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl)")
+    @Pointcut("@within(com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl) || @annotation(com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl)")
     public void annotationPointCut() {
     }
 

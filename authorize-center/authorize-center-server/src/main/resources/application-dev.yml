@@ -59,3 +59,7 @@ lhit:
     server-url-of-check-perms-code: /security/check_perms_code
     server-url-of-check-static-res-path: /security/check_static_res_path
     server-url-of-token-to-authority: /security/token_to_authority
+
+logging:
+  level:
+    com.alibaba.nacos: error
