@@ -11,7 +11,7 @@
  Target Server Version : 50733
  File Encoding         : 65001
 
- Date: 24/08/2021 21:55:37
+ Date: 25/08/2021 21:37:44
 */
 
 SET NAMES utf8mb4;
@@ -112,23 +112,32 @@ CREATE TABLE `sys_res` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `sys_res` VALUES (1, 0, 0, '系统管理', 1, NULL, NULL, NULL, NULL, '0', NULL, '2021-01-20 09:57:08', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (2, 0, 1, '用户管理', 1, '', '/users', 'user', 1, '0,1', NULL, '2021-03-01 21:55:41', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (3, 0, 2, '创建用户', 2, 'sys_admin:sys_user:create', '/sys_admin/sys_user/create', NULL, 1, '0,1,2', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (4, 0, 2, '修改用户', 2, 'sys_admin:sys_user:update', '/sys_admin/sys_user/update', NULL, 2, '0,1,2', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (5, 0, 2, '查询用户', 2, 'sys_admin:sys_user:query', '/sys_admin/sys_user/query', NULL, 3, '0,1,2', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (6, 0, 2, '设置用户角色', 2, 'sys_admin:sys_user:roles:set', '/sys_admin/sys_user/roles/set', NULL, 4, '0,1,2', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (8, 0, 1, '角色管理', 1, '', '/roles', 'role', 2, '0,1', NULL, '2021-03-01 22:00:37', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (9, 0, 8, '创建角色', 2, 'sys_admin:sys_role:create', '/sys_admin/sys_role/create', NULL, 1, '0,1,8', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (10, 0, 8, '修改角色', 2, 'sys_admin:sys_role:update', '/sys_admin/sys_role/update', NULL, 2, '0,1,8', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (11, 0, 8, '查询角色', 2, 'sys_admin:sys_role:query', '/sys_admin/sys_role/query', NULL, 3, '0,1,8', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (12, 0, 8, '删除角色', 2, 'sys_admin:sys_role:delete', '/sys_admin/sys_role/delete/{roleId}', NULL, 4, '0,1,8', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (13, 0, 8, '查询所有角色列表', 2, 'sys_admin:sys_role:query:all_list', '/sys_admin/sys_role/query/all_list', NULL, 5, '0,1,8', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (14, 0, 8, '查询角色资源列表', 2, 'sys_admin:sys_role:res:by_id:{roleId}', '/sys_admin/sys_role/res/by_id/{roleId}', NULL, 6, '0,1,8', NULL, '2021-03-01 22:07:09', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (15, 0, 8, '保存角色资源（权限）', 2, 'sys_admin:sys_role:save_res', '/sys_admin/sys_role/save_res', NULL, 7, '0,1,8', NULL, '2021-03-01 22:07:09', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (16, 0, 1, '资源管理', 1, '', '/resources', 'res', 3, '0,1', NULL, '2021-03-01 22:11:28', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (17, 0, 16, '创建权限', 2, 'sys_admin:sys_res:create', '/sys_admin/sys_res/create', NULL, 1, '0,1,16', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (18, 0, 16, '获取全部资源树', 2, 'sys_admin:sys_res:tree', '/sys_admin/sys_res/tree', NULL, 2, '0,1,16', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (19, 0, 16, '删除权限', 2, 'sys_admin:sys_res:delete', '/sys_admin/sys_res/delete/{resId}', NULL, 4, '0,1,16', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (2, 0, 1, '用户管理', 1, '', '/system/users', 'user', 1, '0,1', NULL, '2021-03-01 21:55:41', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (3, 0, 2, '创建用户', 2, 'sys_user:create', '/sys_user/create', NULL, 1, '0,1,2', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (4, 0, 2, '修改用户', 2, 'sys_user:update', '/sys_user/update', NULL, 2, '0,1,2', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (5, 0, 2, '查询用户', 2, 'sys_user:query', '/sys_user/query', NULL, 3, '0,1,2', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (6, 0, 2, '设置用户角色', 2, 'sys_user:roles:set', '/sys_user/roles/set', NULL, 4, '0,1,2', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (8, 0, 1, '角色管理', 1, '', '/system/roles', 'role', 2, '0,1', NULL, '2021-03-01 22:00:37', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (9, 0, 8, '创建角色', 2, 'sys_role:create', '/sys_role/create', NULL, 1, '0,1,8', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (10, 0, 8, '修改角色', 2, 'sys_role:update', '/sys_role/update', NULL, 2, '0,1,8', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (11, 0, 8, '查询角色', 2, 'sys_role:query', '/sys_role/query', NULL, 3, '0,1,8', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (12, 0, 8, '删除角色', 2, 'sys_role:delete', '/sys_role/delete/{roleId}', NULL, 4, '0,1,8', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (13, 0, 8, '查询所有角色列表', 2, 'sys_role:query:all_list', '/sys_role/query/all_list', NULL, 5, '0,1,8', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (14, 0, 8, '查询角色资源列表', 2, 'sys_role:res:by_id:{roleId}', '/sys_role/res/by_id/{roleId}', NULL, 6, '0,1,8', NULL, '2021-03-01 22:07:09', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (15, 0, 8, '保存角色资源（权限）', 2, 'sys_role:save_res', '/sys_role/save_res', NULL, 7, '0,1,8', NULL, '2021-03-01 22:07:09', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (16, 0, 1, '资源管理', 1, '', '/system/resources', 'res', 3, '0,1', NULL, '2021-03-01 22:11:28', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (17, 0, 16, '创建权限', 2, 'sys_res:create', '/sys_res/create', NULL, 1, '0,1,16', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (18, 0, 16, '获取全部资源树', 2, 'sys_res:tree', '/sys_res/tree', NULL, 2, '0,1,16', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (19, 0, 16, '删除权限', 2, 'sys_res:delete', '/sys_res/delete/{resId}', NULL, 4, '0,1,16', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (20, 0, 1, '部门管理', 1, NULL, '/system/depts', 'dept', 4, '0,1', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (21, 0, 1, '创建部门', 2, 'sys_dept:create', '/sys_dept/create', NULL, 1, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (22, 0, 1, '获取部门树', 2, 'sys_dept:tree:query', '/sys_dept/tree/query', NULL, 2, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (23, 0, 1, '删除部门', 2, 'sys_dept:delete:{deptId}', '/sys_dept/delete/{deptId}', NULL, 3, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (24, 0, 1, '获取部门用户信息', 2, 'sys_dept:user:query', '/sys_dept/user/query', NULL, 4, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (25, 0, 1, '岗位管理', 1, NULL, '/system/positions', 'position', 5, '0,1', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (26, 0, 1, '创建岗位', 2, 'sys_position:create', '/sys_position/create', NULL, 1, '0,1,25', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (27, 0, 1, '删除岗位', 2, 'sys_position:delete:{positionId}', '/sys_position/delete/{positionId}', NULL, 2, '0,1,25', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (28, 0, 1, '查询岗位', 2, 'sys_position:query', '/sys_position/query', NULL, 3, '0,1,25', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
 INSERT INTO `sys_res` VALUES (1000, 0, 0, '系统管理员全PermsCode权限', 3, 'ALL', '/**', NULL, 0, '0', NULL, '2021-05-13 14:28:04', NULL, 0, NULL);
 INSERT INTO `sys_res` VALUES (1001, 0, 0, '系统管理员全URL权限', 2, 'ALL', '/**', NULL, 0, '0', NULL, '2021-05-13 14:28:04', NULL, 0, NULL);
 COMMIT;
