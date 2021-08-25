@@ -11,12 +11,14 @@ import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.SysUserService;
 import com.cloud.base.user.vo.MenuVo;
 import com.cloud.base.user.vo.SysUserVo;
+import com.cloud.base.user.vo.UserInfoVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -157,11 +159,18 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
     @TokenToAuthority
-    public ServerResponse<SysUser> getUesrInfo(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<UserInfoVo> getUserInfo(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserCurrentUserController-getUesrInfo");
         SysUser sysUser = sysUserService.getUserByUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
-        return ServerResponse.createBySuccess("获取成功",sysUser);
+        List<MenuVo> menuTreeByUser = sysUserService.getMenuTreeByUser(getCurrentSysUser(securityAuthority).getId());
+        // 组织vo
+        UserInfoVo userInfoVo = new UserInfoVo();
+        SysUserVo sysUserVo = new SysUserVo();
+        BeanUtils.copyProperties(sysUser,sysUserVo);
+        userInfoVo.setUserInfo(sysUserVo);
+        userInfoVo.setMenuList(menuTreeByUser);
+        return ServerResponse.createBySuccess("获取成功",userInfoVo);
     }
 
     /**
