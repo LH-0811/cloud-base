@@ -84,11 +84,15 @@ public class SysDept implements Serializable {
     private String title;
 
     @Transient
-    @ApiModelProperty(value = "标题")
+    @ApiModelProperty(value = "本节点key")
     private String key;
 
     @Transient
-    @ApiModelProperty(value = "标题")
+    @ApiModelProperty(value = "父级key")
     private String pkey;
+
+    @Transient
+    @ApiModelProperty(value = "是否是叶子节点")
+    private Boolean isLeaf;
 
 }

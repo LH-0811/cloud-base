@@ -99,15 +99,16 @@ public class SysDeptServiceImpl implements SysDeptService {
             Example example = new Example(SysDept.class);
             Example.Criteria criteria = example.createCriteria();
             if (StringUtils.isNotBlank(deptName)) {
-                criteria.andLike("name","%"+deptName+"%");
+                criteria.andLike("name", "%" + deptName + "%");
             }
             // 所有的资源列表
             List<SysDept> sysDeptList = sysDeptDao.selectByExample(example);
             for (SysDept sysDept : sysDeptList) {
                 sysDept.setParent(sysDeptDao.selectByPrimaryKey(sysDept.getParentId()));
-                sysDept.setTitle(sysDept.getName() + "[" + sysDept.getNo() + "]");
+                sysDept.setTitle(sysDept.getName());
                 sysDept.setKey(String.valueOf(sysDept.getId()));
                 sysDept.setPkey(String.valueOf(sysDept.getParentId()));
+                sysDept.setIsLeaf(checkIsLeaf(sysDept.getId()));
             }
             // 组装未tree数据
             JSONArray jsonArray = CommonMethod.listToTree(sysDeptList, "0", "parentId", "id", "children");
@@ -116,6 +117,12 @@ public class SysDeptServiceImpl implements SysDeptService {
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
         }
+    }
+
+    private Boolean checkIsLeaf(Long deptId) {
+        SysDept queryParam = new SysDept();
+        queryParam.setParentId(deptId);
+        return sysDeptDao.selectCount(queryParam) == 0;
     }
 
     /**

@@ -31,36 +31,31 @@ public interface DeptUserCustomDao {
             "\tsys_user.create_time AS createTime,\n" +
             "\tsys_user.update_time AS updateTime \n" +
             "FROM\n" +
-            "\tsys_user\n" +
-            "\tLEFT JOIN sys_user_dept_rel ON sys_user.`id` = sys_user_dept_rel.`user_id`\n" +
-            "\tLEFT JOIN sys_dept ON sys_user_dept_rel.`dept_id` = sys_dept.`id` \n" +
+            "\tsys_dept,\n" +
+            "\tsys_user_dept_rel,\n" +
+            "\tsys_user \n" +
             "WHERE\n" +
-            "\tsys_user.del_flag = 0 \n" +
-
+            "\tsys_dept.id = sys_user_dept_rel.dept_id \n" +
+            "\tAND sys_user_dept_rel.user_id = sys_user.id \n" +
+            "\tAND sys_user.del_flag = 0 \n" +
             "<if test='param.deptId != null'>" +
             "\tAND sys_dept.id = #{param.deptId} \n" +
             "</if>" +
-
             "<if test='param.username != null'>" +
             "\tAND sys_user.username like CONCAT(CONCAT('%',#{param.username}),'%') \n" +
             "</if>" +
-
             "<if test='param.phone != null'>" +
             "\tAND sys_user.phone = #{param.phone} \n" +
             "</if>" +
-
             "<if test='param.activeFlag != null'>" +
             "\tAND sys_user.active_flag = #{param.activeFlag} \n" +
             "</if>" +
-
             "<if test='param.createTimeLow != null'>" +
             "\tAND sys_user.create_time &gt;=  #{param.createTimeLow} \n" +
             "</if>" +
-
             "<if test='param.createTimeUp != null'>" +
             "\tAND sys_user.create_time &lt;=  #{param.createTimeUp} \n" +
             "</if>" +
-
             "</script>")
     List<DeptUserDto> selectDeptUser(@Param("param") SysDeptUserQueryParam param);
 

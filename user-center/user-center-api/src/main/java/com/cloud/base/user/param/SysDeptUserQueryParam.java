@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ import java.util.Date;
 @Setter
 public class SysDeptUserQueryParam implements Serializable {
 
-    @ApiModelProperty(value = "部门id")
+    @ApiModelProperty(value = "部门id",required = true)
     private Long deptId;
 
     @ApiModelProperty(value = "用户名")

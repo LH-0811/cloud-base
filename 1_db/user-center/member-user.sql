@@ -11,7 +11,7 @@
  Target Server Version : 50733
  File Encoding         : 65001
 
- Date: 25/08/2021 21:37:44
+ Date: 26/08/2021 11:30:12
 */
 
 SET NAMES utf8mb4;
@@ -130,14 +130,14 @@ INSERT INTO `sys_res` VALUES (17, 0, 16, '创建权限', 2, 'sys_res:create', '/
 INSERT INTO `sys_res` VALUES (18, 0, 16, '获取全部资源树', 2, 'sys_res:tree', '/sys_res/tree', NULL, 2, '0,1,16', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
 INSERT INTO `sys_res` VALUES (19, 0, 16, '删除权限', 2, 'sys_res:delete', '/sys_res/delete/{resId}', NULL, 4, '0,1,16', NULL, '2021-03-01 21:57:24', NULL, 0, NULL);
 INSERT INTO `sys_res` VALUES (20, 0, 1, '部门管理', 1, NULL, '/system/depts', 'dept', 4, '0,1', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (21, 0, 1, '创建部门', 2, 'sys_dept:create', '/sys_dept/create', NULL, 1, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (22, 0, 1, '获取部门树', 2, 'sys_dept:tree:query', '/sys_dept/tree/query', NULL, 2, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (23, 0, 1, '删除部门', 2, 'sys_dept:delete:{deptId}', '/sys_dept/delete/{deptId}', NULL, 3, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (24, 0, 1, '获取部门用户信息', 2, 'sys_dept:user:query', '/sys_dept/user/query', NULL, 4, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (21, 0, 20, '创建部门', 2, 'sys_dept:create', '/sys_dept/create', NULL, 1, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (22, 0, 20, '获取部门树', 2, 'sys_dept:tree:query', '/sys_dept/tree/query', NULL, 2, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (23, 0, 20, '删除部门', 2, 'sys_dept:delete:{deptId}', '/sys_dept/delete/{deptId}', NULL, 3, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (24, 0, 20, '获取部门用户信息', 2, 'sys_dept:user:query', '/sys_dept/user/query', NULL, 4, '0,1,20', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
 INSERT INTO `sys_res` VALUES (25, 0, 1, '岗位管理', 1, NULL, '/system/positions', 'position', 5, '0,1', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (26, 0, 1, '创建岗位', 2, 'sys_position:create', '/sys_position/create', NULL, 1, '0,1,25', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (27, 0, 1, '删除岗位', 2, 'sys_position:delete:{positionId}', '/sys_position/delete/{positionId}', NULL, 2, '0,1,25', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
-INSERT INTO `sys_res` VALUES (28, 0, 1, '查询岗位', 2, 'sys_position:query', '/sys_position/query', NULL, 3, '0,1,25', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (26, 0, 25, '创建岗位', 2, 'sys_position:create', '/sys_position/create', NULL, 1, '0,1,25', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (27, 0, 25, '删除岗位', 2, 'sys_position:delete:{positionId}', '/sys_position/delete/{positionId}', NULL, 2, '0,1,25', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
+INSERT INTO `sys_res` VALUES (28, 0, 25, '查询岗位', 2, 'sys_position:query', '/sys_position/query', NULL, 3, '0,1,25', NULL, '2021-08-25 21:06:52', NULL, 0, NULL);
 INSERT INTO `sys_res` VALUES (1000, 0, 0, '系统管理员全PermsCode权限', 3, 'ALL', '/**', NULL, 0, '0', NULL, '2021-05-13 14:28:04', NULL, 0, NULL);
 INSERT INTO `sys_res` VALUES (1001, 0, 0, '系统管理员全URL权限', 2, 'ALL', '/**', NULL, 0, '0', NULL, '2021-05-13 14:28:04', NULL, 0, NULL);
 COMMIT;
