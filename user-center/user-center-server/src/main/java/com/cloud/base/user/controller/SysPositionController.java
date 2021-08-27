@@ -7,6 +7,7 @@ import com.cloud.base.user.param.SysPositionCreateParam;
 import com.cloud.base.user.param.SysPositionQueryParam;
 import com.cloud.base.user.repository.entity.SysPosition;
 import com.cloud.base.user.service.SysPositionService;
+import com.cloud.base.user.vo.SysPositionVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 /**
  * @author lh0811
@@ -78,7 +81,25 @@ public class SysPositionController extends BaseController {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询岗位信息 接口 : SysPositionController-queryPosition ");
         PageInfo<SysPosition> sysPositionPageInfo = sysPositionService.queryPosition(param, getCurrentSysUser(securityAuthority));
-        return ServerResponse.createBySuccess("删除成功", sysPositionPageInfo);
+        return ServerResponse.createBySuccess("获取成功", sysPositionPageInfo);
     }
+
+    /**
+     * 查询全部岗位列表
+     */
+    @PostMapping("/query/all")
+    @ApiOperation("查询岗位信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "body", dataType = "SysPositionQueryParam", dataTypeClass = SysPositionQueryParam.class, name = "param", value = "参数")
+    })
+    public ServerResponse<List<SysPositionVo>> queryAllPosition(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 查询岗位信息 接口 : SysPositionController-queryPosition ");
+        List<SysPositionVo> sysPositionVoList = sysPositionService.queryAllPosition(getCurrentSysUser(securityAuthority));
+        return ServerResponse.createBySuccess("获取成功", sysPositionVoList);
+    }
+
+
 
 }

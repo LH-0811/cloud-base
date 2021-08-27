@@ -4,8 +4,11 @@ import com.cloud.base.user.param.SysPositionCreateParam;
 import com.cloud.base.user.param.SysPositionQueryParam;
 import com.cloud.base.user.repository.entity.SysPosition;
 import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.vo.SysPositionVo;
 import com.github.pagehelper.PageInfo;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author lh0811
@@ -26,4 +29,9 @@ public interface SysPositionService {
      * 查询岗位信息
      */
     PageInfo<SysPosition> queryPosition(SysPositionQueryParam param, SysUser sysUser) throws Exception;
+
+    /**
+     * 获取全部岗位列表
+     */
+    List<SysPositionVo> queryAllPosition(SysUser sysUser) throws Exception;
 }

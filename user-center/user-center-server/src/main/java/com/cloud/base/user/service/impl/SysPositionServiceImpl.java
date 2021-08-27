@@ -10,6 +10,7 @@ import com.cloud.base.user.repository.dao.SysPositionDao;
 import com.cloud.base.user.repository.entity.SysPosition;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.SysPositionService;
+import com.cloud.base.user.vo.SysPositionVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author lh0811
@@ -85,7 +87,7 @@ public class SysPositionServiceImpl implements SysPositionService {
     @Override
     public PageInfo<SysPosition> queryPosition(SysPositionQueryParam param, SysUser sysUser) throws Exception {
         log.info("开始 查询岗位信息: param=" + JSON.toJSONString(param));
-        // 创建部门信息
+        // 查询岗位信息
         try {
             Example example = new Example(SysPosition.class);
             example.setOrderByClause(" create_time desc ");
@@ -110,6 +112,27 @@ public class SysPositionServiceImpl implements SysPositionService {
             return pageInfo;
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("查询岗位信息失败,请联系管理员！"));
+        }
+    }
+
+
+    /**
+     * 获取全部岗位列表
+     */
+    @Override
+    public List<SysPositionVo> queryAllPosition(SysUser sysUser) throws Exception {
+        log.info("开始 查询岗位列表");
+        try {
+            List<SysPosition> sysPositions = sysPositionDao.selectAll();
+            List<SysPositionVo> voList = sysPositions.stream().map(ele -> {
+                SysPositionVo sysPositionVo = new SysPositionVo();
+                BeanUtils.copyProperties(ele, sysPositionVo);
+                return sysPositionVo;
+            }).collect(Collectors.toList());
+            log.info("完成 查询岗位列表");
+            return voList;
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("查询岗位列表失败,请联系管理员！"));
         }
     }
 }

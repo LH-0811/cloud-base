@@ -198,7 +198,7 @@ public class SysUserServiceImpl implements SysUserService {
             }
 
             // 所有的资源列表
-            List<SysRes> sysResList = sysResDao.selectByIdList(resIds).stream().filter(ele -> ele.getType().equals(SysRes.Type.MENU.getCode()) ).collect(Collectors.toList());
+            List<SysRes> sysResList = sysResDao.selectByIdList(resIds).stream().filter(ele -> ele.getType().equals(SysRes.Type.MENU.getCode())).collect(Collectors.toList());
             for (SysRes sysRes : sysResList) {
                 sysRes.setParent(sysResDao.selectByPrimaryKey(sysRes.getParentId()));
                 sysRes.setTitle(sysRes.getName() + "[" + SysRes.Type.getDescByCode(sysRes.getType()) + "]");
@@ -321,6 +321,7 @@ public class SysUserServiceImpl implements SysUserService {
      * 通过用户名密码 获取用户信息 并组装权限信息
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public SecurityAuthority verification(UsernamePasswordVerificationParam param) throws Exception {
         log.info("开始 通过用户名密码 获取用户信息 并组装权限信息:{}", JSON.toJSONString(param));
         // 获取到等用户
@@ -331,24 +332,32 @@ public class SysUserServiceImpl implements SysUserService {
         if (!loginUser.getActiveFlag()) {
             throw CommonException.create(ServerResponse.createByError("用户不可用请联系管理员"));
         }
-        // 获取用户角色列表
-        List<SysRole> userRoleList = getUserRoleList(loginUser.getId());
-        // 获取用户资源列表
-        List<SysRes> resAllList = getResListByUser(loginUser.getId());
+        try {
+            // 获取用户角色列表
+            List<SysRole> userRoleList = getUserRoleList(loginUser.getId());
+            // 获取用户资源列表
+            List<SysRes> resAllList = getResListByUser(loginUser.getId());
 
-        SecurityAuthority securityAuthority = new SecurityAuthority();
-        securityAuthority.setSecurityUser(new SecurityUser(String.valueOf(loginUser.getId()), loginUser.getUsername()));
-//      securityAuthority.setSecurityResList(Lists.newArrayList(SecurityRes.allUrlRes(),SecurityRes.allCodeRes(),SecurityRes.allStaticResPath()));
-        if (!CollectionUtils.isEmpty(resAllList)) {
-            List<SecurityRes> securityResList = resAllList.stream().map(ele -> new SecurityRes(ele.getType(), ele.getName(), ele.getCode(), ele.getUrl(), "")).collect(Collectors.toList());
-            securityAuthority.setSecurityResList(securityResList);
+            SecurityAuthority securityAuthority = new SecurityAuthority();
+            securityAuthority.setSecurityUser(new SecurityUser(String.valueOf(loginUser.getId()), loginUser.getUsername()));
+            if (!CollectionUtils.isEmpty(resAllList)) {
+                List<SecurityRes> securityResList = resAllList.stream().map(ele -> new SecurityRes(ele.getType(), ele.getName(), ele.getCode(), ele.getUrl(), "")).collect(Collectors.toList());
+                securityAuthority.setSecurityResList(securityResList);
+            }
+            if (!CollectionUtils.isEmpty(userRoleList)) {
+                List<SecurityRole> securityRoleList = userRoleList.stream().map(ele -> new SecurityRole(ele.getId(), ele.getNo(), ele.getName())).collect(Collectors.toList());
+                securityAuthority.setSecurityRoleList(securityRoleList);
+            }
+            SysUser updateParam = new SysUser();
+            updateParam.setId(loginUser.getId());
+            updateParam.setLastLogin(new Date());
+            sysUserDao.updateByPrimaryKeySelective(updateParam);
+            log.info("完成 通过用户名密码 获取用户信息 并组装权限信息:{}", JSON.toJSONString(param));
+            return securityAuthority;
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("通过用户名密码获取用户信息失败,请联系管理员"));
         }
-        if (!CollectionUtils.isEmpty(userRoleList)) {
-            List<SecurityRole> securityRoleList = userRoleList.stream().map(ele -> new SecurityRole(ele.getId(), ele.getNo(), ele.getName())).collect(Collectors.toList());
-            securityAuthority.setSecurityRoleList(securityRoleList);
-        }
-        log.info("完成 通过用户名密码 获取用户信息 并组装权限信息:{}", JSON.toJSONString(param));
-        return securityAuthority;
+
     }
 
     // //////////////// 用户管理

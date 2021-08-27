@@ -48,7 +48,7 @@ public class SysUserQueryParam implements Serializable {
      * 邮箱
      */
     @ApiModelProperty(value = "邮箱")
-    private String eMail;
+    private String email;
 
     /**
      * 是否可用

@@ -52,7 +52,6 @@ public class SysDeptController extends BaseController {
         return ServerResponse.createBySuccess("创建成功");
     }
 
-
     /**
      * 获取部门树
      */
@@ -65,6 +64,21 @@ public class SysDeptController extends BaseController {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取部门树 接口 : SysDeptController-queryDeptTree ");
         List<SysDept> sysDeptList = sysDeptService.queryDeptTree(deptName, getCurrentSysUser(securityAuthority));
+        return ServerResponse.createBySuccess("查询成功", sysDeptList);
+    }
+
+    /**
+     * 获取部门级联列表
+     */
+    @GetMapping("/cascader/query")
+    @ApiOperation("获取部门级联列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+    })
+    public ServerResponse<List<SysDept>> queryDeptCascader(@RequestParam(value = "deptName",required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 获取部门级联列表 接口 : SysDeptController-queryDeptCascader ");
+        List<SysDept> sysDeptList = sysDeptService.queryDeptCascader(deptName, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("查询成功", sysDeptList);
     }
 
@@ -83,7 +97,6 @@ public class SysDeptController extends BaseController {
         sysDeptService.deleteSysDept(deptId, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("删除成功");
     }
-
 
     /**
      * 获取部门用户信息

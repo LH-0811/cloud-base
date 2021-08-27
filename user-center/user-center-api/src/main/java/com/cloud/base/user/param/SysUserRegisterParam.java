@@ -45,7 +45,7 @@ public class SysUserRegisterParam implements Serializable {
      * 邮箱
      */
     @ApiModelProperty(value = "邮箱")
-    private String eMail;
+    private String email;
 
     /**
      * 用户密码

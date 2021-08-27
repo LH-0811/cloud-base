@@ -16,6 +16,7 @@ import com.cloud.base.user.repository.entity.SysDept;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.repository.entity.SysUserDeptRel;
 import com.cloud.base.user.service.SysDeptService;
+import com.cloud.base.user.vo.SysDeptVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -88,9 +89,6 @@ public class SysDeptServiceImpl implements SysDeptService {
 
     /**
      * 获取部门树
-     *
-     * @return
-     * @throws Exception
      */
     @Override
     public List<SysDept> queryDeptTree(String deptName, SysUser sysUser) throws Exception {
@@ -167,10 +165,6 @@ public class SysDeptServiceImpl implements SysDeptService {
 
     /**
      * 获取部门用户信息
-     *
-     * @param param
-     * @return
-     * @throws Exception
      */
     @Override
     public PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception {
@@ -184,6 +178,37 @@ public class SysDeptServiceImpl implements SysDeptService {
             return pageInfo;
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取部门角色信息失败,请联系管理员"));
+        }
+    }
+
+
+
+    /**
+     * 获取部门级联选项列表
+     */
+    @Override
+    public List<SysDept> queryDeptCascader(String deptName, SysUser sysUser) throws Exception {
+        log.info("开始 获取部门级联列表");
+        try {
+            Example example = new Example(SysDept.class);
+            Example.Criteria criteria = example.createCriteria();
+            if (StringUtils.isNotBlank(deptName)) {
+                criteria.andLike("name", "%" + deptName + "%");
+            }
+            // 所有的资源列表
+            List<SysDept> sysDeptList = sysDeptDao.selectByExample(example);
+            for (SysDept sysDept : sysDeptList) {
+                sysDept.setParent(sysDeptDao.selectByPrimaryKey(sysDept.getParentId()));
+                sysDept.setLabel(sysDept.getName());
+                sysDept.setValue(String.valueOf(sysDept.getId()));
+                sysDept.setIsLeaf(checkIsLeaf(sysDept.getId()));
+            }
+            // 组装未tree数据
+            JSONArray jsonArray = CommonMethod.listToTree(sysDeptList, "0", "parentId", "id", "children");
+            log.info("完成 获取部门级联列表");
+            return jsonArray.toJavaList(SysDept.class);
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("获取资源级联列表失败"));
         }
     }
 

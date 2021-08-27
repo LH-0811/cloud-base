@@ -43,4 +43,9 @@ public interface SysDeptService {
      * @throws Exception
      */
     PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception;
+
+    /**
+     * 获取部门级联选项列表
+     */
+    List<SysDept> queryDeptCascader(String deptName, SysUser sysUser) throws Exception;
 }

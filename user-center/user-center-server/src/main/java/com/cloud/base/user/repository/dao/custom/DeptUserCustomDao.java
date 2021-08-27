@@ -18,29 +18,22 @@ public interface DeptUserCustomDao {
 
     @Select("<script>" +
             "SELECT\n" +
-            "\tsys_dept.`id` AS deptId,\n" +
-            "\tsys_dept.`no` AS deptNo,\n" +
-            "\tsys_dept.`name` AS deptName,\n" +
-            "\tsys_user.`id` AS userId,\n" +
-            "\tsys_user.`username` AS username,\n" +
-            "\tsys_user.`nick_name` AS nickName,\n" +
-            "\tsys_user.phone AS phone,\n" +
-            "\tsys_user.e_mail AS eMail,\n" +
-            "\tsys_user.active_flag AS activeFlag,\n" +
-            "\tsys_user.last_login AS lastLogin,\n" +
-            "\tsys_user.create_time AS createTime,\n" +
-            "\tsys_user.update_time AS updateTime \n" +
+            "\td.`id` AS deptId,\n" +
+            "\td.`no` AS deptNo,\n" +
+            "\td.`name` AS deptName,\n" +
+            "\tu.`id` AS userId,\n" +
+            "\tu.`username` AS username,\n" +
+            "\tu.`nick_name` AS nickName,\n" +
+            "\tu.phone AS phone,\n" +
+            "\tu.email AS email,\n" +
+            "\tu.active_flag AS activeFlag,\n" +
+            "\tu.last_login AS lastLogin,\n" +
+            "\tu.create_time AS createTime,\n" +
+            "\tu.update_time AS updateTime \n" +
             "FROM\n" +
-            "\tsys_dept,\n" +
-            "\tsys_user_dept_rel,\n" +
-            "\tsys_user \n" +
-            "WHERE\n" +
-            "\tsys_dept.id = sys_user_dept_rel.dept_id \n" +
-            "\tAND sys_user_dept_rel.user_id = sys_user.id \n" +
-            "\tAND sys_user.del_flag = 0 \n" +
-            "<if test='param.deptId != null'>" +
-            "\tAND sys_dept.id = #{param.deptId} \n" +
-            "</if>" +
+            "\t( SELECT * FROM \n" +
+            "sys_user \n" +
+            "WHERE del_flag = 0 \n" +
             "<if test='param.username != null'>" +
             "\tAND sys_user.username like CONCAT(CONCAT('%',#{param.username}),'%') \n" +
             "</if>" +
@@ -55,6 +48,12 @@ public interface DeptUserCustomDao {
             "</if>" +
             "<if test='param.createTimeUp != null'>" +
             "\tAND sys_user.create_time &lt;=  #{param.createTimeUp} \n" +
+            "</if>" +
+            ") u\n" +
+            "\tLEFT JOIN sys_user_dept_rel r ON u.id = r.user_id\n" +
+            "\tLEFT JOIN sys_dept d ON r.dept_id = d.id\n" +
+            "<if test='param.deptId != null'>" +
+            "\tWHERE d.id = #{param.deptId} \n" +
             "</if>" +
             "</script>")
     List<DeptUserDto> selectDeptUser(@Param("param") SysDeptUserQueryParam param);
