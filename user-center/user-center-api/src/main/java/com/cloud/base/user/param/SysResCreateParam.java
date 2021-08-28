@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -25,7 +26,7 @@ public class SysResCreateParam implements Serializable {
     @ApiModelProperty(value = "父节点id",required = true)
     private Long parentId=0L;
 
-    @NotNull(message = "权限名称不能为空")
+    @NotBlank(message = "权限名称不能为空")
     @ApiModelProperty(value = "权限名称",required = true)
     private String name;
 

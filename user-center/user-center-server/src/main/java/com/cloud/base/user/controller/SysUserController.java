@@ -24,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -55,7 +56,7 @@ public class SysUserController extends BaseController {
             @ApiImplicitParam(paramType = "body", dataType = "SysUserCreateParam", dataTypeClass = SysUserCreateParam.class, name = "param", value = "参数")
     })
     @HasUrl
-    public ServerResponse createUser(@Validated @RequestBody SysUserCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse createUser(@Valid @RequestBody SysUserCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建用户 接口 : SysUserAdminController-createUser ");
         sysUserService.createUser(param, getCurrentSysUser(securityAuthority));
@@ -120,6 +121,23 @@ public class SysUserController extends BaseController {
         return ServerResponse.createBySuccess("删除成功");
     }
 
+
+    /**
+     * 重置用户密码
+     */
+    @PostMapping("/reset/pwd")
+    @ApiOperation("重置用户密码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "body", dataType = "SysUserResetPwdParam", dataTypeClass = SysUserResetPwdParam.class, name = "param", value = "参数")
+    })
+    @HasUrl
+    public ServerResponse resetPassword(@Validated @RequestBody SysUserResetPwdParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 修改用户 接口 : SysUserAdminController-resetPassword ");
+        sysUserService.resetPassword(param.getUserId(), getCurrentSysUser(securityAuthority));
+        return ServerResponse.createBySuccess("修改成功");
+    }
 
 // 当前用户
 
@@ -252,7 +270,7 @@ public class SysUserController extends BaseController {
      * @param param
      * @throws Exception
      */
-    @PostMapping("/re_set/pwd")
+    @PostMapping("/set/pwd")
     @ApiOperation("用户修改密码")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),

@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -17,7 +18,7 @@ import java.io.Serializable;
 @Getter
 public class SysRegionUpdateParam implements Serializable {
 
-    @NotNull(message = "未上传 行政区划代码")
+    @NotBlank(message = "未上传 行政区划代码")
     @ApiModelProperty(value = "行政区划代码",required = true)
     private String code;
 

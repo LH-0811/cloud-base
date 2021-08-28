@@ -49,16 +49,18 @@ public class DefaultTokenManager implements TokenManager {
     // 初始化缓存 过期时间在配置文件中指定
     @PostConstruct
     private void init() {
-        this.userIdTokenCache = CacheBuilder.newBuilder().expireAfterWrite(Long.valueOf(securityProperties.getExpire()), TimeUnit.MINUTES).removalListener(new RemovalListener<String, String>() {
+        this.userIdTokenCache = CacheBuilder.newBuilder().expireAfterWrite(Long.valueOf(securityProperties.getExpire()), TimeUnit.MINUTES)
+                /*.removalListener(new RemovalListener<String, String>() {
             public void onRemoval(RemovalNotification<String, String> notification) {
                 log.info("用户id:{} token:{} 已过期", notification.getKey(), notification.getValue());
-            }
-        }).build();
-        this.tokenAuthorityCache = CacheBuilder.newBuilder().expireAfterWrite(Long.valueOf(securityProperties.getExpire()), TimeUnit.MINUTES).removalListener(new RemovalListener<String, SecurityAuthority>() {
+            }})*/
+                .build();
+        this.tokenAuthorityCache = CacheBuilder.newBuilder().expireAfterWrite(Long.valueOf(securityProperties.getExpire()), TimeUnit.MINUTES)
+                /*.removalListener(new RemovalListener<String, SecurityAuthority>() {
             public void onRemoval(RemovalNotification<String, SecurityAuthority> notification) {
                 log.info("token:{} authority:{} 已过期", notification.getKey(), JSON.toJSONString(notification.getValue()));
-            }
-        }).build();
+            }})*/
+                .build();
     }
 
     @Override

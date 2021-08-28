@@ -10,6 +10,7 @@ import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.vo.MenuVo;
 import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public interface SysUserService {
      * 用户修改密码
      */
     void updateUserPassword(SysUserUpdatePasswordParam param, Long userId) throws Exception;
+
 
     /**
      * 获取用户资源树
@@ -64,6 +66,7 @@ public interface SysUserService {
      * @throws Exception
      */
     SysUser getUserByUsernameAndPassword(String username, String password) throws Exception;
+
 
 
     /**
@@ -112,5 +115,9 @@ public interface SysUserService {
      */
     void delUser(Long userId, SysUser sysUser) throws Exception;
 
+    /**
+     * 重置用户密码
+     */
+    void resetPassword(Long userId, SysUser sysUser) throws Exception;
 
 }

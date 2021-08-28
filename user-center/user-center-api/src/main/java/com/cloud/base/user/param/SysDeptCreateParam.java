@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -24,7 +25,7 @@ public class SysDeptCreateParam implements Serializable {
     @ApiModelProperty(value = "部门编号")
     private String no;
 
-    @NotNull(message = "未上传 部门名称")
+    @NotBlank(message = "未上传 部门名称")
     @ApiModelProperty(value = "部门名称",required = true)
     private String name;
 

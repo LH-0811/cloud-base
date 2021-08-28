@@ -403,6 +403,15 @@ public class SysUserServiceImpl implements SysUserService {
             sysUserNew.setCreateTime(new Date());
             sysUserDao.insertSelective(sysUserNew);
 
+            // 保存用户部门信息
+            if (param.getDeptId() != null) {
+                SysUserDeptRel sysUserDeptRel = new SysUserDeptRel();
+                sysUserDeptRel.setId(idWorker.nextId());
+                sysUserDeptRel.setUserId(sysUserNew.getId());
+                sysUserDeptRel.setDeptId(param.getDeptId());
+                sysUserDeptRelDao.insertSelective(sysUserDeptRel);
+            }
+
             // 保存用户岗位信息
             if (CollectionUtils.isNotEmpty(param.getPositionIdList())) {
                 List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), sysUserNew.getId(), ele)).collect(Collectors.toList());
@@ -596,6 +605,33 @@ public class SysUserServiceImpl implements SysUserService {
             log.info("完成 删除用户");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("删除用户失败,请联系管理员"));
+        }
+    }
+
+
+
+    /**
+     * 重置用户密码
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void resetPassword(Long userId, SysUser sysUser) throws Exception {
+        log.info("开始 重置用户密码");
+        SysUser checkUser = sysUserDao.selectByPrimaryKey(userId);
+        if (checkUser == null) {
+            throw CommonException.create(ServerResponse.createByError("用户信息不存在"));
+        }
+        try {
+            // 重置用户名密码
+            SysUser updateUser = new SysUser();
+            updateUser.setId(checkUser.getId());
+            updateUser.setPassword(Md5Util.getMD5Str("123456", checkUser.getSalt()));
+            updateUser.setUpdateBy(sysUser.getId());
+            updateUser.setUpdateTime(new Date());
+            sysUserDao.updateByPrimaryKeySelective(updateUser);
+            log.info("完成 重置用户密码");
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("重置用户密码失败,请联系管理员"));
         }
     }
 

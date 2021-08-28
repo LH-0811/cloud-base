@@ -1,16 +1,12 @@
 package com.cloud.base.user.param;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,7 +29,7 @@ public class SysUserCreateParam implements Serializable {
     /**
      * 所属部门id
      */
-    @NotBlank(message = "未上传 所属部门id")
+    @NotNull(message = "未上传 所属部门id")
     @ApiModelProperty(value = "所属部门id",required = true)
     private Long deptId;
 

@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -87,7 +88,7 @@ public class SysPositionController extends BaseController {
     /**
      * 查询全部岗位列表
      */
-    @PostMapping("/query/all")
+    @GetMapping("/query/all")
     @ApiOperation("查询岗位信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
