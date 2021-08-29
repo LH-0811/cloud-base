@@ -47,6 +47,10 @@ public class SysRoleVo {
 
     @ApiModelProperty(value="角色资源列表")
     private List<SysResVo> sysResList;
+
+    @ApiModelProperty(value="角色资源数")
+    private List<SysResVo> sysResTree;
+
     /**
      * 创建时间
      */

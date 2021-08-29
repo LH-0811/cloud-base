@@ -78,7 +78,7 @@ public class SysResController extends BaseController {
     /**
      * 获取全部资源树
      */
-    @PostMapping("/tree")
+    @GetMapping("/tree")
     @ApiOperation("获取全部资源树")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),

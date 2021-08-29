@@ -118,6 +118,14 @@ public class SysRes implements Serializable {
     @ApiModelProperty(value = "标题")
     private String pkey;
 
+    @Transient
+    @ApiModelProperty(value = "是否是叶子节点")
+    private Boolean isLeaf;
+
+    @Transient
+    @ApiModelProperty(value = "是否选中")
+    private Boolean checked;
+
 
 
 

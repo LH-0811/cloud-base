@@ -8,6 +8,7 @@ import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.user.param.SysResCreateParam;
 import com.cloud.base.user.repository.dao.*;
+import com.cloud.base.user.repository.entity.SysDept;
 import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysRoleResRel;
 import com.cloud.base.user.repository.entity.SysUser;
@@ -127,6 +128,7 @@ public class SysResServiceImpl implements SysResService {
                 sysRes.setTitle(sysRes.getName() + "[" + SysRes.Type.getDescByCode(sysRes.getType()) + "]");
                 sysRes.setKey(String.valueOf(sysRes.getId()));
                 sysRes.setPkey(String.valueOf(sysRes.getParentId()));
+                sysRes.setIsLeaf(checkIsLeaf(sysRes.getId()));
             }
             // 组装未tree数据
             JSONArray jsonArray = CommonMethod.listToTree(sysResList, "0", "parentId", "id", "children");
@@ -136,5 +138,13 @@ public class SysResServiceImpl implements SysResService {
             throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
         }
     }
+
+
+    private Boolean checkIsLeaf(Long resId) {
+        SysRes queryParam = new SysRes();
+        queryParam.setParentId(resId);
+        return sysResDao.selectCount(queryParam) == 0;
+    }
+
 
 }

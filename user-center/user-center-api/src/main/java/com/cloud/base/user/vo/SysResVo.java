@@ -79,4 +79,29 @@ public class SysResVo implements Serializable {
     private String notes;
 
 
+
+    @Transient
+    @ApiModelProperty(value = "子资源列表")
+    private List<SysResVo> children;
+
+    @Transient
+    @ApiModelProperty(value = "父节点")
+    private SysResVo parent;
+
+    @Transient
+    @ApiModelProperty(value = "标题")
+    private String title;
+
+    @Transient
+    @ApiModelProperty(value = "标题")
+    private String key;
+
+    @Transient
+    @ApiModelProperty(value = "标题")
+    private String pkey;
+
+    @Transient
+    @ApiModelProperty(value = "是否选中")
+    private String checked;
+
 }
