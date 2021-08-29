@@ -23,6 +23,7 @@ public interface DeptUserCustomDao {
             "\td.`name` AS deptName,\n" +
             "\tu.`id` AS userId,\n" +
             "\tu.`username` AS username,\n" +
+            "\tu.`gender` AS gender,\n" +
             "\tu.`nick_name` AS nickName,\n" +
             "\tu.phone AS phone,\n" +
             "\tu.email AS email,\n" +

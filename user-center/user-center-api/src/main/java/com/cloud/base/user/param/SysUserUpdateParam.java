@@ -26,7 +26,7 @@ public class SysUserUpdateParam implements Serializable {
      */
     @NotNull(message = "未上传 系统用户id")
     @ApiModelProperty(value="系统用户id",required = true)
-    private Long id;
+    private Long userId;
 
 
     /**
@@ -42,6 +42,12 @@ public class SysUserUpdateParam implements Serializable {
     private String nickName;
 
     /**
+     * 所属部门id
+     */
+    @ApiModelProperty(value = "所属部门id")
+    private Long deptId;
+
+    /**
      * 电话
      */
     @ApiModelProperty(value = "电话")
@@ -53,19 +59,18 @@ public class SysUserUpdateParam implements Serializable {
     @ApiModelProperty(value = "邮箱")
     private String email;
 
-    /**
-     * 是否可用
-     */
-    @ApiModelProperty(value = "是否可用")
-    private Boolean activeFlag;
-
-
 
     /**
      * 性别 0-保密 1-男 2-女
      */
     @ApiModelProperty(value = "性别 0-保密 1-男 2-女")
     private Integer gender;
+
+    /**
+     * 是否可用
+     */
+    @ApiModelProperty(value = "是否可用")
+    private Boolean activeFlag;
 
     /**
      * 岗位id列表
@@ -78,7 +83,5 @@ public class SysUserUpdateParam implements Serializable {
      */
     @ApiModelProperty(value = "角色id列表")
     private List<Long> roleIdList;
-
-
 
 }

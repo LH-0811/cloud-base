@@ -21,6 +21,14 @@ public class SysUserCreateParam implements Serializable {
 
 
     /**
+     * 用户名
+     */
+    @NotBlank(message = "未上传 用户名")
+    @ApiModelProperty(value = "用户名",required = true)
+    private String username;
+
+
+    /**
      * 昵称
      */
     @ApiModelProperty(value = "昵称")
@@ -47,18 +55,18 @@ public class SysUserCreateParam implements Serializable {
     private String email;
 
     /**
-     * 用户名
-     */
-    @NotBlank(message = "未上传 用户名")
-    @ApiModelProperty(value = "用户名",required = true)
-    private String username;
-
-
-    /**
      * 性别 0-保密 1-男 2-女
      */
     @ApiModelProperty(value = "性别 0-保密 1-男 2-女")
     private Integer gender;
+
+
+    /**
+     * 是否可用
+     */
+    @ApiModelProperty(value = "是否可用")
+    private Boolean activeFlag;
+
 
     /**
      * 岗位id列表
@@ -71,17 +79,6 @@ public class SysUserCreateParam implements Serializable {
      */
     @ApiModelProperty(value = "角色id列表")
     private List<Long> roleIdList;
-
-    /**
-     * 是否可用
-     */
-    @ApiModelProperty(value = "是否可用")
-    private Boolean activeFlag;
-
-
-
-
-
 
 
 

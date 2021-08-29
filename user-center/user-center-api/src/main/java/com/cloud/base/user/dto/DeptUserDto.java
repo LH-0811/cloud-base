@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 部门用户Dto
@@ -55,6 +56,9 @@ public class DeptUserDto {
     @ApiModelProperty(value = "昵称")
     private String nickName;
 
+    @ApiModelProperty(value = "性别 0-保密 1-男 2-女")
+    private Integer gender;
+
     /**
      * 电话
      */
@@ -91,6 +95,12 @@ public class DeptUserDto {
      */
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
+
+    @ApiModelProperty(value = "角色id列表")
+    private List<Long> roleIdList;
+
+    @ApiModelProperty(value = "岗位id列表")
+    private List<Long> positionIdList;
 
 
 }

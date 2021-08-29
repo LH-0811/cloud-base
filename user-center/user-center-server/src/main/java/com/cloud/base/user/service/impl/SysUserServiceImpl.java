@@ -445,6 +445,7 @@ public class SysUserServiceImpl implements SysUserService {
             // 更新用户信息
             SysUser updateUser = new SysUser();
             BeanUtils.copyProperties(param, updateUser);
+            updateUser.setId(param.getUserId());
             updateUser.setUpdateBy(sysUser.getId());
             updateUser.setUpdateTime(new Date());
             sysUserDao.updateByPrimaryKeySelective(updateUser);
@@ -453,10 +454,10 @@ public class SysUserServiceImpl implements SysUserService {
             if (CollectionUtils.isNotEmpty(param.getPositionIdList())) {
 
                 SysUserPositionRel delParam = new SysUserPositionRel();
-                delParam.setUserId(param.getId());
+                delParam.setUserId(param.getUserId());
                 sysUserPositionRelDao.delete(delParam);
 
-                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), param.getId(), ele)).collect(Collectors.toList());
+                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), param.getUserId(), ele)).collect(Collectors.toList());
                 sysUserPositionRelDao.insertList(sysUserPositionRelList);
             }
 
@@ -464,10 +465,10 @@ public class SysUserServiceImpl implements SysUserService {
             if (CollectionUtils.isNotEmpty(param.getRoleIdList())) {
 
                 SysUserRoleRel delParam = new SysUserRoleRel();
-                delParam.setUserId(param.getId());
+                delParam.setUserId(param.getUserId());
                 sysUserRoleRelDao.delete(delParam);
 
-                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), param.getId(), ele)).collect(Collectors.toList());
+                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), param.getUserId(), ele)).collect(Collectors.toList());
                 sysUserRoleRelDao.insertList(sysUserRoleRelList);
             }
 
