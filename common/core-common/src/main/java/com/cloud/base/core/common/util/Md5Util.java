@@ -1,6 +1,7 @@
 package com.cloud.base.core.common.util;
 
 import com.google.common.collect.Lists;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -47,36 +48,37 @@ public class Md5Util {
     }
 
     public static void main(String[] args) {
-        String str = "aaa";
 
-        String[] arr = StringUtils.split(str,",");
+        List<Student> studentList = Lists.newArrayList(
+                new Student(1),
+                new Student(2),
+                new Student(3),
+                new Student(1),
+                new Student(1)
+        );
 
-        List<String> list = Arrays.stream(arr).filter(ele -> !ele.equalsIgnoreCase("aaa")).collect(Collectors.toList());
+        Map<Integer, List<Student>> collect = studentList.stream().collect(Collectors.groupingBy(ele -> ele.getClazz()));
 
-        String result = StringUtils.join(list,",");
-        System.out.println(result);
+        studentList.remove(0);
+
+        System.out.println(studentList.get(2) == collect.get(3).get(0));
+
+        System.out.println("");
 
 
     }
 
 
+//    @Getter
+//    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+//    @EqualsAndHashCode
+    @Data
     public static class Student {
-        private Integer tag;
-
-        public Student() {
-        }
-
-        public Student(Integer tag) {
-            this.tag = tag;
-        }
-
-        public Integer getTag() {
-            return tag;
-        }
-
-        public void setTag(Integer tag) {
-            this.tag = tag;
-        }
+        private Integer clazz;
     }
+
+
 
 }

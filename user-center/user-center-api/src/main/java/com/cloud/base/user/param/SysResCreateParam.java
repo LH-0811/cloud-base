@@ -30,11 +30,14 @@ public class SysResCreateParam implements Serializable {
     @ApiModelProperty(value = "权限名称",required = true)
     private String name;
 
-    @ApiModelProperty(value = "类型：0-静态资源 1-目录 2-菜单 3-按钮 4-接口 5-数据")
+    @ApiModelProperty(value = "类型：1-菜单 2-接口 3-权限码,4-静态资源")
     private Integer type;
 
     @ApiModelProperty(value = "资源路径")
     private String url;
+
+    @ApiModelProperty(value = "权限码")
+    private String code;
 
     @ApiModelProperty(value = "图标")
     private String icon;
@@ -43,6 +46,6 @@ public class SysResCreateParam implements Serializable {
     private String orderNo;
 
     @ApiModelProperty(value = "备注")
-    private String remark;
+    private String notes;
 
 }

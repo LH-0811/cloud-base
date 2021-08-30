@@ -98,12 +98,20 @@ public class SysResServiceImpl implements SysResService {
         if (sysRes == null) {
             throw CommonException.create(ServerResponse.createByError("权限信息不存在"));
         }
-        SysRoleResRel selectByResId = new SysRoleResRel();
-        selectByResId.setResId(resId);
-        if (sysRoleResRelDao.selectCount(selectByResId) > 0) {
-            throw CommonException.create(ServerResponse.createByError("当前权限已关联角色"));
+
+        SysRes queryChildParam = new SysRes();
+        queryChildParam.setParentId(resId);
+        if (sysResDao.selectCount(queryChildParam) > 0) {
+            throw CommonException.create(ServerResponse.createByError("当前资源有子资源，不能删除"));
         }
+
         try {
+            // 删除资源与角色之间的关系
+            SysRoleResRel selectByResId = new SysRoleResRel();
+            selectByResId.setResId(resId);
+            sysRoleResRelDao.delete(selectByResId);
+
+            // 删除资源信息
             sysResDao.deleteByPrimaryKey(resId);
             log.info("完成 删除资源信息:" + resId);
         } catch (Exception e) {

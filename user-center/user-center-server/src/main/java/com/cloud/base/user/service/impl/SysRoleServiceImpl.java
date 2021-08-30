@@ -133,7 +133,6 @@ public class SysRoleServiceImpl implements SysRoleService {
         }
     }
 
-
     /**
      * 删除系统角色信息
      */
@@ -217,20 +216,21 @@ public class SysRoleServiceImpl implements SysRoleService {
                     sysRoleVo.setSysResList(sysResVoList);
                 }
 
-                // 设置角色资源树
-                if (CollectionUtils.isNotEmpty(sysRoleResRels)) {
-                    List<Long> resOrRoleIds = sysRoleResRels.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
-                    for (SysRes sysRes : sysResAllList) {
-                        sysRes.setParent(sysResDao.selectByPrimaryKey(sysRes.getParentId()));
-                        sysRes.setTitle(sysRes.getName() + "[" + SysRes.Type.getDescByCode(sysRes.getType()) + "]");
-                        sysRes.setKey(String.valueOf(sysRes.getId()));
-                        sysRes.setPkey(String.valueOf(sysRes.getParentId()));
-                        sysRes.setChecked(resOrRoleIds.contains(sysRes.getId()));
-                    }
-                    // 组装未tree数据
-                    JSONArray jsonArray = CommonMethod.listToTree(sysResAllList, "0", "parentId", "id", "children");
-                    sysRoleVo.setSysResTree(JSON.parseArray(JSONArray.toJSONString(jsonArray), SysResVo.class));
-                }
+//                // 设置角色资源树
+//                if (CollectionUtils.isNotEmpty(sysRoleResRels)) {
+//                    List<Long> resOrRoleIds = sysRoleResRels.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
+//                    for (SysRes sysRes : sysResAllList) {
+//                        sysRes.setParent(sysResDao.selectByPrimaryKey(sysRes.getParentId()));
+//                        sysRes.setTitle(sysRes.getName() + "[" + SysRes.Type.getDescByCode(sysRes.getType()) + "]");
+//                        sysRes.setKey(String.valueOf(sysRes.getId()));
+//                        sysRes.setPkey(String.valueOf(sysRes.getParentId()));
+//                        sysRes.setIsLeaf(checkIsLeaf(sysRes.getId()));
+//                        sysRes.setChecked(resOrRoleIds.contains(sysRes.getId()) && sysRes.getIsLeaf());
+//                    }
+//                    // 组装未tree数据
+//                    JSONArray jsonArray = CommonMethod.listToTree(sysResAllList, "0", "parentId", "id", "children");
+//                    sysRoleVo.setSysResTree(JSON.parseArray(JSONArray.toJSONString(jsonArray), SysResVo.class));
+//                }
 
 
                 return sysRoleVo;
@@ -244,7 +244,6 @@ public class SysRoleServiceImpl implements SysRoleService {
             throw CommonException.create(e, ServerResponse.createByError("查询角色失败"));
         }
     }
-
 
     /**
      * 获取角色列表
@@ -296,4 +295,9 @@ public class SysRoleServiceImpl implements SysRoleService {
         }
     }
 
+    //    private Boolean checkIsLeaf(Long resId) {
+//        SysRes queryParam = new SysRes();
+//        queryParam.setParentId(resId);
+//        return sysResDao.selectCount(queryParam) == 0;
+//    }
 }

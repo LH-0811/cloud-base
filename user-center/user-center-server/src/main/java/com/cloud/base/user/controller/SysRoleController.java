@@ -71,7 +71,7 @@ public class SysRoleController extends BaseController {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改系统角色信息 接口 : SysAdminController-updateRole ");
         sysRoleService.updateRole(param, getCurrentSysUser(securityAuthority));
-        return ServerResponse.createBySuccess("创建成功");
+        return ServerResponse.createBySuccess("修改成功");
     }
 
     /**
