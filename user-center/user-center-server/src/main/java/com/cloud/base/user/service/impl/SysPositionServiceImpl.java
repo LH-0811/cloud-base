@@ -7,8 +7,10 @@ import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.user.param.SysPositionCreateParam;
 import com.cloud.base.user.param.SysPositionQueryParam;
 import com.cloud.base.user.repository.dao.SysPositionDao;
+import com.cloud.base.user.repository.dao.SysUserPositionRelDao;
 import com.cloud.base.user.repository.entity.SysPosition;
 import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.repository.entity.SysUserPositionRel;
 import com.cloud.base.user.service.SysPositionService;
 import com.cloud.base.user.vo.SysPositionVo;
 import com.github.pagehelper.PageHelper;
@@ -35,6 +37,9 @@ public class SysPositionServiceImpl implements SysPositionService {
 
     @Autowired
     private SysPositionDao sysPositionDao;
+
+    @Autowired
+    private SysUserPositionRelDao sysUserPositionRelDao;
 
     @Autowired
     private IdWorker idWorker;
@@ -73,7 +78,14 @@ public class SysPositionServiceImpl implements SysPositionService {
         log.info("开始 删除岗位信息: positionId=" + positionId);
         // 创建部门信息
         try {
+            // 删除岗位和用户关系
+            SysUserPositionRel delParam = new SysUserPositionRel();
+            delParam.setPositionId(positionId);
+            sysUserPositionRelDao.delete(delParam);
+
+            // 删除岗位信息
             sysPositionDao.deleteByPrimaryKey(positionId);
+
             log.info("完成 删除岗位信息");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("删除岗位信息失败,请联系管理员！"));

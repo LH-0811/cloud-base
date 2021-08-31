@@ -29,7 +29,7 @@ import java.util.List;
 @Slf4j
 @Api(tags = "用户中心-岗位管理接口")
 @RestController
-@RequestMapping("/sys_position")
+@RequestMapping("/sys_positions")
 @HasUrl
 public class SysPositionController extends BaseController {
 
