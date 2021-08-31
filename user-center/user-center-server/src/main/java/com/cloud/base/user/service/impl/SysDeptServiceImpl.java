@@ -68,10 +68,8 @@ public class SysDeptServiceImpl implements SysDeptService {
     public void createSysDept(SysDeptCreateParam param, SysUser sysUser) throws Exception {
         log.info("开始 创建部门信息: param=" + JSON.toJSONString(param));
         // 检查父级部门
-        SysDept queryParam = new SysDept();
-        queryParam.setParentId(param.getParentId());
-        SysDept parentDept = sysDeptDao.selectOne(queryParam);
-        if (parentDept == null) {
+        SysDept parentDept = sysDeptDao.selectByPrimaryKey(param.getParentId());
+        if (parentDept == null && !param.getParentId().equals(0L)) {
             log.info("退出 父级部门不存在");
             throw CommonException.create(ServerResponse.createByError("父级部门不存在！"));
         }
