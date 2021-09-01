@@ -37,7 +37,7 @@ public interface SysUserService {
     /**
      * 获取用户资源树
      */
-    List<SysRes> getResTreeByUser(Long userId) throws Exception;
+//    List<SysRes> getResTreeByUser(Long userId) throws Exception;
 
     /**
      * 获取用户菜单树

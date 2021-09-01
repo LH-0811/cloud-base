@@ -13,6 +13,7 @@ import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysRoleResRel;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.SysResService;
+import com.cloud.base.user.vo.SysResVo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -63,16 +64,19 @@ public class SysResServiceImpl implements SysResService {
 
         try {
             SysRes sysRes = new SysRes();
-            sysRes.setId(idWorker.nextId());
             BeanUtils.copyProperties(param, sysRes);
+
+            sysRes.setId(idWorker.nextId());
             sysRes.setCreateBy(sysUser.getId());
             sysRes.setCreateTime(new Date());
 
             SysRes parent = sysResDao.selectByPrimaryKey(sysRes.getParentId());
             if (parent != null) {
-                sysRes.setRouter(StringUtils.join(Lists.newArrayList(parent.getRouter(), String.valueOf(parent.getId())), ","));
+                sysRes.setRouter(StringUtils.join(Lists.newArrayList(parent.getRouter(), String.valueOf(sysRes.getId())), ","));
+                parent.setIsLeaf(Boolean.FALSE);
+                sysResDao.updateByPrimaryKeySelective(parent);
             } else {
-                sysRes.setRouter("0");
+                sysRes.setRouter("0,"+sysRes.getId());
             }
             sysResDao.insertSelective(sysRes);
             log.info("完成 创建资源:" + JSON.toJSONString(param));
@@ -113,6 +117,18 @@ public class SysResServiceImpl implements SysResService {
 
             // 删除资源信息
             sysResDao.deleteByPrimaryKey(resId);
+
+            // 更新父节点的是否叶子节点状态
+            SysRes pChildrenParam = new SysRes();
+            pChildrenParam.setParentId(sysRes.getParentId());
+            if (sysResDao.selectCount(pChildrenParam) == 0){
+                SysRes pUpdateParam = new SysRes();
+                pUpdateParam.setId(sysRes.getParentId());
+                pUpdateParam.setIsLeaf(Boolean.TRUE);
+                sysResDao.updateByPrimaryKeySelective(pUpdateParam);
+            }
+
+
             log.info("完成 删除资源信息:" + resId);
         } catch (Exception e) {
             throw CommonException.create(ServerResponse.createByError("删除权限失败"));
@@ -126,33 +142,27 @@ public class SysResServiceImpl implements SysResService {
      * @throws Exception 异常
      */
     @Override
-    public List<SysRes> getAllResTree() throws Exception {
+    public List<SysResVo> getAllResTree() throws Exception {
         log.info("进入 获取全部资源树");
         try {
             // 所有的资源列表
             List<SysRes> sysResList = sysResDao.selectAll();
-            for (SysRes sysRes : sysResList) {
-                sysRes.setParent(sysResDao.selectByPrimaryKey(sysRes.getParentId()));
+            List<SysResVo> sysResVoList = JSONArray.parseArray(JSON.toJSONString(sysResList),SysResVo.class);
+            for (SysResVo sysRes : sysResVoList) {
                 sysRes.setTitle(sysRes.getName() + "[" + SysRes.Type.getDescByCode(sysRes.getType()) + "]");
                 sysRes.setKey(String.valueOf(sysRes.getId()));
                 sysRes.setPkey(String.valueOf(sysRes.getParentId()));
-                sysRes.setIsLeaf(checkIsLeaf(sysRes.getId()));
             }
             // 组装未tree数据
-            JSONArray jsonArray = CommonMethod.listToTree(sysResList, "0", "parentId", "id", "children");
+            JSONArray jsonArray = CommonMethod.listToTree(sysResVoList, "0", "parentId", "id", "children");
             log.info("完成 获取全部资源树");
-            return jsonArray.toJavaList(SysRes.class);
+            return jsonArray.toJavaList(SysResVo.class);
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
         }
     }
 
 
-    private Boolean checkIsLeaf(Long resId) {
-        SysRes queryParam = new SysRes();
-        queryParam.setParentId(resId);
-        return sysResDao.selectCount(queryParam) == 0;
-    }
 
 
 }

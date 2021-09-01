@@ -125,47 +125,7 @@ public class SysUserServiceImpl implements SysUserService {
         }
     }
 
-    /**
-     * 获取用户资源树
-     */
-    @Override
-    public List<SysRes> getResTreeByUser(Long userId) throws Exception {
-        log.info("进入 获取用户资源树");
-        try {
-            // 获取用户角色
-            SysUserRoleRel roleSelect = new SysUserRoleRel();
-            roleSelect.setUserId(userId);
-            List<SysUserRoleRel> roleList = sysUserRoleRelDao.select(roleSelect);
-            if (CollectionUtils.isEmpty(roleList)) {
-                return Lists.newArrayList();
-            }
-            // 角色id列表
-            List<Long> roleIds = roleList.stream().map(ele -> ele.getRoleId()).collect(Collectors.toList());
-            Example example = new Example(SysRoleResRel.class);
-            example.createCriteria().andIn("roleId", roleIds);
-            List<SysRoleResRel> sysRoleReRels = sysRoleResRelDao.selectByExample(example);
-            if (CollectionUtils.isEmpty(sysRoleReRels)) {
-                return Lists.newArrayList();
-            }
-            // 资源id列表
-            List<Long> resIds = sysRoleReRels.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
 
-            // 所有的资源列表
-            List<SysRes> sysResList = sysResDao.selectByIdList(resIds);
-            for (SysRes sysRes : sysResList) {
-                sysRes.setParent(sysResDao.selectByPrimaryKey(sysRes.getParentId()));
-                sysRes.setTitle(sysRes.getName() + "[" + SysRes.Type.getDescByCode(sysRes.getType()) + "]");
-                sysRes.setKey(String.valueOf(sysRes.getId()));
-                sysRes.setPkey(String.valueOf(sysRes.getParentId()));
-            }
-            // 组装未tree数据
-            JSONArray jsonArray = CommonMethod.listToTree(sysResList, "0", "parentId", "id", "children");
-            log.info("完成 获取用户资源树");
-            return jsonArray.toJavaList(SysRes.class);
-        } catch (Exception e) {
-            throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
-        }
-    }
 
     /**
      * 获取用户菜单树
@@ -211,7 +171,6 @@ public class SysUserServiceImpl implements SysUserService {
                 MenuVo menuVo = new MenuVo();
                 menuVo.setId(ele.getId());
                 menuVo.setParentId(ele.getParentId());
-//                menuVo.setIcon(ele.getIcon());
                 JSONObject icon = new JSONObject();
                 icon.put("type", "icon");
                 icon.put("value", ele.getIcon());
@@ -637,4 +596,46 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
 
+
+    //    /**
+//     * 获取用户资源树
+//     */
+//    @Override
+//    public List<SysRes> getResTreeByUser(Long userId) throws Exception {
+//        log.info("进入 获取用户资源树");
+//        try {
+//            // 获取用户角色
+//            SysUserRoleRel roleSelect = new SysUserRoleRel();
+//            roleSelect.setUserId(userId);
+//            List<SysUserRoleRel> roleList = sysUserRoleRelDao.select(roleSelect);
+//            if (CollectionUtils.isEmpty(roleList)) {
+//                return Lists.newArrayList();
+//            }
+//            // 角色id列表
+//            List<Long> roleIds = roleList.stream().map(ele -> ele.getRoleId()).collect(Collectors.toList());
+//            Example example = new Example(SysRoleResRel.class);
+//            example.createCriteria().andIn("roleId", roleIds);
+//            List<SysRoleResRel> sysRoleReRels = sysRoleResRelDao.selectByExample(example);
+//            if (CollectionUtils.isEmpty(sysRoleReRels)) {
+//                return Lists.newArrayList();
+//            }
+//            // 资源id列表
+//            List<Long> resIds = sysRoleReRels.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
+//
+//            // 所有的资源列表
+//            List<SysRes> sysResList = sysResDao.selectByIdList(resIds);
+//            for (SysRes sysRes : sysResList) {
+//                sysRes.setParent(sysResDao.selectByPrimaryKey(sysRes.getParentId()));
+//                sysRes.setTitle(sysRes.getName() + "[" + SysRes.Type.getDescByCode(sysRes.getType()) + "]");
+//                sysRes.setKey(String.valueOf(sysRes.getId()));
+//                sysRes.setPkey(String.valueOf(sysRes.getParentId()));
+//            }
+//            // 组装未tree数据
+//            JSONArray jsonArray = CommonMethod.listToTree(sysResList, "0", "parentId", "id", "children");
+//            log.info("完成 获取用户资源树");
+//            return jsonArray.toJavaList(SysRes.class);
+//        } catch (Exception e) {
+//            throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
+//        }
+//    }
 }

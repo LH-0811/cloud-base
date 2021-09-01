@@ -28,7 +28,7 @@ public interface SysPositionService {
     /**
      * 查询岗位信息
      */
-    PageInfo<SysPosition> queryPosition(SysPositionQueryParam param, SysUser sysUser) throws Exception;
+    PageInfo<SysPositionVo> queryPosition(SysPositionQueryParam param, SysUser sysUser) throws Exception;
 
     /**
      * 获取全部岗位列表

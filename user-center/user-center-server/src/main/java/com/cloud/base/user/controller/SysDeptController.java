@@ -7,8 +7,8 @@ import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptCreateParam;
 import com.cloud.base.user.param.SysDeptUserQueryParam;
 import com.cloud.base.user.repository.entity.SysDept;
-import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.SysDeptService;
+import com.cloud.base.user.vo.SysDeptVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -60,10 +60,10 @@ public class SysDeptController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    public ServerResponse<List<SysDept>> queryDeptTree(@RequestParam(value = "deptName",required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysDeptVo>> queryDeptTree(@RequestParam(value = "deptName",required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取部门树 接口 : SysDeptController-queryDeptTree ");
-        List<SysDept> sysDeptList = sysDeptService.queryDeptTree(deptName, getCurrentSysUser(securityAuthority));
+        List<SysDeptVo> sysDeptList = sysDeptService.queryDeptTree(deptName, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("查询成功", sysDeptList);
     }
 
@@ -75,10 +75,10 @@ public class SysDeptController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    public ServerResponse<List<SysDept>> queryDeptCascader(@RequestParam(value = "deptName",required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysDeptVo>> queryDeptCascader(@RequestParam(value = "deptName",required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取部门级联列表 接口 : SysDeptController-queryDeptCascader ");
-        List<SysDept> sysDeptList = sysDeptService.queryDeptCascader(deptName, getCurrentSysUser(securityAuthority));
+        List<SysDeptVo> sysDeptList = sysDeptService.queryDeptCascader(deptName, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("查询成功", sysDeptList);
     }
 

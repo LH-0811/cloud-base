@@ -1,6 +1,7 @@
 package com.cloud.base.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
@@ -97,7 +98,7 @@ public class SysPositionServiceImpl implements SysPositionService {
      * 查询岗位信息
      */
     @Override
-    public PageInfo<SysPosition> queryPosition(SysPositionQueryParam param, SysUser sysUser) throws Exception {
+    public PageInfo<SysPositionVo> queryPosition(SysPositionQueryParam param, SysUser sysUser) throws Exception {
         log.info("开始 查询岗位信息: param=" + JSON.toJSONString(param));
         // 查询岗位信息
         try {
@@ -120,6 +121,7 @@ public class SysPositionServiceImpl implements SysPositionService {
             List<SysPosition> sysPositions = sysPositionDao.selectByExample(example);
             PageInfo pageInfo = new PageInfo(sysPositions);
             PageHelper.clearPage();
+            pageInfo.setList(JSONArray.parseArray(JSON.toJSONString(sysPositions),SysPositionVo.class));
             log.info("完成 查询岗位信息");
             return pageInfo;
         } catch (Exception e) {

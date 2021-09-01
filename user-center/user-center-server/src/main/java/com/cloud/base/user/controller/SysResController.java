@@ -12,6 +12,7 @@ import com.cloud.base.user.service.SysDeptService;
 import com.cloud.base.user.service.SysResService;
 import com.cloud.base.user.service.SysRoleService;
 import com.cloud.base.user.service.SysUserService;
+import com.cloud.base.user.vo.SysResVo;
 import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -83,10 +84,10 @@ public class SysResController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
     })
-    public ServerResponse<List<SysRes>> getAllResTree(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysResVo>> getAllResTree(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取全部资源树 接口 : SysAdminController-getAllResTree ");
-        List<SysRes> allResTree = sysResService.getAllResTree();
+        List<SysResVo> allResTree = sysResService.getAllResTree();
         return ServerResponse.createBySuccess("获取成功", allResTree);
     }
 

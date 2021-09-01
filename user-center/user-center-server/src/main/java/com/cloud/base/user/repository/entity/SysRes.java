@@ -68,6 +68,11 @@ public class SysRes implements Serializable {
     @ApiModelProperty(value = "排序")
     private Integer orderNo;
     /**
+     * 是否是叶子节点
+     */
+    @ApiModelProperty(value = "是否是叶子节点")
+    private Boolean isLeaf;
+    /**
      * 路由
      */
     @ApiModelProperty(value = "路由")
@@ -117,10 +122,6 @@ public class SysRes implements Serializable {
     @Transient
     @ApiModelProperty(value = "标题")
     private String pkey;
-
-    @Transient
-    @ApiModelProperty(value = "是否是叶子节点")
-    private Boolean isLeaf;
 
     @Transient
     @ApiModelProperty(value = "是否选中")

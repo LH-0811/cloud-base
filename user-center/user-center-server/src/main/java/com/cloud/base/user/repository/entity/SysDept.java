@@ -40,6 +40,16 @@ public class SysDept implements Serializable {
      */
     @ApiModelProperty(value = "部门编号")
     private String no;
+
+    @ApiModelProperty(value = "是否是叶子节点")
+    private Boolean isLeaf;
+
+    /**
+     * 路由
+     */
+    @ApiModelProperty(value = "路由")
+    private String router;
+
     /**
      * 部门名称
      */
@@ -71,38 +81,4 @@ public class SysDept implements Serializable {
     @ApiModelProperty(value = "更新人")
     private Long updateBy;
 
-    ////////////////////子数据
-    @Transient
-    @ApiModelProperty(value = "子资源列表")
-    private List<SysDept> children;
-
-    @Transient
-    @ApiModelProperty(value = "是否是叶子节点")
-    private Boolean isLeaf;
-    ////////////////////树形数据相关参数
-    @Transient
-    @ApiModelProperty(value = "父节点")
-    private SysDept parent;
-
-    @Transient
-    @ApiModelProperty(value = "标题")
-    private String title;
-
-    @Transient
-    @ApiModelProperty(value = "本节点key")
-    private String key;
-
-    @Transient
-    @ApiModelProperty(value = "父级key")
-    private String pkey;
-
-
-    ////////////////////树形数据相关参数
-    @Transient
-    @ApiModelProperty(value = "级联值")
-    private String value;
-
-    @Transient
-    @ApiModelProperty(value = "级联文本")
-    private String label;
 }

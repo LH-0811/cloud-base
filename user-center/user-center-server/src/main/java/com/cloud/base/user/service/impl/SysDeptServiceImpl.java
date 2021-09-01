@@ -19,6 +19,7 @@ import com.cloud.base.user.service.SysDeptService;
 import com.cloud.base.user.vo.SysDeptVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -82,6 +83,17 @@ public class SysDeptServiceImpl implements SysDeptService {
             sysDept.setId(idWorker.nextId());
             sysDept.setCreateBy(sysUser.getId());
             sysDept.setCreateTime(new Date());
+
+
+            SysDept parent = sysDeptDao.selectByPrimaryKey(sysDept.getParentId());
+            if (parent != null) {
+                sysDept.setRouter(StringUtils.join(Lists.newArrayList(parent.getRouter(), String.valueOf(sysDept.getId())), ","));
+                parent.setIsLeaf(Boolean.FALSE);
+                sysDeptDao.updateByPrimaryKeySelective(parent);
+            } else {
+                sysDept.setRouter("0,"+sysDept.getId());
+            }
+
             sysDeptDao.insertSelective(sysDept);
             log.info("完成 创建部门信息");
         } catch (Exception e) {
@@ -95,7 +107,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      * 获取部门树
      */
     @Override
-    public List<SysDept> queryDeptTree(String deptName, SysUser sysUser) throws Exception {
+    public List<SysDeptVo> queryDeptTree(String deptName, SysUser sysUser) throws Exception {
         log.info("开始 获取部门树");
         try {
             Example example = new Example(SysDept.class);
@@ -105,27 +117,22 @@ public class SysDeptServiceImpl implements SysDeptService {
             }
             // 所有的资源列表
             List<SysDept> sysDeptList = sysDeptDao.selectByExample(example);
-            for (SysDept sysDept : sysDeptList) {
-                sysDept.setParent(sysDeptDao.selectByPrimaryKey(sysDept.getParentId()));
+
+            List<SysDeptVo> sysDeptVos = JSONArray.parseArray(JSON.toJSONString(sysDeptList), SysDeptVo.class);
+            for (SysDeptVo sysDept : sysDeptVos) {
                 sysDept.setTitle(sysDept.getName());
                 sysDept.setKey(String.valueOf(sysDept.getId()));
                 sysDept.setPkey(String.valueOf(sysDept.getParentId()));
-                sysDept.setIsLeaf(checkIsLeaf(sysDept.getId()));
             }
             // 组装未tree数据
-            JSONArray jsonArray = CommonMethod.listToTree(sysDeptList, "0", "parentId", "id", "children");
+            JSONArray jsonArray = CommonMethod.listToTree(sysDeptVos, "0", "parentId", "id", "children");
             log.info("完成 获取部门树");
-            return jsonArray.toJavaList(SysDept.class);
+            return jsonArray.toJavaList(SysDeptVo.class);
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
         }
     }
 
-    private Boolean checkIsLeaf(Long deptId) {
-        SysDept queryParam = new SysDept();
-        queryParam.setParentId(deptId);
-        return sysDeptDao.selectCount(queryParam) == 0;
-    }
 
     /**
      * 删除部门信息
@@ -160,6 +167,16 @@ public class SysDeptServiceImpl implements SysDeptService {
 
         try {
             sysDeptDao.deleteByPrimaryKey(deptId);
+
+            // 更新父节点的是否叶子节点状态
+            SysDept pChildrenParam = new SysDept();
+            pChildrenParam.setParentId(sysDept.getParentId());
+            if (sysDeptDao.selectCount(pChildrenParam) == 0){
+                SysDept pUpdateParam = new SysDept();
+                pUpdateParam.setId(sysDept.getParentId());
+                pUpdateParam.setIsLeaf(Boolean.TRUE);
+                sysDeptDao.updateByPrimaryKeySelective(pUpdateParam);
+            }
             log.info("完成 删除部门信息");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("删除部门信息失败,请联系管理员！"));
@@ -206,7 +223,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      * 获取部门级联选项列表
      */
     @Override
-    public List<SysDept> queryDeptCascader(String deptName, SysUser sysUser) throws Exception {
+    public List<SysDeptVo> queryDeptCascader(String deptName, SysUser sysUser) throws Exception {
         log.info("开始 获取部门级联列表");
         try {
             Example example = new Example(SysDept.class);
@@ -216,16 +233,15 @@ public class SysDeptServiceImpl implements SysDeptService {
             }
             // 所有的资源列表
             List<SysDept> sysDeptList = sysDeptDao.selectByExample(example);
-            for (SysDept sysDept : sysDeptList) {
-                sysDept.setParent(sysDeptDao.selectByPrimaryKey(sysDept.getParentId()));
+            List<SysDeptVo> sysDeptVos = JSONArray.parseArray(JSON.toJSONString(sysDeptList), SysDeptVo.class);
+            for (SysDeptVo sysDept : sysDeptVos) {
                 sysDept.setLabel(sysDept.getName());
                 sysDept.setValue(String.valueOf(sysDept.getId()));
-                sysDept.setIsLeaf(checkIsLeaf(sysDept.getId()));
             }
             // 组装未tree数据
-            JSONArray jsonArray = CommonMethod.listToTree(sysDeptList, "0", "parentId", "id", "children");
+            JSONArray jsonArray = CommonMethod.listToTree(sysDeptVos, "0", "parentId", "id", "children");
             log.info("完成 获取部门级联列表");
-            return jsonArray.toJavaList(SysDept.class);
+            return jsonArray.toJavaList(SysDeptVo.class);
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取资源级联列表失败"));
         }

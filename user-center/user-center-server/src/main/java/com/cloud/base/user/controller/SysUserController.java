@@ -210,23 +210,23 @@ public class SysUserController extends BaseController {
         return ServerResponse.createBySuccess("查询成功", roles);
     }
 
-    /**
-     * 获取用户资源树
-     *
-     * @throws Exception 异常
-     */
-    @GetMapping("/res_tree/get")
-    @ApiOperation("获取用户资源树")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
-    })
-    @TokenToAuthority
-    public ServerResponse<List<SysRes>> getResTreeByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
-        log.info("|-----------------------------------------------|");
-        log.info("进入 获取用户资源树 接口 : SysUserCurrentUserController-getResTreeByUser");
-        List<SysRes> resTreeByUser = sysUserService.getResTreeByUser(getCurrentSysUser(securityAuthority).getId());
-        return ServerResponse.createBySuccess("查询成功", resTreeByUser);
-    }
+//    /**
+//     * 获取用户资源树
+//     *
+//     * @throws Exception 异常
+//     */
+//    @GetMapping("/res_tree/get")
+//    @ApiOperation("获取用户资源树")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+//    })
+//    @TokenToAuthority
+//    public ServerResponse<List<SysRes>> getResTreeByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+//        log.info("|-----------------------------------------------|");
+//        log.info("进入 获取用户资源树 接口 : SysUserCurrentUserController-getResTreeByUser");
+//        List<SysRes> resTreeByUser = sysUserService.getResTreeByUser(getCurrentSysUser(securityAuthority).getId());
+//        return ServerResponse.createBySuccess("查询成功", resTreeByUser);
+//    }
 
     /**
      * 获取用户菜单树

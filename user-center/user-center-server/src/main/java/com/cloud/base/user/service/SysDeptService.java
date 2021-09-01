@@ -5,6 +5,7 @@ import com.cloud.base.user.param.SysDeptCreateParam;
 import com.cloud.base.user.param.SysDeptUserQueryParam;
 import com.cloud.base.user.repository.entity.SysDept;
 import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.vo.SysDeptVo;
 import com.github.pagehelper.PageInfo;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,7 @@ public interface SysDeptService {
      * @return
      * @throws Exception
      */
-    List<SysDept> queryDeptTree(String deptName,SysUser sysUser) throws Exception;
+    List<SysDeptVo> queryDeptTree(String deptName, SysUser sysUser) throws Exception;
 
     /**
      * 删除部门信息
@@ -47,5 +48,5 @@ public interface SysDeptService {
     /**
      * 获取部门级联选项列表
      */
-    List<SysDept> queryDeptCascader(String deptName, SysUser sysUser) throws Exception;
+    List<SysDeptVo> queryDeptCascader(String deptName, SysUser sysUser) throws Exception;
 }
