@@ -12,8 +12,10 @@ import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRole;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityUser;
+import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.dao.*;
+import com.cloud.base.user.repository.dao.custom.DeptUserCustomDao;
 import com.cloud.base.user.repository.entity.*;
 import com.cloud.base.user.service.SysUserService;
 import com.cloud.base.user.vo.*;
@@ -70,6 +72,9 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Resource
     private SysPositionDao sysPositionDao;
+
+    @Resource
+    private DeptUserCustomDao deptUserCustomDao;
 
     @Resource
     private IdWorker idWorker;
@@ -277,6 +282,41 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     /**
+     * 获取部门用户信息
+     */
+    @Override
+    public PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception {
+        log.info("开始 获取部门角色信息：param=" + JSON.toJSONString(param));
+        try {
+            PageHelper.startPage(param.getPageNum(), param.getPageSize());
+            List<DeptUserDto> deptUserDtos = deptUserCustomDao.selectDeptUser(param);
+            PageInfo<DeptUserDto> pageInfo = new PageInfo(deptUserDtos);
+            PageHelper.clearPage();
+
+            for (DeptUserDto deptUserDto : deptUserDtos) {
+                SysUserRoleRel queryRoleParam = new SysUserRoleRel();
+                queryRoleParam.setUserId(deptUserDto.getUserId());
+                List<SysUserRoleRel> sysUserRoleRelList = sysUserRoleRelDao.select(queryRoleParam);
+                if (CollectionUtils.isNotEmpty(sysUserRoleRelList)) {
+                    deptUserDto.setRoleIdList(sysUserRoleRelList.stream().map(ele -> ele.getRoleId()).collect(Collectors.toList()));
+                }
+                SysUserPositionRel queryPositionParam = new SysUserPositionRel();
+                queryPositionParam.setUserId(deptUserDto.getUserId());
+                List<SysUserPositionRel> sysUserPositionRelList = sysUserPositionRelDao.select(queryPositionParam);
+                if (CollectionUtils.isNotEmpty(sysUserPositionRelList)) {
+                    deptUserDto.setPositionIdList(sysUserPositionRelList.stream().map(ele -> ele.getPositionId()).collect(Collectors.toList()));
+                }
+            }
+
+            log.info("完成 开始 获取部门角色信息");
+            return pageInfo;
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("获取部门角色信息失败,请联系管理员"));
+        }
+    }
+
+
+    /**
      * 通过用户名密码 获取用户信息 并组装权限信息
      */
     @Override
@@ -318,6 +358,8 @@ public class SysUserServiceImpl implements SysUserService {
         }
 
     }
+
+
 
     // //////////////// 用户管理
 

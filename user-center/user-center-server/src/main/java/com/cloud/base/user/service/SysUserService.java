@@ -10,7 +10,6 @@ import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.vo.MenuVo;
 import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,6 +47,16 @@ public interface SysUserService {
      * 获取用户资源列表
      */
     List<SysRes> getResListByUser(Long userId) throws Exception;
+
+    /**
+     * 获取部门用户信息
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception;
+
 
     /**
      * 根据用户id获取用户信息

@@ -6,19 +6,14 @@ import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
-import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptCreateParam;
-import com.cloud.base.user.param.SysDeptUserQueryParam;
 import com.cloud.base.user.repository.dao.SysDeptDao;
 import com.cloud.base.user.repository.dao.SysUserDeptRelDao;
-import com.cloud.base.user.repository.dao.SysUserPositionRelDao;
-import com.cloud.base.user.repository.dao.SysUserRoleRelDao;
-import com.cloud.base.user.repository.dao.custom.DeptUserCustomDao;
-import com.cloud.base.user.repository.entity.*;
+import com.cloud.base.user.repository.entity.SysDept;
+import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.repository.entity.SysUserDeptRel;
 import com.cloud.base.user.service.SysDeptService;
 import com.cloud.base.user.vo.SysDeptVo;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -31,7 +26,6 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 系统部门服务接口 实现
@@ -50,16 +44,8 @@ public class SysDeptServiceImpl implements SysDeptService {
     private SysDeptDao sysDeptDao;
 
     @Autowired
-    private DeptUserCustomDao deptUserCustomDao;
-
-    @Autowired
     private SysUserDeptRelDao sysUserDeptRelDao;
 
-    @Autowired
-    private SysUserRoleRelDao sysUserRoleRelDao;
-
-    @Autowired
-    private SysUserPositionRelDao sysUserPositionRelDao;
 
     /**
      * 创建部门 信息
@@ -184,39 +170,6 @@ public class SysDeptServiceImpl implements SysDeptService {
     }
 
 
-    /**
-     * 获取部门用户信息
-     */
-    @Override
-    public PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception {
-        log.info("开始 获取部门角色信息：param=" + JSON.toJSONString(param));
-        try {
-            PageHelper.startPage(param.getPageNum(), param.getPageSize());
-            List<DeptUserDto> deptUserDtos = deptUserCustomDao.selectDeptUser(param);
-            PageInfo<DeptUserDto> pageInfo = new PageInfo(deptUserDtos);
-            PageHelper.clearPage();
-
-            for (DeptUserDto deptUserDto : deptUserDtos) {
-                SysUserRoleRel queryRoleParam = new SysUserRoleRel();
-                queryRoleParam.setUserId(deptUserDto.getUserId());
-                List<SysUserRoleRel> sysUserRoleRelList = sysUserRoleRelDao.select(queryRoleParam);
-                if (CollectionUtils.isNotEmpty(sysUserRoleRelList)) {
-                    deptUserDto.setRoleIdList(sysUserRoleRelList.stream().map(ele -> ele.getRoleId()).collect(Collectors.toList()));
-                }
-                SysUserPositionRel queryPositionParam = new SysUserPositionRel();
-                queryPositionParam.setUserId(deptUserDto.getUserId());
-                List<SysUserPositionRel> sysUserPositionRelList = sysUserPositionRelDao.select(queryPositionParam);
-                if (CollectionUtils.isNotEmpty(sysUserPositionRelList)) {
-                    deptUserDto.setPositionIdList(sysUserPositionRelList.stream().map(ele -> ele.getPositionId()).collect(Collectors.toList()));
-                }
-            }
-
-            log.info("完成 开始 获取部门角色信息");
-            return pageInfo;
-        } catch (Exception e) {
-            throw CommonException.create(e, ServerResponse.createByError("获取部门角色信息失败,请联系管理员"));
-        }
-    }
 
 
     /**

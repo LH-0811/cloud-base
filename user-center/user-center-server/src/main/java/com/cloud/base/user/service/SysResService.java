@@ -1,7 +1,6 @@
 package com.cloud.base.user.service;
 
 import com.cloud.base.user.param.SysResCreateParam;
-import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.vo.SysResVo;
 

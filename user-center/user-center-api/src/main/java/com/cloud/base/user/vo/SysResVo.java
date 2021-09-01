@@ -68,6 +68,11 @@ public class SysResVo implements Serializable {
     @ApiModelProperty(value = "排序")
     private Integer orderNo;
     /**
+     * 是否是叶子节点
+     */
+    @ApiModelProperty(value = "是否是叶子节点")
+    private Boolean isLeaf;
+    /**
      * 路由
      */
     @ApiModelProperty(value = "路由")

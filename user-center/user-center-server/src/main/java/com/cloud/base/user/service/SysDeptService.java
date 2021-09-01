@@ -1,13 +1,8 @@
 package com.cloud.base.user.service;
 
-import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptCreateParam;
-import com.cloud.base.user.param.SysDeptUserQueryParam;
-import com.cloud.base.user.repository.entity.SysDept;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.vo.SysDeptVo;
-import com.github.pagehelper.PageInfo;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,14 +31,6 @@ public interface SysDeptService {
      */
     void deleteSysDept(Long deptId, SysUser sysUser) throws Exception;
 
-    /**
-     * 获取部门用户信息
-     *
-     * @param param
-     * @return
-     * @throws Exception
-     */
-    PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception;
 
     /**
      * 获取部门级联选项列表

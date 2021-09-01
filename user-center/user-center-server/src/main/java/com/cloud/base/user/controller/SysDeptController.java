@@ -3,13 +3,9 @@ package com.cloud.base.user.controller;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptCreateParam;
-import com.cloud.base.user.param.SysDeptUserQueryParam;
-import com.cloud.base.user.repository.entity.SysDept;
 import com.cloud.base.user.service.SysDeptService;
 import com.cloud.base.user.vo.SysDeptVo;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -98,21 +94,6 @@ public class SysDeptController extends BaseController {
         return ServerResponse.createBySuccess("删除成功");
     }
 
-    /**
-     * 获取部门用户信息
-     */
-    @PostMapping("/user/query")
-    @ApiOperation("获取部门用户信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
-            @ApiImplicitParam(paramType = "body", dataType = "SysDeptUserQueryParam", dataTypeClass = SysDeptUserQueryParam.class, name = "param", value = "参数")
-    })
-    public ServerResponse<PageInfo<DeptUserDto>> selectDeptUser(@Validated @RequestBody SysDeptUserQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
-        log.info("|-----------------------------------------------|");
-        log.info("进入 获取部门用户信息 接口 : SysDeptController-selectDeptUser ");
-        PageInfo<DeptUserDto> deptUserDtoPageInfo = sysDeptService.selectDeptUser(param, getCurrentSysUser(securityAuthority));
-        return ServerResponse.createBySuccess("查询成功", deptUserDtoPageInfo);
-    }
 
 
 }

@@ -2,7 +2,6 @@ package com.cloud.base.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
@@ -116,12 +115,12 @@ public class SysRoleServiceImpl implements SysRoleService {
             sysRole.setUpdateTime(new Date());
             sysRoleDao.updateByPrimaryKeySelective(sysRole);
 
+            SysRoleResRel delParam = new SysRoleResRel();
+            delParam.setRoleId(param.getId());
+            sysRoleResRelDao.delete(delParam);
+
             // 添加角色与资源之间的关系
             if (CollectionUtils.isNotEmpty(param.getResIdList())) {
-                SysRoleResRel delParam = new SysRoleResRel();
-                delParam.setRoleId(param.getId());
-                sysRoleResRelDao.delete(delParam);
-
                 List<SysRoleResRel> sysRoleResRelList = param.getResIdList().stream().map(resId -> new SysRoleResRel(idWorker.nextId(), sysRole.getId(), resId)).collect(Collectors.toList());
                 sysRoleResRelDao.insertList(sysRoleResRelList);
             }

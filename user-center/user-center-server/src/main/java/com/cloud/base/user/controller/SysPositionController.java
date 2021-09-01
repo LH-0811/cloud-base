@@ -5,7 +5,6 @@ import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUr
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.user.param.SysPositionCreateParam;
 import com.cloud.base.user.param.SysPositionQueryParam;
-import com.cloud.base.user.repository.entity.SysPosition;
 import com.cloud.base.user.service.SysPositionService;
 import com.cloud.base.user.vo.SysPositionVo;
 import com.github.pagehelper.PageInfo;
@@ -19,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
