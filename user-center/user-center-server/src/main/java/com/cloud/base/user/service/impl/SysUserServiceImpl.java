@@ -510,11 +510,7 @@ public class SysUserServiceImpl implements SysUserService {
                     List<Long> positionIdList = sysUserPositionRelList.stream().map(userPositionRel -> userPositionRel.getPositionId()).collect(Collectors.toList());
                     List<SysPosition> sysPositions = sysPositionDao.selectByIdList(positionIdList);
                     if (CollectionUtils.isNotEmpty(sysPositions)) {
-                        List<SysPositionVo> sysPositionVoList = sysPositions.stream().map(sysPosition -> {
-                            SysPositionVo sysPositionVo = new SysPositionVo();
-                            BeanUtils.copyProperties(sysPosition, sysPositionVo);
-                            return sysPositionVo;
-                        }).collect(Collectors.toList());
+                        List<SysPositionVo> sysPositionVoList = JSONArray.parseArray(JSON.toJSONString(sysPositions),SysPositionVo.class);
                         sysUserVo.setPositionList(sysPositionVoList);
                     }
                 }
@@ -527,11 +523,7 @@ public class SysUserServiceImpl implements SysUserService {
                     List<Long> sysRoleIdList = sysUserRoleRelList.stream().map(sysUserRoleRel -> sysUserRoleRel.getRoleId()).collect(Collectors.toList());
                     List<SysRole> sysRoles = sysRoleDao.selectByIdList(sysRoleIdList);
                     if (CollectionUtils.isNotEmpty(sysRoles)) {
-                        List<SysRoleVo> sysRoleVoList = sysRoles.stream().map(sysRole -> {
-                            SysRoleVo sysRoleVo = new SysRoleVo();
-                            BeanUtils.copyProperties(sysRole, sysRoleVo);
-                            return sysRoleVo;
-                        }).collect(Collectors.toList());
+                        List<SysRoleVo> sysRoleVoList = JSONArray.parseArray(JSON.toJSONString(sysRoles),SysRoleVo.class);
                         sysUserVo.setRoleList(sysRoleVoList);
                     }
                 }
