@@ -1,5 +1,9 @@
 # springcloud 脚手架项目
 
+
+sentinel：http://49.232.166.94:9000/#/login
+zipkin：http://49.232.166.94:9411/zipkin
+
 ## 项目概述
 
 springboot+springcloud

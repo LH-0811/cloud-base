@@ -135,6 +135,7 @@ public class SysRes implements Serializable {
     @AllArgsConstructor
     @NoArgsConstructor
     public enum Type {
+        GROUP(0, "菜单组"),
         MENU(1, "菜单"),
         INTERFACE(2, "接口"),
         PERMS_CODE(3, "权限码"),

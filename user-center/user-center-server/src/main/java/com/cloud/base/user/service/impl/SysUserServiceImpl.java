@@ -163,7 +163,7 @@ public class SysUserServiceImpl implements SysUserService {
             }
 
             // 所有的资源列表
-            List<SysRes> sysResList = sysResDao.selectByIdList(resIds).stream().filter(ele -> ele.getType().equals(SysRes.Type.MENU.getCode())).collect(Collectors.toList());
+            List<SysRes> sysResList = sysResDao.selectByIdList(resIds).stream().filter(ele -> ele.getType().equals(SysRes.Type.GROUP.getCode()) || ele.getType().equals(SysRes.Type.MENU.getCode())).collect(Collectors.toList());
             for (SysRes sysRes : sysResList) {
                 sysRes.setParent(sysResDao.selectByPrimaryKey(sysRes.getParentId()));
                 sysRes.setTitle(sysRes.getName() + "[" + SysRes.Type.getDescByCode(sysRes.getType()) + "]");
@@ -180,7 +180,7 @@ public class SysUserServiceImpl implements SysUserService {
                 icon.put("type", "icon");
                 icon.put("value", ele.getIcon());
                 menuVo.setIcon(icon);
-                menuVo.setGroup(ele.getType().equals(SysRes.Type.MENU.getCode()));
+                menuVo.setGroup(ele.getType().equals(SysRes.Type.GROUP.getCode()));
                 menuVo.setText(ele.getName());
                 menuVo.setLink(ele.getUrl());
                 return menuVo;
