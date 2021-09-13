@@ -25,8 +25,7 @@ spring:
       discovery:
         locator:
           enabled: true
-          #gateway 服务名小写 (不建议)
-#          lower-case-service-id: true
+          lower-case-service-id: true #gateway 服务名小写 (不建议)
     nacos: # 配置nacos
       discovery: # 服务发现地址
         server-addr: 127.0.0.1:8848 # nacos 启动地址

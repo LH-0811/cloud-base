@@ -26,10 +26,10 @@
 
 
         <!--  三方库 版本管理  -->
-        <springboot.version>2.3.9.RELEASE</springboot.version>
-<!--        <springboot.version>2.4.0</springboot.version>-->
-        <springcloud.version>Hoxton.SR8</springcloud.version>
-        <springcloud-alibaba.version>2.2.1.RELEASE</springcloud-alibaba.version>
+<!--        <springboot.version>2.3.9.RELEASE</springboot.version>-->
+        <springboot.version>2.4.2</springboot.version>
+        <springcloud.version>2020.0.3</springcloud.version>
+        <springcloud-alibaba.version>2021.1</springcloud-alibaba.version>
 
 
         <druid.version>1.1.21</druid.version>
@@ -61,7 +61,6 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <!--SR3 版本 与openfeign整合sentinel会报错-->
                 <version>${springcloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>

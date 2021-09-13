@@ -1,6 +1,6 @@
 package com.cloud.base.alibaba_cloud.fallback;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * @author lh0811

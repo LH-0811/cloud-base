@@ -103,9 +103,9 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 ```
 ## 版本使用说明
 ```
-<springboot.version>2.3.9.RELEASE</springboot.version>
-<springcloud.version>Hoxton.SR8</springcloud.version>
-<springcloud-alibaba.version>2.2.1.RELEASE</springcloud-alibaba.version>
+<springboot.version>2.4.2</springboot.version>
+<springcloud.version>2020.0.3</springcloud.version>
+<springcloud-alibaba.version>2021.1</springcloud-alibaba.version>
 ```
 
 

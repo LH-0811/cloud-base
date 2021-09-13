@@ -2,6 +2,7 @@ package com.cloud.base.user.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.response.ServerResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,11 +26,13 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/monitor")
+@Api(tags = "系统监控接口 API")
 public class MonitorController {
     @Autowired
     private DiscoveryClient discoveryClient;
 
     @GetMapping("/druid")
+    @ApiModelProperty("druid 监控列表")
     public ServerResponse<MonitorVo> druid() {
         MonitorVo monitorVo = new MonitorVo();
         monitorVo.setDruidList(Lists.newArrayList());
