@@ -43,6 +43,7 @@
         <cloud-security.version>2.2.2.RELEASE</cloud-security.version>
         <servlet-api.version>9.0.38</servlet-api.version>
         <commons-collections4.version>4.4</commons-collections4.version>
+        <activiti.version>7.1.0.M6</activiti.version>
 
     </properties>
 
@@ -135,6 +136,12 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+            <!--activiti 工作流-->
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-spring-boot-starter</artifactId>
+                <version>${activiti.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
