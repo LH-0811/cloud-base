@@ -2,16 +2,18 @@ package com.cloud.base.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.user.param.SysPositionCreateParam;
 import com.cloud.base.user.param.SysPositionQueryParam;
-import com.cloud.base.user.repository.dao.SysPositionDao;
-import com.cloud.base.user.repository.dao.SysUserPositionRelDao;
-import com.cloud.base.user.repository.entity.SysPosition;
-import com.cloud.base.user.repository.entity.SysUser;
-import com.cloud.base.user.repository.entity.SysUserPositionRel;
+import com.cloud.base.user.repository_plus.dao.SysPositionDao;
+import com.cloud.base.user.repository_plus.dao.SysUserPositionRelDao;
+import com.cloud.base.user.repository_plus.entity.SysPosition;
+import com.cloud.base.user.repository_plus.entity.SysUser;
+import com.cloud.base.user.repository_plus.entity.SysUserPositionRel;
 import com.cloud.base.user.service.SysPositionService;
 import com.cloud.base.user.vo.SysPositionVo;
 import com.github.pagehelper.PageHelper;
@@ -22,7 +24,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
@@ -62,7 +63,7 @@ public class SysPositionServiceImpl implements SysPositionService {
             sysPosition.setId(idWorker.nextId());
             sysPosition.setCreateBy(sysUser.getId());
             sysPosition.setCreateTime(new Date());
-            sysPositionDao.insertSelective(sysPosition);
+            sysPositionDao.save(sysPosition);
             log.info("完成 创建岗位信息");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("创建岗位信息失败,请联系管理员！"));
@@ -80,13 +81,11 @@ public class SysPositionServiceImpl implements SysPositionService {
         // 创建部门信息
         try {
             // 删除岗位和用户关系
-            SysUserPositionRel delParam = new SysUserPositionRel();
-            delParam.setPositionId(positionId);
-            sysUserPositionRelDao.delete(delParam);
-
+            QueryWrapper<SysUserPositionRel> userPositionRelQuery = new QueryWrapper<>();
+            userPositionRelQuery.lambda().eq(SysUserPositionRel::getPositionId,positionId);
+            sysUserPositionRelDao.remove(userPositionRelQuery);
             // 删除岗位信息
-            sysPositionDao.deleteByPrimaryKey(positionId);
-
+            sysPositionDao.removeById(positionId);
             log.info("完成 删除岗位信息");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("删除岗位信息失败,请联系管理员！"));
@@ -102,23 +101,23 @@ public class SysPositionServiceImpl implements SysPositionService {
         log.info("开始 查询岗位信息: param=" + JSON.toJSONString(param));
         // 查询岗位信息
         try {
-            Example example = new Example(SysPosition.class);
-            example.setOrderByClause(" create_time desc ");
-            Example.Criteria criteria = example.createCriteria();
+            QueryWrapper<SysPosition> queryWrapper = new QueryWrapper<>();
+            LambdaQueryWrapper<SysPosition> lambda = queryWrapper.lambda();
+            lambda.orderByDesc(SysPosition::getCreateTime);
             if (StringUtils.isNotBlank(param.getNo())) {
-                criteria.andEqualTo("no", param.getNo());
+                lambda.eq(SysPosition::getNo,param.getNo());
             }
             if (StringUtils.isNotBlank(param.getName())) {
-                criteria.andLike("name", "%" + param.getName() + "%");
+                lambda.like(SysPosition::getName,"%" + param.getName() + "%");
             }
             if (param.getCreateTimeLow() != null) {
-                criteria.andGreaterThanOrEqualTo("createTime", param.getCreateTimeLow());
+                lambda.ge(SysPosition::getCreateTime, param.getCreateTimeLow());
             }
             if (param.getCreateTimeUp() != null) {
-                criteria.andLessThanOrEqualTo("createTime", param.getCreateTimeUp());
+                lambda.le(SysPosition::getCreateTime, param.getCreateTimeUp());
             }
             PageHelper.startPage(param.getPageNum(), param.getPageSize());
-            List<SysPosition> sysPositions = sysPositionDao.selectByExample(example);
+            List<SysPosition> sysPositions = sysPositionDao.list(queryWrapper);
             PageInfo pageInfo = new PageInfo(sysPositions);
             PageHelper.clearPage();
             pageInfo.setList(JSONArray.parseArray(JSON.toJSONString(sysPositions),SysPositionVo.class));
@@ -137,7 +136,7 @@ public class SysPositionServiceImpl implements SysPositionService {
     public List<SysPositionVo> queryAllPosition(SysUser sysUser) throws Exception {
         log.info("开始 查询岗位列表");
         try {
-            List<SysPosition> sysPositions = sysPositionDao.selectAll();
+            List<SysPosition> sysPositions = sysPositionDao.list();
             List<SysPositionVo> voList = sysPositions.stream().map(ele -> {
                 SysPositionVo sysPositionVo = new SysPositionVo();
                 BeanUtils.copyProperties(ele, sysPositionVo);

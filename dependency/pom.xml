@@ -22,6 +22,7 @@
         <module>dependency-sentinel-gateway</module>
         <module>dependency-sleuth-zipkin</module>
         <module>dependency-redis</module>
+        <module>dependency-mybatis-plus</module>
     </modules>
 
 

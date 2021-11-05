@@ -1,12 +1,13 @@
 package com.cloud.base.user.service;
 
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
-import com.cloud.base.user.repository.entity.SysRes;
-import com.cloud.base.user.repository.entity.SysRole;
-import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.repository_plus.entity.SysRes;
+import com.cloud.base.user.repository_plus.entity.SysRole;
+import com.cloud.base.user.repository_plus.entity.SysUser;
 import com.cloud.base.user.vo.MenuVo;
 import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;

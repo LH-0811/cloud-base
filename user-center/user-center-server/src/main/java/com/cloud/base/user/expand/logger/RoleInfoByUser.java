@@ -2,8 +2,8 @@ package com.cloud.base.user.expand.logger;
 
 import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.modules.logger.adapter.LhitLoggerRoleInfoByUserAdapter;
-import com.cloud.base.user.repository.entity.SysRole;
-import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.repository_plus.entity.SysRole;
+import com.cloud.base.user.repository_plus.entity.SysUser;
 import com.cloud.base.user.service.SysUserService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;

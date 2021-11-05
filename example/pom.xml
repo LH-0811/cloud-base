@@ -18,6 +18,7 @@
         <module>boot-example</module>
         <module>cloud-example</module>
         <module>lh-security-example</module>
+        <module>mybatis-plus-example</module>
     </modules>
 
 

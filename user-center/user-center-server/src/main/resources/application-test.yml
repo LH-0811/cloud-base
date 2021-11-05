@@ -65,7 +65,7 @@ spring:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-  type-aliases-package: com.cloud.base.member.user.repository.entity
+  type-aliases-package: com.cloud.base.member.user.repository_plus.entity
 mapper:
   not-empty: false
   identity: MYSQL

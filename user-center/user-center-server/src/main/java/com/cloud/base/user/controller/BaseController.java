@@ -4,7 +4,7 @@ import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ResponseCode;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.repository_plus.entity.SysUser;
 import com.cloud.base.user.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

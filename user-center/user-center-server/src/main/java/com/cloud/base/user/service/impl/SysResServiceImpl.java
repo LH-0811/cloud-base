@@ -2,16 +2,18 @@ package com.cloud.base.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cloud.base.core.common.entity.CommonMethod;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
+import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.param.SysResCreateParam;
-import com.cloud.base.user.repository.dao.SysResDao;
-import com.cloud.base.user.repository.dao.SysRoleResRelDao;
-import com.cloud.base.user.repository.entity.SysRes;
-import com.cloud.base.user.repository.entity.SysRoleResRel;
-import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.repository_plus.dao.SysResDao;
+import com.cloud.base.user.repository_plus.dao.SysRoleResRelDao;
+import com.cloud.base.user.repository_plus.entity.SysRes;
+import com.cloud.base.user.repository_plus.entity.SysRoleResRel;
+import com.cloud.base.user.repository_plus.entity.SysUser;
 import com.cloud.base.user.service.SysResService;
 import com.cloud.base.user.vo.SysResVo;
 import com.google.common.collect.Lists;
@@ -56,9 +58,9 @@ public class SysResServiceImpl implements SysResService {
     @Transactional(rollbackFor = Exception.class)
     public void createRes(SysResCreateParam param, SysUser sysUser) throws Exception {
         log.info("进入 创建资源:" + JSON.toJSONString(param));
-        SysRes queryByName = new SysRes();
-        queryByName.setName(param.getName());
-        if (sysResDao.selectCount(queryByName) > 0) {
+        QueryWrapper<SysRes> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(SysRes::getName,param.getName());
+        if (sysResDao.count(queryWrapper) > 0) {
             throw CommonException.create(ServerResponse.createByError("权限名称已经存在"));
         }
 
@@ -70,15 +72,15 @@ public class SysResServiceImpl implements SysResService {
             sysRes.setCreateBy(sysUser.getId());
             sysRes.setCreateTime(new Date());
 
-            SysRes parent = sysResDao.selectByPrimaryKey(sysRes.getParentId());
+            SysRes parent = sysResDao.getById(sysRes.getParentId());
             if (parent != null) {
                 sysRes.setRouter(StringUtils.join(Lists.newArrayList(parent.getRouter(), String.valueOf(sysRes.getId())), ","));
                 parent.setIsLeaf(Boolean.FALSE);
-                sysResDao.updateByPrimaryKeySelective(parent);
+                sysResDao.updateById(parent);
             } else {
                 sysRes.setRouter("0,"+sysRes.getId());
             }
-            sysResDao.insertSelective(sysRes);
+            sysResDao.save(sysRes);
             log.info("完成 创建资源:" + JSON.toJSONString(param));
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("创建权限失败"));
@@ -98,37 +100,35 @@ public class SysResServiceImpl implements SysResService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteRes(Long resId, SysUser sysUser) throws Exception {
         log.info("进入 删除资源信息:" + resId);
-        SysRes sysRes = sysResDao.selectByPrimaryKey(resId);
+        SysRes sysRes = sysResDao.getById(resId);
         if (sysRes == null) {
             throw CommonException.create(ServerResponse.createByError("权限信息不存在"));
         }
 
-        SysRes queryChildParam = new SysRes();
-        queryChildParam.setParentId(resId);
-        if (sysResDao.selectCount(queryChildParam) > 0) {
+        QueryWrapper<SysRes> resQueryWrapper = new QueryWrapper<>();
+        resQueryWrapper.lambda().eq(SysRes::getParentId,resId);
+        if (sysResDao.count(resQueryWrapper) > 0) {
             throw CommonException.create(ServerResponse.createByError("当前资源有子资源，不能删除"));
         }
 
         try {
             // 删除资源与角色之间的关系
-            SysRoleResRel selectByResId = new SysRoleResRel();
-            selectByResId.setResId(resId);
-            sysRoleResRelDao.delete(selectByResId);
+            QueryWrapper<SysRoleResRel> roleResDelQuery = new QueryWrapper<>();
+            roleResDelQuery.lambda().eq(SysRoleResRel::getResId,resId);
+            sysRoleResRelDao.remove(roleResDelQuery);
 
             // 删除资源信息
-            sysResDao.deleteByPrimaryKey(resId);
+            sysResDao.removeById(resId);
 
             // 更新父节点的是否叶子节点状态
-            SysRes pChildrenParam = new SysRes();
-            pChildrenParam.setParentId(sysRes.getParentId());
-            if (sysResDao.selectCount(pChildrenParam) == 0){
+            QueryWrapper<SysRes> resQuery = new QueryWrapper<>();
+            resQuery.lambda().eq(SysRes::getParentId,sysRes.getParentId());
+            if (sysResDao.count(resQuery) == 0){
                 SysRes pUpdateParam = new SysRes();
                 pUpdateParam.setId(sysRes.getParentId());
                 pUpdateParam.setIsLeaf(Boolean.TRUE);
-                sysResDao.updateByPrimaryKeySelective(pUpdateParam);
+                sysResDao.updateById(pUpdateParam);
             }
-
-
             log.info("完成 删除资源信息:" + resId);
         } catch (Exception e) {
             throw CommonException.create(ServerResponse.createByError("删除权限失败"));
@@ -146,10 +146,10 @@ public class SysResServiceImpl implements SysResService {
         log.info("进入 获取全部资源树");
         try {
             // 所有的资源列表
-            List<SysRes> sysResList = sysResDao.selectAll();
+            List<SysRes> sysResList = sysResDao.list();
             List<SysResVo> sysResVoList = JSONArray.parseArray(JSON.toJSONString(sysResList),SysResVo.class);
             for (SysResVo sysRes : sysResVoList) {
-                sysRes.setTitle(sysRes.getName() + "[" + SysRes.Type.getDescByCode(sysRes.getType()) + "]");
+                sysRes.setTitle(sysRes.getName() + "[" + UCConstant.Type.getDescByCode(sysRes.getType()) + "]");
                 sysRes.setKey(String.valueOf(sysRes.getId()));
                 sysRes.setPkey(String.valueOf(sysRes.getParentId()));
             }

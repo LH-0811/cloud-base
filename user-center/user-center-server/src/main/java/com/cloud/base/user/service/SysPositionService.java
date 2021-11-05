@@ -2,7 +2,7 @@ package com.cloud.base.user.service;
 
 import com.cloud.base.user.param.SysPositionCreateParam;
 import com.cloud.base.user.param.SysPositionQueryParam;
-import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.repository_plus.entity.SysUser;
 import com.cloud.base.user.vo.SysPositionVo;
 import com.github.pagehelper.PageInfo;
 
