@@ -18,7 +18,8 @@ import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository_plus.dao.*;
-import com.cloud.base.user.repository_plus.dao.custom.DeptUserCustomDao;
+import com.cloud.base.user.repository_plus.dao.mapper.DeptUserCustomDao;
+import com.cloud.base.user.repository_plus.dao.mapper.SysUserMapper;
 import com.cloud.base.user.repository_plus.entity.*;
 import com.cloud.base.user.service.SysUserService;
 import com.cloud.base.user.vo.*;
@@ -47,10 +48,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service("sysUserService")
 public class SysUserServiceImpl implements SysUserService {
-
-
-    @Resource
-    private SysUserDao sysUserDaoPlus;
 
     @Resource
     private SysRoleResRelDao sysRoleResRelDao;
@@ -85,6 +82,9 @@ public class SysUserServiceImpl implements SysUserService {
     @Resource
     private IdWorker idWorker;
 
+    @Resource
+    private SysUserMapper sysUserMapper;
+
 
     /**
      * 获取用户角色列表
@@ -92,7 +92,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public List<SysRole> getUserRoleList(Long userId) throws Exception {
         log.info("开始  获取用户角色列表");
-        SysUser sysUser = sysUserDaoPlus.getById(userId);
+        SysUser sysUser = sysUserDao.getById(userId);
         if (sysUser == null) {
             throw CommonException.create(ServerResponse.createByError("角色列表不存在"));
         }
@@ -268,8 +268,11 @@ public class SysUserServiceImpl implements SysUserService {
         SysUser currentUser = null;
         try {
             QueryWrapper<SysUser> sysUserQueryWrapper = new QueryWrapper<>();
-            sysUserQueryWrapper.lambda().eq(SysUser::getDelFlag, Boolean.FALSE).eq(SysUser::getUsername, username);
-            currentUser = sysUserDao.getOne(sysUserQueryWrapper);
+//            sysUserQueryWrapper.eq("delFlag",Boolean.FALSE);
+//            sysUserQueryWrapper.eq("username",username);
+            LambdaQueryWrapper<SysUser> eq = sysUserQueryWrapper.lambda().eq(SysUser::getDelFlag, Boolean.FALSE).eq(SysUser::getUsername, username);
+            SysUser sysUser = sysUserMapper.selectById(1L);
+            currentUser = sysUserDao.getOne(eq);
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("当前用户不存在"));
         }

@@ -3,6 +3,7 @@ package com.cloud.base.user.expand.logger;
 import com.cloud.base.core.modules.lh_security.client.service.SecurityClient;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.logger.adapter.LhitLoggerUserInfoFromRequestAdapter;
+import com.cloud.base.user.repository_plus.dao.SysUserDao;
 import com.cloud.base.user.repository_plus.entity.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class UserInfoFromRequest implements LhitLoggerUserInfoFromRequestAdapter
         try {
             SecurityAuthority securityAuthority = securityClient.tokenToAuthority();
             if (securityAuthority != null && securityAuthority.getSecurityUser() != null) {
-                SysUser sysUser = sysUserDao.selectByPrimaryKey(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+                SysUser sysUser = sysUserDao.getById(Long.valueOf(securityAuthority.getSecurityUser().getId()));
                 return sysUser;
             }
         } catch (Exception e) {

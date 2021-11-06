@@ -2,6 +2,7 @@ package com.cloud.base.user.repository_plus.dao;
 
 import com.cloud.base.user.repository_plus.entity.SysRes;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 /**
@@ -11,8 +12,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2021-11-05 09:29:02
  */
 public interface SysResDao extends IService<SysRes> {
-    @Repository
-    public interface SysResMapper extends BaseMapper<SysRes> {
 
-    }
 }

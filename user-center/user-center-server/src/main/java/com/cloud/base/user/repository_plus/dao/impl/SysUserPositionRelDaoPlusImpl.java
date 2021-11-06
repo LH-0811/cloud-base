@@ -1,9 +1,9 @@
 package com.cloud.base.user.repository_plus.dao.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cloud.base.user.repository_plus.dao.mapper.SysUserPositionRelMapper;
 import com.cloud.base.user.repository_plus.entity.SysUserPositionRel;
 import com.cloud.base.user.repository_plus.dao.SysUserPositionRelDao;
-import com.cloud.base.user.repository_plus.dao.SysUserPositionRelDaoPlus;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since 2021-11-05 09:29:02
  */
 @Service
-public class SysUserPositionRelDaoPlusImpl extends ServiceImpl<SysUserPositionRelDao.SysUserPositionRelMapper,SysUserPositionRel> implements SysUserPositionRelDaoPlus {
+public class SysUserPositionRelDaoPlusImpl extends ServiceImpl<SysUserPositionRelMapper,SysUserPositionRel> implements SysUserPositionRelDao {
 
 }

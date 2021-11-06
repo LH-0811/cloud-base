@@ -44,7 +44,7 @@ public class SysRes implements Serializable {
     /**
      * 类型：0-菜单组 1-"菜单" 2-"接口" 3-"权限码",4-"静态资源"
      */
-    @ApiModelProperty(value="类型：0-菜单组 1-"菜单" 2-"接口" 3-"权限码",4-"静态资源"")
+    @ApiModelProperty(value="类型：0-菜单组 1-菜单 2-接口 3-权限码,4-静态资源")
     private Integer type;
     /**
      * 权限标识符

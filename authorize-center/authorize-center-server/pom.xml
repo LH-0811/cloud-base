@@ -28,7 +28,7 @@
             <exclusions>
                 <exclusion>
                     <groupId>com.cloud.dependency</groupId>
-                    <artifactId>dependency-mybatis-tk</artifactId>
+                    <artifactId>dependency-mybatis-plus</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

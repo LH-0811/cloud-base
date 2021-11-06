@@ -178,7 +178,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         try {
             QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysRole> lambda = queryWrapper.lambda();
-            lambda.orderByDesc(Lists.newArrayList(SysRole::getSortNum,SysRole::getCreateTime));
+            lambda.orderByDesc(SysRole::getSortNum,SysRole::getCreateTime);
 
             if (StringUtils.isNotEmpty(param.getName())) {
                 lambda.like(SysRole::getName,"%" + param.getName() + "%");
@@ -235,7 +235,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         try {
             QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysRole> lambda = queryWrapper.lambda();
-            lambda.orderByDesc(Lists.newArrayList(SysRole::getSortNum,SysRole::getCreateTime));
+            lambda.orderByDesc(SysRole::getSortNum,SysRole::getCreateTime);
             if (StringUtils.isNotBlank(roleName)) {
                 lambda.eq(SysRole::getName,roleName);
             }

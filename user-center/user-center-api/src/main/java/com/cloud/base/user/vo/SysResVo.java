@@ -1,15 +1,10 @@
 package com.cloud.base.user.vo;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import tk.mybatis.mapper.annotation.KeySql;
 
-import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -85,27 +80,21 @@ public class SysResVo implements Serializable {
 
 
 
-    @Transient
     @ApiModelProperty(value = "子资源列表")
     private List<SysResVo> children;
 
-    @Transient
     @ApiModelProperty(value = "父节点")
     private SysResVo parent;
 
-    @Transient
     @ApiModelProperty(value = "标题")
     private String title;
 
-    @Transient
     @ApiModelProperty(value = "标题")
     private String key;
 
-    @Transient
     @ApiModelProperty(value = "标题")
     private String pkey;
 
-    @Transient
     @ApiModelProperty(value = "是否选中")
     private String checked;
 

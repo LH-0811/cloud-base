@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptUserQueryParam;
-import com.cloud.base.user.repository_plus.dao.custom.DeptUserCustomDao;
+import com.cloud.base.user.repository_plus.dao.mapper.DeptUserCustomDao;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;

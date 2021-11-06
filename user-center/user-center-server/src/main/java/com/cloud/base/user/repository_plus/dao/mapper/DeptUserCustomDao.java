@@ -1,7 +1,9 @@
-package com.cloud.base.user.repository_plus.dao.custom;
+package com.cloud.base.user.repository_plus.dao.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptUserQueryParam;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -14,8 +16,6 @@ import java.util.List;
  * @date 2021/8/7
  */
 public interface DeptUserCustomDao {
-
-
     @Select("<script>" +
             "SELECT\n" +
             "\td.`id` AS deptId,\n" +

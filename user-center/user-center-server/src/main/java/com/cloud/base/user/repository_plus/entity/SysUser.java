@@ -24,7 +24,7 @@ public class SysUser implements Serializable {
     /**
      * 系统管理员用户
      */
-    @TableId(type = IdType.NONE)
+    @TableId(value = "id",type = IdType.NONE)
     @ApiModelProperty(value="系统管理员用户")
     private Long id;
 

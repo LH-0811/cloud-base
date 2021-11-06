@@ -1,9 +1,9 @@
 package com.cloud.base.user.repository_plus.dao.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cloud.base.user.repository_plus.dao.mapper.SysResMapper;
 import com.cloud.base.user.repository_plus.entity.SysRes;
 import com.cloud.base.user.repository_plus.dao.SysResDao;
-import com.cloud.base.user.repository_plus.dao.SysResDaoPlus;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since 2021-11-05 09:29:02
  */
 @Service
-public class SysResDaoPlusImpl extends ServiceImpl<SysResDao.SysResMapper,SysRes> implements SysResDaoPlus {
+public class SysResDaoPlusImpl extends ServiceImpl<SysResMapper,SysRes> implements SysResDao {
 
 }

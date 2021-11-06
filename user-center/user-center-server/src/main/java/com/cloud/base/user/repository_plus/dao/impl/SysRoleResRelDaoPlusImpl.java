@@ -1,9 +1,9 @@
 package com.cloud.base.user.repository_plus.dao.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cloud.base.user.repository_plus.dao.mapper.SysRoleResRelMapper;
 import com.cloud.base.user.repository_plus.entity.SysRoleResRel;
 import com.cloud.base.user.repository_plus.dao.SysRoleResRelDao;
-import com.cloud.base.user.repository_plus.dao.SysRoleResRelDaoPlus;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since 2021-11-05 09:29:02
  */
 @Service
-public class SysRoleResRelDaoPlusImpl extends ServiceImpl<SysRoleResRelDao.SysRoleResRelMapper,SysRoleResRel> implements SysRoleResRelDaoPlus {
+public class SysRoleResRelDaoPlusImpl extends ServiceImpl<SysRoleResRelMapper,SysRoleResRel> implements SysRoleResRelDao {
 
 }
