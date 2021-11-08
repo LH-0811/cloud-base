@@ -1,10 +1,8 @@
 package com.cloud.base.user.repository_plus.dao;
 
-import com.cloud.base.user.repository_plus.entity.SysDict;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.cloud.base.user.repository_plus.entity.SysDict;
+
 /**
  * 系统表-字典表(SysDict)表数据库访问层加强
  *

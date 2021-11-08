@@ -17,6 +17,7 @@
         <module>modules</module>
         <module>authorize-center</module>
         <module>user-center</module>
+        <module>code-generator</module>
     </modules>
 
     <properties>
@@ -44,7 +45,10 @@
         <cloud-security.version>2.2.2.RELEASE</cloud-security.version>
         <servlet-api.version>9.0.38</servlet-api.version>
         <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-lang.version>2.6</commons-lang.version>
         <activiti.version>7.1.0.M6</activiti.version>
+        <velocity.version>1.7</velocity.version>
+        <commons-io.version>2.11.0</commons-io.version>
 
     </properties>
 
@@ -121,6 +125,16 @@
                 <artifactId>commons-collections4</artifactId>
                 <version>${commons-collections4.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
             <!--swagger-ui-->
             <dependency>
                 <groupId>io.springfox</groupId>
@@ -148,6 +162,12 @@
                 <groupId>org.activiti</groupId>
                 <artifactId>activiti-spring-boot-starter</artifactId>
                 <version>${activiti.version}</version>
+            </dependency>
+            <!--模板-->
+            <dependency>
+                <artifactId>velocity</artifactId>
+                <groupId>org.apache.velocity</groupId>
+                <version>${velocity.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
