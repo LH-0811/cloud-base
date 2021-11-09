@@ -135,13 +135,13 @@ management: # 健康检查暴露端点
     web:
       exposure:
         include: "*"
-seata:
-  enabled: true
-  application-id: cloud-example-account
-  tx-service-group: my_test_tx_group
-  service:
-#    vgroup-mapping.my_test_tx_group: default
-    grouplist: { "default": "127.0.0.1:8091" }
+#seata:
+#  enabled: true
+#  application-id: cloud-example-account
+#  tx-service-group: my_test_tx_group
+#  service:
+##    vgroup-mapping.my_test_tx_group: default
+#    grouplist: { "default": "127.0.0.1:8091" }
 logging:
   level:
     com.cloud.base.user.repository_plus.dao:  debug
