@@ -17,10 +17,10 @@ import com.cloud.base.core.modules.lh_security.core.entity.SecurityUser;
 import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
-import com.cloud.base.user.repository_plus.dao.*;
-import com.cloud.base.user.repository_plus.dao.mapper.DeptUserCustomDao;
-import com.cloud.base.user.repository_plus.dao.mapper.SysUserMapper;
-import com.cloud.base.user.repository_plus.entity.*;
+import com.cloud.base.user.repository.dao.*;
+import com.cloud.base.user.repository.dao.mapper.DeptUserCustomDao;
+import com.cloud.base.user.repository.dao.mapper.SysUserMapper;
+import com.cloud.base.user.repository.entity.*;
 import com.cloud.base.user.service.SysUserService;
 import com.cloud.base.user.vo.*;
 import com.github.pagehelper.PageHelper;
@@ -170,15 +170,16 @@ public class SysUserServiceImpl implements SysUserService {
 
             // 所有的资源列表
             List<SysRes> sysResList = sysResDao.listByIds(resIds).stream().filter(ele -> ele.getType().equals(UCConstant.Type.GROUP.getCode()) || ele.getType().equals(UCConstant.Type.MENU.getCode())).collect(Collectors.toList());
-            for (SysRes sysRes : sysResList) {
-                sysRes.setParent(sysResDao.getById(sysRes.getParentId()));
+            List<SysResVo> sysResVoList = JSONArray.parseArray(JSON.toJSONString(sysResList),SysResVo.class);
+            for (SysResVo sysRes : sysResVoList) {
+                sysRes.setParent(JSON.parseObject(JSON.toJSONString(sysResDao.getById(sysRes.getParentId())),SysResVo.class) );
                 sysRes.setTitle(sysRes.getName() + "[" + UCConstant.Type.getDescByCode(sysRes.getType()) + "]");
                 sysRes.setKey(String.valueOf(sysRes.getId()));
                 sysRes.setPkey(String.valueOf(sysRes.getParentId()));
             }
 
             // 资源转menuVo
-            List<MenuVo> menuVoList = sysResList.stream().map(ele -> {
+            List<MenuVo> menuVoList = sysResVoList.stream().map(ele -> {
                 MenuVo menuVo = new MenuVo();
                 menuVo.setId(ele.getId());
                 menuVo.setParentId(ele.getParentId());

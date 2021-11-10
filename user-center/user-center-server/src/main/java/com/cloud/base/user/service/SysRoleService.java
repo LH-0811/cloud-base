@@ -3,9 +3,9 @@ package com.cloud.base.user.service;
 import com.cloud.base.user.param.SysRoleCreateParam;
 import com.cloud.base.user.param.SysRoleQueryParam;
 import com.cloud.base.user.param.SysRoleUpdateParam;
-import com.cloud.base.user.repository_plus.entity.SysRes;
-import com.cloud.base.user.repository_plus.entity.SysRole;
-import com.cloud.base.user.repository_plus.entity.SysUser;
+import com.cloud.base.user.repository.entity.SysRes;
+import com.cloud.base.user.repository.entity.SysRole;
+import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.vo.SysRoleVo;
 import com.github.pagehelper.PageInfo;
 
