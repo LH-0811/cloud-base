@@ -18,10 +18,7 @@
         <module>modules-multi-datasource</module>
         <module>modules-security</module>
         <module>modules-logger</module>
-        <module>modules-zk-distributed-util</module>
-        <module>modules-elasticsearch</module>
         <module>modules-lh-security</module>
-        <module>modules-activiti</module>
     </modules>
 
 </project>
