@@ -1,7 +1,6 @@
-package com.cloud.base.core.modules.rooster.util;
+package com.cloud.base.core.modules.rooster.code.util;
 
 import okhttp3.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -10,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class RoosterWorkOkHttpClientUtil {
+public class RoosterOkHttpClientUtil {
 
     OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)//设置链接超时

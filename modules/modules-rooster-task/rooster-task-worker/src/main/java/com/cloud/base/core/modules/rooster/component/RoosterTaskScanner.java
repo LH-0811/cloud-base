@@ -5,7 +5,7 @@ import com.cloud.base.core.modules.rooster.code.annotation.EnableRooster;
 import com.cloud.base.core.modules.rooster.code.annotation.RoosterTask;
 import com.cloud.base.core.modules.rooster.code.param.RoosterTaskCreateParam;
 import com.cloud.base.core.modules.rooster.properties.RoosterWorkerProperties;
-import com.cloud.base.core.modules.rooster.util.RoosterWorkOkHttpClientUtil;
+import com.cloud.base.core.modules.rooster.code.util.RoosterOkHttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +38,7 @@ public class RoosterTaskScanner implements CommandLineRunner {
     private RoosterWorkerProperties properties;
 
     @Autowired
-    private RoosterWorkOkHttpClientUtil httpClientUtil;
+    private RoosterOkHttpClientUtil httpClientUtil;
 
     @Override
     public void run(String... args) throws Exception {

@@ -11,9 +11,6 @@
 
     <artifactId>rooster-task-manage</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>rooster-task-manage-api</module>
-    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

@@ -23,7 +23,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("task_info")
+@TableName("rooster_task_info")
 public class TaskInfo implements Serializable {
 
 	/**
