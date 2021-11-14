@@ -58,6 +58,8 @@ public class RoosterTaskServiceImpl implements RoosterTaskService {
     @Transactional(rollbackFor = Exception.class)
     public void registerWorker(@Valid RoosterTaskCreateParam param, String workerHost, Integer workerPort) throws Exception {
         log.info("[Rooster-Manage 定时任务worker 注册到manage]RoosterTaskServiceImpl.registerWorker： param={}", JSON.toJSONString(param));
+        // 移除无效工作节点
+        this.removeDieWorkerNode();
         try {
             for (RoosterTaskCreateParam.RoosterTaskForm roosterTaskForm : param.getParamList()) {
                 // 检查taskNo 是否已经存在在数据库中 如果有则不再初始化。
@@ -123,13 +125,8 @@ public class RoosterTaskServiceImpl implements RoosterTaskService {
     public void heartBeatCheckWorker() {
         log.info("[Rooster-Manage Worker心跳检测] date={}", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
 
-        QueryWrapper<TaskWorker> taskWorkerDeleteQueryWrapper = new QueryWrapper<>();
-
-        // 比 当前是时间 减去 最大未反馈时间还要早 则就是废弃的工作节点 直接删除掉
-        taskWorkerDeleteQueryWrapper.lambda()
-                .le(TaskWorker::getLastHeartBeatTime, DateUtils.addSeconds(new Date(), (0 - properties.getDieNoHeartBeatTime())));
-        taskWorkerDao.remove(taskWorkerDeleteQueryWrapper);
-
+        // 移除无效工作节点
+        this.removeDieWorkerNode();
         // 获取到全部的注册节点
         List<TaskWorker> workerList = taskWorkerDao.list();
 
@@ -163,4 +160,17 @@ public class RoosterTaskServiceImpl implements RoosterTaskService {
         }
     }
 
+
+    /**
+     * 移除无效的工作节点
+     */
+    private void removeDieWorkerNode() {
+        QueryWrapper<TaskWorker> taskWorkerDeleteQueryWrapper = new QueryWrapper<>();
+
+        // 比 当前是时间 减去 最大未反馈时间还要早 则就是废弃的工作节点 直接删除掉
+        taskWorkerDeleteQueryWrapper.lambda()
+                .le(TaskWorker::getLastHeartBeatTime, DateUtils.addSeconds(new Date(), (0 - properties.getDieNoHeartBeatTime())));
+        taskWorkerDao.remove(taskWorkerDeleteQueryWrapper);
+    }
 }
+
