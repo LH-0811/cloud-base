@@ -48,28 +48,16 @@ public class Md5Util {
     }
 
     public static void main(String[] args) {
+        String[] strings = {"1", "2"};
+        strings = null;
+        String join = StringUtils.join(strings, "|");
 
-        List<Student> studentList = Lists.newArrayList(
-                new Student(1),
-                new Student(2),
-                new Student(3),
-                new Student(1),
-                new Student(1)
-        );
-
-        Map<Integer, List<Student>> collect = studentList.stream().collect(Collectors.groupingBy(ele -> ele.getClazz()));
-
-        studentList.remove(0);
-
-        System.out.println(studentList.get(2) == collect.get(3).get(0));
-
-        System.out.println("");
-
+        System.out.printf(join);
 
     }
 
 
-//    @Getter
+    //    @Getter
 //    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
@@ -78,7 +66,6 @@ public class Md5Util {
     public static class Student {
         private Integer clazz;
     }
-
 
 
 }

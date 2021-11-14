@@ -16,9 +16,9 @@
 
     <modules>
         <module>modules-multi-datasource</module>
-        <module>modules-security</module>
         <module>modules-logger</module>
         <module>modules-lh-security</module>
+        <module>modules-rooster-task</module>
     </modules>
 
 </project>

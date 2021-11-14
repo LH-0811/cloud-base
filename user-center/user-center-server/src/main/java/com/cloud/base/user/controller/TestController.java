@@ -1,9 +1,16 @@
 package com.cloud.base.user.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.nacos.api.naming.NamingFactory;
+import com.alibaba.nacos.api.naming.NamingService;
+import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.core.modules.rooster.code.annotation.EnableRooster;
+import com.cloud.base.core.modules.rooster.code.annotation.RoosterTask;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptUserQueryParam;
+import com.cloud.base.user.param.SysUserCreateParam;
+import com.cloud.base.user.param.SysUserUpdateParam;
 import com.cloud.base.user.repository.dao.mapper.DeptUserCustomDao;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -14,10 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,36 +36,27 @@ import java.util.List;
 @Api(tags = "用户中心-测试")
 @RestController
 @RequestMapping("/test")
+@EnableRooster
 public class TestController {
 
-    @Autowired
-    private DeptUserCustomDao deptUserCustomDao;
+    @RoosterTask(taskName = "测试任务1", taskNo = "Task0001", corn = "0/5 * * * * ?", enable = true)
+    public void testRoosterTask1(SysUserCreateParam param1) throws Exception {
 
-    @Value("${spring.cloud.sentinel.enabled:false}")
-    private Boolean userSentinel1;
-
-    @Value("${spring.cloud.sentinel.enable11:false}")
-    private Boolean userSentinel2;
-
-    @PostMapping("/query/dept_user")
-    @ApiOperation("测试查询部门用户")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "body", dataType = "SysDeptUserQueryParam", dataTypeClass = SysDeptUserQueryParam.class, name = "param", value = "参数")
-    })
-    public ServerResponse<PageInfo<DeptUserDto>> selectDeptUser(@RequestBody SysDeptUserQueryParam param) throws Exception {
-        log.info("userSentinel:1"+userSentinel1);
-        log.info("userSentinel:2"+userSentinel2);
-        log.info("开始 测试查询部门用户 TestController-selectDeptUser: param="+JSON.toJSONString(param));
-        // 查询
-        PageHelper.startPage(param.getPageNum(), param.getPageSize());
-        List<DeptUserDto> deptUserDtos = deptUserCustomDao.selectDeptUser(param);
-        PageInfo pageInfo = new PageInfo(deptUserDtos);
-        PageHelper.clearPage();
-        // 查询完成
-        log.info("完成 测试查询部门用户 TestController-selectDeptUser");
-        int a = 1/0;
-        return ServerResponse.createBySuccess("查询成功",pageInfo);
     }
+
+    @RoosterTask(taskName = "测试任务2", taskNo = "Task0002", corn = "0/2 * * * * ?", enable = true)
+    public void testRoosterTask2(SysUserCreateParam param1, SysUserUpdateParam param2) throws Exception {
+
+    }
+
+    @GetMapping("/test1")
+    public String test() throws Exception {
+        NamingService naming = NamingFactory.createNamingService("127.0.0.1:8848");
+        List<Instance> allInstances = naming.getAllInstances("user-center-server");
+        System.out.println(naming.getAllInstances("user-center-server"));
+        return "success";
+    }
+
 
 }
 
