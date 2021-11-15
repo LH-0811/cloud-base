@@ -17,7 +17,7 @@ import org.springframework.scheduling.support.CronTrigger;
 @Slf4j
 @EnableScheduling
 @Configuration
-public class SchedulerConfig implements SchedulingConfigurer {
+public class HeartBeatSchedulerConfig implements SchedulingConfigurer {
 
     @Autowired
     private RoosterServerProperties properties;
@@ -35,7 +35,7 @@ public class SchedulerConfig implements SchedulingConfigurer {
                 },
                 //2.设置执行周期(Trigger)
                 triggerContext -> {
-                    // 返回执行周期(Date) 每天上午4点触发一次
+                    // 返回执行周期(Date)
                     return new CronTrigger(properties.getHeartBeatCorn()).nextExecutionTime(triggerContext);
                 }
         );
