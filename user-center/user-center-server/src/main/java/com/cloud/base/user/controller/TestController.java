@@ -1,26 +1,14 @@
 package com.cloud.base.user.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.naming.NamingFactory;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
-import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.rooster.code.annotation.EnableRooster;
-import com.cloud.base.core.modules.rooster.code.annotation.RoosterTask;
-import com.cloud.base.user.dto.DeptUserDto;
-import com.cloud.base.user.param.SysDeptUserQueryParam;
+import com.cloud.base.core.modules.youji.code.annotation.EnableYouJi;
+import com.cloud.base.core.modules.youji.code.annotation.YouJiTask;
 import com.cloud.base.user.param.SysUserCreateParam;
 import com.cloud.base.user.param.SysUserUpdateParam;
-import com.cloud.base.user.repository.dao.mapper.DeptUserCustomDao;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,15 +24,15 @@ import java.util.List;
 @Api(tags = "用户中心-测试")
 @RestController
 @RequestMapping("/test")
-@EnableRooster
+@EnableYouJi
 public class TestController {
 
-    @RoosterTask(taskName = "测试任务1", taskNo = "Task0001", corn = "0/5 * * * * ?", enable = true)
+    @YouJiTask(taskName = "测试任务1", taskNo = "Task0001", corn = "0/5 * * * * ?", enable = true)
     public void testRoosterTask1(SysUserCreateParam param1) throws Exception {
 
     }
 
-    @RoosterTask(taskName = "测试任务2", taskNo = "Task0002", corn = "0/2 * * * * ?", enable = true)
+    @YouJiTask(taskName = "测试任务2", taskNo = "Task0002", corn = "0/2 * * * * ?", enable = true)
     public void testRoosterTask2(SysUserCreateParam param1, SysUserUpdateParam param2) throws Exception {
 
     }
