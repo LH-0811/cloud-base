@@ -3,14 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>modules-rooster-task</artifactId>
+        <artifactId>modules-youji-task</artifactId>
         <groupId>com.cloud.modules</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>rooster-task-manage</artifactId>
-    <packaging>pom</packaging>
+    <groupId>com.cloud.modules</groupId>
+    <artifactId>youji-task-worker</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -21,7 +21,7 @@
         <!-- 核心模块 -->
         <dependency>
             <groupId>com.cloud.modules</groupId>
-            <artifactId>rooster-task-code</artifactId>
+            <artifactId>youji-task-code</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

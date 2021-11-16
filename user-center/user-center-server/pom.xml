@@ -57,12 +57,12 @@
         <!-- 引入定时任务 酉鸡 -->
         <dependency>
             <groupId>com.cloud.modules</groupId>
-            <artifactId>rooster-task-worker</artifactId>
+            <artifactId>youji-task-worker</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.cloud.modules</groupId>
-            <artifactId>rooster-task-manage</artifactId>
+            <artifactId>youji-task-manage</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

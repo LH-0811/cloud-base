@@ -18,7 +18,7 @@
         <module>modules-multi-datasource</module>
         <module>modules-logger</module>
         <module>modules-lh-security</module>
-        <module>modules-rooster-task</module>
+        <module>modules-youji-task</module>
     </modules>
 
 </project>

@@ -10,14 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cloud.modules</groupId>
-    <artifactId>modules-rooster-task</artifactId>
+    <artifactId>modules-youji-task</artifactId>
     <packaging>pom</packaging>
 
 
     <modules>
-        <module>rooster-task-worker</module>
-        <module>rooster-task-manage</module>
-        <module>rooster-task-code</module>
+        <module>youji-task-worker</module>
+        <module>youji-task-manage</module>
+        <module>youji-task-code</module>
     </modules>
 
     <description>
