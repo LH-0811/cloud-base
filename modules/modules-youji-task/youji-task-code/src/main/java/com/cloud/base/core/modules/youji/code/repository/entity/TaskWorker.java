@@ -71,9 +71,27 @@ public class TaskWorker implements Serializable {
 
 
 	/**
+	 * 心跳失败累计数(成功-1，失败+1 到0为止)
+	 */
+	@ApiModelProperty(value = "心跳失败累计数(成功-1，失败+1 到0为止)")
+	private Integer beatFailNum;
+
+	/**
 	 * 最后一次心跳时间
 	 */
 	@ApiModelProperty(value="最后一次心跳时间")
 	private Date lastHeartBeatTime;
 
+
+	/**
+	 * 执行任务的次数
+	 */
+	@ApiModelProperty(value="执行任务的次数")
+	private Integer execTaskNum  ;//      int        default 0 not null comment '执行任务的次数',
+
+	/**
+	 * 最后一次执行任务的时间
+	 */
+	@ApiModelProperty(value="最后一次执行任务的时间")
+	private Date lastExecTime ;//      int                  null comment '最后一次执行任务的时间'
 }

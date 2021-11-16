@@ -27,24 +27,23 @@ import java.util.List;
 @EnableYouJi
 public class TestController {
 
-    @YouJiTask(taskName = "测试任务1", taskNo = "Task0001", corn = "0/5 * * * * ?", enable = true)
-    public void testRoosterTask1(SysUserCreateParam param1) throws Exception {
-
+    @YouJiTask(taskName = "测试任务1",
+            taskNo = "Task0001",
+            corn = "0/5 * * * * ?",
+            param = "name=123",
+            enable = true)
+    public void testRoosterTask1(String param) throws Exception {
+        log.info("[酉鸡 Worker Task1]  !!!!!! 参数:{}", param);
     }
 
-    @YouJiTask(taskName = "测试任务2", taskNo = "Task0002", corn = "0/2 * * * * ?", enable = true)
-    public void testRoosterTask2(SysUserCreateParam param1, SysUserUpdateParam param2) throws Exception {
-
+    @YouJiTask(taskName = "测试任务2",
+            taskNo = "Task0002",
+            corn = "0/2 * * * * ?",
+            param = "test-param",
+            enable = true)
+    public void testRoosterTask2(String param) throws Exception {
+        log.info("[酉鸡 Worker Task2]  !!!!!! 参数:{}", param);
     }
-
-    @GetMapping("/test1")
-    public String test() throws Exception {
-        NamingService naming = NamingFactory.createNamingService("127.0.0.1:8848");
-        List<Instance> allInstances = naming.getAllInstances("user-center-server");
-        System.out.println(naming.getAllInstances("user-center-server"));
-        return "success";
-    }
-
 
 }
 

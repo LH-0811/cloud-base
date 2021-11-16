@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskCreateParam;
+import com.cloud.base.core.modules.youji.code.param.YouJiWorkerRegisterTaskParam;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskInfoDao;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskWorkerDao;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
@@ -16,10 +16,10 @@ import com.cloud.base.core.modules.youji.service.YouJiTaskService;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -56,12 +56,12 @@ public class YouJiTaskServiceImpl implements YouJiTaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void registerWorker(@Valid YouJiTaskCreateParam param, String workerHost, Integer workerPort) throws Exception {
+    public void registerWorker(@Valid YouJiWorkerRegisterTaskParam param, String workerHost, Integer workerPort) throws Exception {
         log.info("[Rooster-Manage 定时任务worker 注册到manage]RoosterTaskServiceImpl.registerWorker： param={}", JSON.toJSONString(param));
         // 移除无效工作节点
         this.removeDieWorkerNode();
         try {
-            for (YouJiTaskCreateParam.RoosterTaskForm roosterTaskForm : param.getParamList()) {
+            for (YouJiWorkerRegisterTaskParam.RoosterTaskForm roosterTaskForm : param.getParamList()) {
                 // 检查taskNo 是否已经存在在数据库中 如果有则不再初始化。
                 QueryWrapper<TaskInfo> taskInfoQueryWrapper = new QueryWrapper<>();
                 taskInfoQueryWrapper.lambda().eq(TaskInfo::getTaskNo, roosterTaskForm.getTaskNo());
@@ -114,22 +114,19 @@ public class YouJiTaskServiceImpl implements YouJiTaskService {
         }
     }
 
-
-    @Override
     /**
      * 客户端心跳检测
      *
      * @throws Exception
      */
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void heartBeatCheckWorker() {
         log.info("[Rooster-Manage Worker心跳检测] date={}", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-
         // 移除无效工作节点
         this.removeDieWorkerNode();
         // 获取到全部的注册节点
         List<TaskWorker> workerList = taskWorkerDao.list();
-
         for (TaskWorker taskWorker : workerList) {
             // 向该节点发送心跳请求，成功更新LastHeartBeatTime 失败不做修改
             String reqUrl = "http://" + taskWorker.getWorkerIp() + ":" + taskWorker.getWorkerPort() + "/rooster/task/worker/heart_beat";
@@ -143,7 +140,13 @@ public class YouJiTaskServiceImpl implements YouJiTaskService {
                             TaskWorker updateHeartBeat = new TaskWorker();
                             updateHeartBeat.setId(taskWorker.getId());
                             updateHeartBeat.setLastHeartBeatTime(new Date());
+                            updateHeartBeat.setOnlineFlag(Boolean.TRUE);
+                            if (taskWorker.getBeatFailNum() > 0) {
+                                // 成功后失败 次数 -1
+                                updateHeartBeat.setBeatFailNum(taskWorker.getBeatFailNum() - 1);
+                            }
                             taskWorkerDao.updateById(updateHeartBeat);
+                            continue;
                         } else {
                             log.info("[Rooster-Manage Worker心跳检测] Worker节点返回响应状态 非正常状态: serverResponse.status={}", serverResponse.getStatus());
                         }
@@ -156,8 +159,53 @@ public class YouJiTaskServiceImpl implements YouJiTaskService {
             } catch (Exception e) {
                 log.info("[Rooster-Manage Worker心跳检测] Worker节点 {}:{} 心跳请求失败:{}", taskWorker.getWorkerIp(), taskWorker.getWorkerPort(), e);
             }
-
+            // 如果心跳失败 则 失败次数+1
+            TaskWorker updateHeartBeat = new TaskWorker();
+            updateHeartBeat.setId(taskWorker.getId());
+            updateHeartBeat.setOnlineFlag(Boolean.FALSE);
+            if (taskWorker.getBeatFailNum() > 0) {
+                // 失败 次数 +1
+                updateHeartBeat.setBeatFailNum(taskWorker.getBeatFailNum() + 1);
+            }
+            taskWorkerDao.updateById(updateHeartBeat);
         }
+    }
+
+
+    /**
+     * 获取到全部（可用）定时任务
+     *
+     * @return
+     */
+    @Override
+    public List<TaskInfo> getAllEnableTaskInfo() {
+        log.info("[Rooster-Manage 获取到全部定时任务] date={}", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        QueryWrapper<TaskInfo> taskInfoQueryWrapper = new QueryWrapper<>();
+        taskInfoQueryWrapper.lambda()
+                .eq(TaskInfo::getEnableFlag, Boolean.TRUE);
+        // 获取到全部的可用任务列表
+        return taskInfoDao.list(taskInfoQueryWrapper);
+    }
+
+    @Override
+    public TaskWorker getSingleNode(TaskInfo taskInfo) {
+        log.info("[Rooster-Manage 挑选一个工作节点] date={}", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        QueryWrapper<TaskWorker> taskWorkerQueryWrapper = new QueryWrapper<>();
+
+        // todo 暂时先拿执行次数最少的在线可用
+        taskWorkerQueryWrapper.lambda()
+                .eq(TaskWorker::getTaskId, taskInfo.getId())
+                .eq(TaskWorker::getTaskNo, taskInfo.getTaskNo())
+                .eq(TaskWorker::getExecTaskNum, 0)
+                .eq(TaskWorker::getEnableFlag, Boolean.TRUE)
+                .eq(TaskWorker::getOnlineFlag, Boolean.TRUE)
+                .orderByAsc(TaskWorker::getExecTaskNum);
+
+        List<TaskWorker> taskWorkerList = taskWorkerDao.list(taskWorkerQueryWrapper);
+        if (CollectionUtils.isEmpty(taskWorkerList)) {
+            return null;
+        }
+        return taskWorkerList.get(0);
     }
 
 
@@ -166,10 +214,9 @@ public class YouJiTaskServiceImpl implements YouJiTaskService {
      */
     private void removeDieWorkerNode() {
         QueryWrapper<TaskWorker> taskWorkerDeleteQueryWrapper = new QueryWrapper<>();
-
-        // 比 当前是时间 减去 最大未反馈时间还要早 则就是废弃的工作节点 直接删除掉
+        // 去掉10次 和10次以上的 心跳无响应的客户端
         taskWorkerDeleteQueryWrapper.lambda()
-                .le(TaskWorker::getLastHeartBeatTime, DateUtils.addSeconds(new Date(), (0 - properties.getDieNoHeartBeatTime())));
+                .ge(TaskWorker::getBeatFailNum, properties.getDieNoHeartNum());
         taskWorkerDao.remove(taskWorkerDeleteQueryWrapper);
     }
 }

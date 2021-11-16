@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Valid
-public class YouJiTaskCreateParam {
+public class YouJiWorkerRegisterTaskParam {
 
 
     @NotEmpty(message = "创建参数列表不能为空")
@@ -73,11 +73,13 @@ public class YouJiTaskCreateParam {
          */
         @ApiModelProperty(value="应用上下文中对应的方法名，或者url的请求类型")
         private String taskMethod;
+
         /**
-         * 执行参数(JSON格式 多个入参用|分隔,保证入参的顺序与方法一致)
+         * 执行 只支持字符串类型参数
          */
-        @ApiModelProperty(value="执行参数(JSON格式 多个入参用|分隔,保证入参的顺序与方法一致)")
+        @ApiModelProperty(value="执行参数(只支持字符串类型参数)")
         private String taskParam;
+
         /**
          * 联系人
          */

@@ -1,7 +1,5 @@
 package com.cloud.base.core.modules.youji.code.annotation;
 
-import io.swagger.annotations.ApiModelProperty;
-
 import java.lang.annotation.*;
 
 /**

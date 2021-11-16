@@ -50,14 +50,13 @@ public @interface YouJiTask {
     @ApiModelProperty(value = "是否可用")
     boolean enable();
 
-
     /**
-     * 参数列表，json字符串参数，多个入参时，保证与方法入参顺序一致
+     * 参数 只支持字符串类型
      *
      * @return
      */
-    @ApiModelProperty(value = "参数列表，json字符串参数，多个入参时，保证与方法入参顺序一致")
-    String[] params() default {};
+    @ApiModelProperty(value = "参数: 只支持字符串类型")
+    String param() default "";
 
 
     /**

@@ -22,6 +22,6 @@ public class YouJiServerProperties {
      * 如果定义了 5秒一次的心跳检测，超过50秒没有反馈则就是10次心跳没有反馈认为工作节点废弃，从rooster_task_worker表中删除
      */
     @ApiModelProperty(value = "超过N秒没有心跳反馈后认为该工作节点已废弃，从记录表中删除掉")
-    private Integer dieNoHeartBeatTime = 99999999;
+    private Integer dieNoHeartNum = 10;
 
 }
