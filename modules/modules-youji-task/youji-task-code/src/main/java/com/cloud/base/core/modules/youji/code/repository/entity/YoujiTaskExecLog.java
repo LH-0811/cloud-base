@@ -33,11 +33,6 @@ public class YoujiTaskExecLog implements Serializable {
 	@ApiModelProperty(value="主键id")
 	private Long id;
 	/**
-	 * 任务id
-	 */
-	@ApiModelProperty(value="任务id")
-	private Long taskId;
-	/**
 	 * 工作节点id
 	 */
 	@ApiModelProperty(value="工作节点id")
