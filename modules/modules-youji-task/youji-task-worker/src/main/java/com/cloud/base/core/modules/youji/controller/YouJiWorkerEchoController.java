@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @Api(tags = "酉鸡-任务管理接口")
-@RequestMapping("/rooster/task/worker")
+@RequestMapping("/youji/task/worker")
 @RestController
 public class YouJiWorkerEchoController {
 
     @GetMapping("/heart_beat")
     @ApiOperation("酉鸡 工作节点的echo心跳检测接口")
     public ServerResponse registerWorker() throws Exception {
-        return ServerResponse.createBySuccess("Rooster-Worker is ready to GO!");
+        return ServerResponse.createBySuccess("YouJi-Worker is ready to GO!");
     }
 
 }

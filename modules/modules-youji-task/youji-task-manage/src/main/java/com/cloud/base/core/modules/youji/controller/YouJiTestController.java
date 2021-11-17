@@ -22,7 +22,7 @@ import java.util.concurrent.ScheduledFuture;
  */
 @Slf4j
 @Api(tags = "酉鸡-任务管理接口")
-@RequestMapping("/rooster/task/test")
+@RequestMapping("/youji/task/test")
 @RestController
 public class YouJiTestController {
 

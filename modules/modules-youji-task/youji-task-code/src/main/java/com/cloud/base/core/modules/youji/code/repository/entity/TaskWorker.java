@@ -23,7 +23,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("rooster_task_worker")
+@TableName("youji_task_worker")
 public class TaskWorker implements Serializable {
 
 	/**

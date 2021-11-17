@@ -1,7 +1,7 @@
 package com.cloud.base.core.modules.youji.config;
 
 import com.cloud.base.core.modules.youji.properties.YouJiServerProperties;
-import com.cloud.base.core.modules.youji.service.YouJiTaskService;
+import com.cloud.base.core.modules.youji.service.YouJiManageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ public class YouJiHeartBeatSchedulerConfig implements SchedulingConfigurer {
     private YouJiServerProperties properties;
 
     @Autowired
-    private YouJiTaskService youJiTaskService;
+    private YouJiManageService youJiManageService;
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
@@ -31,7 +31,7 @@ public class YouJiHeartBeatSchedulerConfig implements SchedulingConfigurer {
                 //1.添加任务内容(Runnable)
                 () -> {
                     // 心跳检测
-                    youJiTaskService.heartBeatCheckWorker();
+                    youJiManageService.heartBeatCheckWorker();
                 },
                 //2.设置执行周期(Trigger)
                 triggerContext -> {

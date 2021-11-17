@@ -32,7 +32,7 @@ public class TestController {
             corn = "0/5 * * * * ?",
             param = "name=123",
             enable = true)
-    public void testRoosterTask1(String param) throws Exception {
+    public void testYouJiTask1(String param) throws Exception {
         log.info("[酉鸡 Worker Task1]  !!!!!! 参数:{}", param);
     }
 
@@ -41,7 +41,7 @@ public class TestController {
             corn = "0/2 * * * * ?",
             param = "test-param",
             enable = true)
-    public void testRoosterTask2(String param) throws Exception {
+    public void testYouJiTask2(String param) throws Exception {
         log.info("[酉鸡 Worker Task2]  !!!!!! 参数:{}", param);
     }
 

@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -17,6 +18,14 @@ import java.util.List;
 @Setter
 @Valid
 public class YouJiWorkerReceiveTaskParam {
+
+
+    /**
+     * 任务编号
+     */
+    @NotNull(message = "工作节点id不能为空")
+    @ApiModelProperty(value = "工作节点id", required = true)
+    private Long workerId;
 
     /**
      * 任务编号

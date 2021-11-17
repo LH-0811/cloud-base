@@ -21,12 +21,12 @@ public class YouJiWorkerRegisterTaskParam {
 
     @NotEmpty(message = "创建参数列表不能为空")
     @ApiModelProperty(value = "创建任务参数列表")
-    private List<RoosterTaskForm> paramList;
+    private List<YouJiTaskForm> paramList;
 
     @Getter
     @Setter
     @Valid
-    public static class RoosterTaskForm{
+    public static class YouJiTaskForm{
         /**
          * （1-通过URL触发 2-遍历容器中的bean触发）
          */

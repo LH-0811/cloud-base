@@ -11,7 +11,7 @@ import java.util.List;
  * @author lh0811
  * @date 2021/11/14
  */
-public interface YouJiTaskService {
+public interface YouJiManageService {
 
 
     /**
