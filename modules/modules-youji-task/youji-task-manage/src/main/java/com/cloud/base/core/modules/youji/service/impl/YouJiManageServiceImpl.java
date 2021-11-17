@@ -196,7 +196,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         taskWorkerQueryWrapper.lambda()
                 .eq(TaskWorker::getTaskId, taskInfo.getId())
                 .eq(TaskWorker::getTaskNo, taskInfo.getTaskNo())
-                .eq(TaskWorker::getExecTaskNum, 0)
+                .eq(TaskWorker::getBeatFailNum, 0)
                 .eq(TaskWorker::getEnableFlag, Boolean.TRUE)
                 .eq(TaskWorker::getOnlineFlag, Boolean.TRUE)
                 .orderByAsc(TaskWorker::getExecTaskNum);
