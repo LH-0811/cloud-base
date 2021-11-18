@@ -93,6 +93,11 @@ public class YoujiTaskExecLog implements Serializable {
 	@ApiModelProperty(value="是否执行完成")
 	private Boolean finishFlag;
 	/**
+	 * 执行结果信息
+	 */
+	@ApiModelProperty(value="执行结果信息")
+	private String resultMsg;
+	/**
 	 * 创建时间
 	 */
 	@ApiModelProperty(value="创建时间")

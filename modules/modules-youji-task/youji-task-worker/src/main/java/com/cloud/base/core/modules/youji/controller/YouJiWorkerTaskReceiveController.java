@@ -32,28 +32,32 @@ public class YouJiWorkerTaskReceiveController {
     @ApiOperation("酉鸡 工作节点接收任务接口")
     public ServerResponse receiveWorker(@Valid @RequestBody YouJiWorkerReceiveTaskParam param) throws Exception {
         log.info("[酉鸡 Worker 接收到执行任务] param={}", JSON.toJSONString(param));
-        ServerResponse serverResponse = null;
-        Object bean = applicationContext.getBean(Class.forName(param.getTaskBeanName()));
-        Method method = null;
-        if (StringUtils.isBlank(param.getTaskParam())) {
-            method = bean.getClass().getMethod(param.getTaskMethod());
-        } else {
-            method = bean.getClass().getMethod(param.getTaskMethod(), String.class);
+        try {
+            ServerResponse serverResponse = null;
+            Object bean = applicationContext.getBean(Class.forName(param.getTaskBeanName()));
+            Method method = null;
+            if (StringUtils.isBlank(param.getTaskParam())) {
+                method = bean.getClass().getMethod(param.getTaskMethod());
+            } else {
+                method = bean.getClass().getMethod(param.getTaskMethod(), String.class);
+            }
+            if (method == null) {
+                serverResponse = ServerResponse.createByError("工作节点定时任务不存在: " + param.getTaskBeanName() + "." + param.getTaskMethod() + " hasParam=" + org.apache.commons.lang3.StringUtils.isNotBlank(param.getTaskParam()));
+            } else {
+                Object invoke = method.invoke(bean, param.getTaskParam());
+                if (invoke instanceof ServerResponse) {
+                    serverResponse = (ServerResponse) invoke;
+                } else {
+                    serverResponse = ServerResponse.createBySuccess("执行成功");
+                }
+            }
+            // 工作节点完成工作后 增加日志
+            youJiWorkerService.finishTask(param, serverResponse);
+            return serverResponse;
+        } catch (Exception e) {
+            return ServerResponse.createByError("定时任务执行失败:"+e.getLocalizedMessage());
         }
 
-        if (method == null) {
-            serverResponse = ServerResponse.createByError("工作节点定时任务不存在: " + param.getTaskBeanName() + "." + param.getTaskMethod() + " hasParam=" + org.apache.commons.lang3.StringUtils.isNotBlank(param.getTaskParam()));
-        }else {
-            Object invoke = method.invoke(bean, param.getTaskParam());
-            if (invoke instanceof ServerResponse) {
-                serverResponse = (ServerResponse) invoke;
-            }else {
-                serverResponse = ServerResponse.createBySuccess("执行成功");
-            }
-        }
-        // 工作节点完成工作后 增加日志
-        youJiWorkerService.finishTask(param,serverResponse);
-        return serverResponse;
     }
 
 }

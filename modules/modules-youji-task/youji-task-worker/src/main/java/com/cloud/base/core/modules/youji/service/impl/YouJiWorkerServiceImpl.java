@@ -66,6 +66,7 @@ public class YouJiWorkerServiceImpl implements YouJiWorkerService {
         execLog.setContactsPhone(param.getContactsPhone());
         execLog.setContactsEmail(param.getContactsEmail());
         execLog.setFinishFlag(serverResponse.isSuccess());
+        execLog.setResultMsg(serverResponse.getMsg());
         execLog.setCreateTime(new Date());
         execLog.setUpdateTime(new Date());
         youjiTaskExecLogDao.save(execLog);

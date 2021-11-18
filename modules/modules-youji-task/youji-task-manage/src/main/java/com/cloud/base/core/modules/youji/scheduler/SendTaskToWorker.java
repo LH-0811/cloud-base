@@ -35,7 +35,7 @@ public class SendTaskToWorker implements Runnable {
         // 找到目标客户端端
         if (YouJiConstant.ExecType.SINGLE_NODE.getCode().equals(taskInfo.getExecType())) {
             log.info("[酉鸡 Manage向Worker 发起任务] taskNo:{} 对应的执行类型:{} 进入单节点执行发布流程", taskInfo.getTaskNo(), taskInfo.getExecType());
-            // todo 获取到最优的工作节点 (算法待优化 先拿执行次数最少的节点)
+            // todo liuhe 获取到最优的工作节点 (算法待优化 先拿执行次数最少的节点)
             TaskWorker taskWorker = youJiManageService.getSingleNode(taskInfo);
             // 向该节点发送执行请求
             try {
