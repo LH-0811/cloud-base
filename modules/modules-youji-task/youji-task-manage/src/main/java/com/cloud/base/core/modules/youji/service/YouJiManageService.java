@@ -42,4 +42,12 @@ public interface YouJiManageService {
      * @return
      */
     TaskWorker getSingleNode(TaskInfo taskInfo);
+
+    /**
+     * 获取到全部的工作节点
+     *
+     * @param taskInfo
+     * @return
+     */
+    List<TaskWorker> getAllNode(TaskInfo taskInfo);
 }

@@ -208,6 +208,20 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         return taskWorkerList.get(0);
     }
 
+    @Override
+    public List<TaskWorker> getAllNode(TaskInfo taskInfo) {
+        log.info("[YouJi-Manage 获取全部可用的工作节点] date={}", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        QueryWrapper<TaskWorker> taskWorkerQueryWrapper = new QueryWrapper<>();
+        taskWorkerQueryWrapper.lambda()
+                .eq(TaskWorker::getTaskId, taskInfo.getId())
+                .eq(TaskWorker::getTaskNo, taskInfo.getTaskNo())
+                .eq(TaskWorker::getBeatFailNum, 0)
+                .eq(TaskWorker::getEnableFlag, Boolean.TRUE)
+                .eq(TaskWorker::getOnlineFlag, Boolean.TRUE)
+                .orderByAsc(TaskWorker::getExecTaskNum);
+        return taskWorkerDao.list(taskWorkerQueryWrapper);
+    }
+
 
     /**
      * 移除无效的工作节点

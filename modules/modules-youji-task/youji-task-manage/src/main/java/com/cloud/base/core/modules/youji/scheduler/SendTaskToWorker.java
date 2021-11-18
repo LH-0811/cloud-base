@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 public class SendTaskToWorker implements Runnable {
@@ -45,7 +46,15 @@ public class SendTaskToWorker implements Runnable {
                 log.info("[酉鸡 Manage向Worker 发起任务]  taskNo:{} Worker节点：{}:{} 失败:{}", taskInfo.getTaskNo(), taskWorker.getWorkerIp(), taskWorker.getWorkerPort(), e);
             }
         } else if (YouJiConstant.ExecType.ALL_NODE.getCode().equals(taskInfo.getExecType())) {
-
+            List<TaskWorker> allNode = youJiManageService.getAllNode(taskInfo);
+            for (TaskWorker taskWorker : allNode) {
+                try {
+                    receiveTaskParam.setWorkerId(taskWorker.getId());
+                    httpClientUtil.postJSONParameters("http://" + taskWorker.getWorkerIp() + ":" + taskWorker.getWorkerPort() + "/youji/task/worker/receive", JSON.toJSONString(receiveTaskParam));
+                } catch (IOException e) {
+                    log.info("[酉鸡 Manage向Worker 发起任务]  taskNo:{} Worker节点：{}:{} 失败:{}", taskInfo.getTaskNo(), taskWorker.getWorkerIp(), taskWorker.getWorkerPort(), e);
+                }
+            }
         } else {
             log.info("[酉鸡 Manage向Worker 发起任务] taskNo:{} 对应的执行类型不合法:{}", taskInfo.getTaskNo(), taskInfo.getExecType());
         }
