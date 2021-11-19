@@ -334,20 +334,22 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         updateInfo.setCorn(param.getCron());
         updateInfo.setUpdateTime(new Date());
         taskInfoDao.updateById(updateInfo);
-        taskInfo.setCorn(param.getCron());
 
-        // 更新定时任务执行计划
-        HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskInit.getSchedulerEntityHashMap();
-        // 获取原任务的执行计划
-        YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
-        // 取消定时任务 如果执行中是否中断
-        schedulerEntity.getFuture().cancel(true);
-        // 覆盖原定时任务执行计划
-        schedulerEntity.setTaskNo(taskInfo.getTaskNo());
-        schedulerEntity.setTaskInfo(taskInfo);
-        ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo, this, httpClientUtil), new CronTrigger(taskInfo.getCorn()));
-        schedulerEntity.setFuture(schedule);
-
+        // 如果该任务是可用状态 需要直接停用启动
+        if (taskInfo.getEnableFlag()) {
+            taskInfo.setCorn(param.getCron());
+            // 更新定时任务执行计划
+            HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskInit.getSchedulerEntityHashMap();
+            // 获取原任务的执行计划
+            YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
+            // 取消定时任务 如果执行中是否中断
+            schedulerEntity.getFuture().cancel(true);
+            // 覆盖原定时任务执行计划
+            schedulerEntity.setTaskNo(taskInfo.getTaskNo());
+            schedulerEntity.setTaskInfo(taskInfo);
+            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo, this, httpClientUtil), new CronTrigger(taskInfo.getCorn()));
+            schedulerEntity.setFuture(schedule);
+        }
     }
 
 
@@ -387,7 +389,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             schedulerEntity.setTaskInfo(taskInfo);
             ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo, this, httpClientUtil), new CronTrigger(taskInfo.getCorn()));
             schedulerEntity.setFuture(schedule);
-        }else {
+        } else {
             // 停止定时任务
 
             // 更新定时任务执行计划
