@@ -67,11 +67,6 @@ public class YouJiTaskInfoQueryParam implements Serializable {
 	@ApiModelProperty(value="联系人邮箱")
 	private String contactsEmail;
 
-	/**
-	 * 是否可用
-	 */
-	@ApiModelProperty(value="是否可用")
-	private Boolean enableFlag;
 
 	@ApiModelProperty(value = "页码")
 	private Integer pageNum = CommonEntity.pageNum;
