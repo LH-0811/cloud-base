@@ -26,7 +26,7 @@ import javax.validation.Valid;
 @Api(tags = "酉鸡-任务管理接口")
 @RequestMapping("/youji/task/manage")
 @RestController
-public class YouJiManagerController {
+public class YouJiRegisterManageController {
 
     @Autowired
     private YouJiManageService youJiManageService;
@@ -42,4 +42,6 @@ public class YouJiManagerController {
         youJiManageService.registerWorker(param,request.getLocalAddr(),request.getLocalPort());
         return ServerResponse.createBySuccess("成功");
     }
+
+
 }

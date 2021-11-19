@@ -1,8 +1,12 @@
 package com.cloud.base.core.modules.youji.service;
 
+import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoBaseInfoUpdateParam;
+import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoCronUpdateParam;
+import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoQueryParam;
 import com.cloud.base.core.modules.youji.code.param.YouJiWorkerRegisterTaskParam;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskWorker;
+import com.github.pagehelper.PageInfo;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -50,4 +54,28 @@ public interface YouJiManageService {
      * @return
      */
     List<TaskWorker> getAllNode(TaskInfo taskInfo);
+
+
+    /**
+     * 查询定时任务列表
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    PageInfo<TaskInfo> queryTask(YouJiTaskInfoQueryParam param) throws Exception;
+
+    /**
+     * @param param
+     * @throws Exception
+     */
+    void updateTask(YouJiTaskInfoBaseInfoUpdateParam param) throws Exception;
+
+    /**
+     * 更新定时任务执行计划
+     *
+     * @param param
+     * @throws Exception
+     */
+    void changeCron(YouJiTaskInfoCronUpdateParam param) throws Exception;
 }
