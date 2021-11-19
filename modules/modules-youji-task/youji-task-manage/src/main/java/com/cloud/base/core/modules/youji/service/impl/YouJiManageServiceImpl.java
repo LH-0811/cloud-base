@@ -137,7 +137,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void heartBeatCheckWorker() {
-        log.info("[YouJi-Manage Worker心跳检测] date={}", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        log.debug("[YouJi-Manage Worker心跳检测] date={}", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
         // 移除无效工作节点
         this.removeDieWorkerNode();
         // 获取到全部的注册节点
