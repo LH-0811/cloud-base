@@ -1,11 +1,13 @@
 package com.cloud.base.core.modules.youji.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.modules.youji.code.param.YouJiWorkerReceiveTaskParam;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskInfoDao;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskWorkerDao;
 import com.cloud.base.core.modules.youji.code.repository.dao.YoujiTaskExecLogDao;
+import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskWorker;
 import com.cloud.base.core.modules.youji.code.repository.entity.YoujiTaskExecLog;
 import com.cloud.base.core.modules.youji.controller.YouJiWorkerEchoController;
@@ -50,7 +52,6 @@ public class YouJiWorkerServiceImpl implements YouJiWorkerService {
      */
     @Override
     public void finishTask(YouJiWorkerReceiveTaskParam param, ServerResponse serverResponse) throws Exception {
-
         // 1. 记录任务执行日志
         YoujiTaskExecLog execLog = new YoujiTaskExecLog();
         execLog.setId(idWorker.nextId());
@@ -77,7 +78,17 @@ public class YouJiWorkerServiceImpl implements YouJiWorkerService {
         workerUpdateInfo.setExecTaskNum(taskWorker.getExecTaskNum() == null ? 1 : taskWorker.getExecTaskNum() + 1);
         workerUpdateInfo.setLastExecTime(new Date());
         taskWorkerDao.updateById(workerUpdateInfo);
-
+        // 3. 修改任务信息
+        QueryWrapper<TaskInfo> taskInfoQueryWrapper = new QueryWrapper<>();
+        taskInfoQueryWrapper.lambda().eq(TaskInfo::getTaskNo, param.getTaskNo());
+        TaskInfo taskInfo = taskInfoDao.getOne(taskInfoQueryWrapper);
+        if (taskInfo != null) {
+            TaskInfo updateTask = new TaskInfo();
+            updateTask.setId(taskInfo.getId());
+            updateTask.setExecNum(taskInfo.getExecNum() == null ? 1 : taskInfo.getExecNum() + 1);
+            updateTask.setLastExecTime(new Date());
+            taskInfoDao.updateById(updateTask);
+        }
     }
 
 
