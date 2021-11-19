@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoCronUpdateParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoQueryParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoBaseInfoUpdateParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiWorkerRegisterTaskParam;
+import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskInfoDao;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskWorkerDao;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
@@ -317,7 +314,6 @@ public class YouJiManageServiceImpl implements YouJiManageService {
     }
 
 
-
     /**
      * 更新定时任务执行计划
      *
@@ -342,7 +338,6 @@ public class YouJiManageServiceImpl implements YouJiManageService {
 
         // 更新定时任务执行计划
         HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskInit.getSchedulerEntityHashMap();
-
         // 获取原任务的执行计划
         YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
         // 取消定时任务 如果执行中是否中断
@@ -350,9 +345,60 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         // 覆盖原定时任务执行计划
         schedulerEntity.setTaskNo(taskInfo.getTaskNo());
         schedulerEntity.setTaskInfo(taskInfo);
-        ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo, this,httpClientUtil), new CronTrigger(taskInfo.getCorn()));
+        ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo, this, httpClientUtil), new CronTrigger(taskInfo.getCorn()));
         schedulerEntity.setFuture(schedule);
 
     }
+
+
+    /**
+     * 修改定时任务停止 和 启动
+     *
+     * @param param
+     * @throws Exception
+     */
+    @Override
+    public void changeTaskEnable(YouJiTaskInfoEnableUpdateParam param) throws Exception {
+        log.info("[酉鸡 更新定时任务是否可用] param={}", JSON.toJSONString(param));
+        TaskInfo taskInfo = taskInfoDao.getById(param.getId());
+        if (taskInfo == null) {
+            throw CommonException.create(ServerResponse.createByError("定时任务不存在"));
+        }
+
+        // 修改定时任务执行策略
+        TaskInfo updateInfo = new TaskInfo();
+        updateInfo.setId(taskInfo.getId());
+        updateInfo.setEnableFlag(param.getEnableFlag());
+        updateInfo.setUpdateTime(new Date());
+        taskInfoDao.updateById(updateInfo);
+        taskInfo.setEnableFlag(param.getEnableFlag());
+
+        if (param.getEnableFlag()) {
+            // 启动定时任务
+
+            // 更新定时任务执行计划
+            HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskInit.getSchedulerEntityHashMap();
+            // 获取原任务的执行计划
+            YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
+            // 取消定时任务 如果执行中是否中断
+            schedulerEntity.getFuture().cancel(true);
+            // 覆盖原定时任务执行计划
+            schedulerEntity.setTaskNo(taskInfo.getTaskNo());
+            schedulerEntity.setTaskInfo(taskInfo);
+            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo, this, httpClientUtil), new CronTrigger(taskInfo.getCorn()));
+            schedulerEntity.setFuture(schedule);
+        }else {
+            // 停止定时任务
+
+            // 更新定时任务执行计划
+            HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskInit.getSchedulerEntityHashMap();
+            // 获取原任务的执行计划
+            YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
+            // 取消定时任务 如果执行中是否中断
+            schedulerEntity.getFuture().cancel(true);
+        }
+
+    }
+
 }
 

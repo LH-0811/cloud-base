@@ -1,9 +1,6 @@
 package com.cloud.base.core.modules.youji.service;
 
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoBaseInfoUpdateParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoCronUpdateParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoQueryParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiWorkerRegisterTaskParam;
+import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskWorker;
 import com.github.pagehelper.PageInfo;
@@ -78,4 +75,12 @@ public interface YouJiManageService {
      * @throws Exception
      */
     void changeCron(YouJiTaskInfoCronUpdateParam param) throws Exception;
+
+    /**
+     * 修改定时任务停止 和 启动
+     *
+     * @param param
+     * @throws Exception
+     */
+    void changeTaskEnable(YouJiTaskInfoEnableUpdateParam param) throws Exception;
 }

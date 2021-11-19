@@ -2,10 +2,7 @@ package com.cloud.base.core.modules.youji.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoBaseInfoUpdateParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoCronUpdateParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoQueryParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiWorkerRegisterTaskParam;
+import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import com.cloud.base.core.modules.youji.service.YouJiManageService;
 import com.github.pagehelper.PageInfo;
@@ -85,8 +82,26 @@ public class YouJiTaskManageController {
             @ApiImplicitParam(paramType = "body", dataType = "YouJiTaskInfoCronUpdateParam", dataTypeClass = YouJiTaskInfoCronUpdateParam.class, name = "param", value = "参数")
     })
     public ServerResponse changeCron(@Valid @RequestBody YouJiTaskInfoCronUpdateParam param) throws Exception {
-        log.info("[酉鸡 定时任务管理接口] 更新定时任务执行结婚 :param={}", JSON.toJSONString(param));
+        log.info("[酉鸡 定时任务管理接口] 更新定时任务执行计划 :param={}", JSON.toJSONString(param));
         youJiManageService.changeCron(param);
+        return ServerResponse.createBySuccess("更新成功");
+    }
+
+
+    /**
+     * 修改定时任务停止 和 启动
+     *
+     * @param param
+     * @throws Exception
+     */
+    @PostMapping("/update/enable")
+    @ApiOperation("修改定时任务停止 和 启动")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "body", dataType = "YouJiTaskInfoEnableUpdateParam", dataTypeClass = YouJiTaskInfoEnableUpdateParam.class, name = "param", value = "参数")
+    })
+    public ServerResponse changeTaskEnable(@Valid @RequestBody YouJiTaskInfoEnableUpdateParam param) throws Exception {
+        log.info("[酉鸡 定时任务管理接口] 更新定时任务是否可用 :param={}", JSON.toJSONString(param));
+        youJiManageService.changeTaskEnable(param);
         return ServerResponse.createBySuccess("更新成功");
     }
 
