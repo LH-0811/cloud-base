@@ -2,11 +2,9 @@ package com.cloud.base.core.modules.youji.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoBaseInfoUpdateParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoCronUpdateParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoEnableUpdateParam;
-import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoQueryParam;
+import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
+import com.cloud.base.core.modules.youji.code.repository.entity.YoujiTaskExecLog;
 import com.cloud.base.core.modules.youji.service.YouJiManageService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -102,7 +100,6 @@ public class YouJiTaskManageController {
         return ServerResponse.createBySuccess("更新成功");
     }
 
-
     /**
      * 立即执行定时任务
      * @param taskNo
@@ -119,5 +116,26 @@ public class YouJiTaskManageController {
         youJiManageService.executeTask(taskNo);
         return ServerResponse.createBySuccess("执行成功");
     }
+
+
+    /**
+     * 查询定时任务列表日志
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/log/query")
+    @ApiOperation("查询定时任务日志列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "body", dataType = "YouJiTaskInfoLogQueryParam", dataTypeClass = YouJiTaskInfoLogQueryParam.class, name = "param", value = "参数")
+    })
+    public ServerResponse<PageInfo<YoujiTaskExecLog>> queryTask(@Valid @RequestBody YouJiTaskInfoLogQueryParam param) throws Exception {
+        log.info("[酉鸡 定时任务管理接口] 查询定时任务日志列表 :param={}", JSON.toJSONString(param));
+        return ServerResponse.createBySuccess("查询成功", youJiManageService.queryTaskLog(param));
+    }
+
+
+
 
 }

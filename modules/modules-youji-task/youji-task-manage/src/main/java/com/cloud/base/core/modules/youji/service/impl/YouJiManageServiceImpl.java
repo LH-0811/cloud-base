@@ -10,8 +10,10 @@ import com.cloud.base.core.modules.youji.code.constant.YouJiConstant;
 import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskInfoDao;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskWorkerDao;
+import com.cloud.base.core.modules.youji.code.repository.dao.YoujiTaskExecLogDao;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskWorker;
+import com.cloud.base.core.modules.youji.code.repository.entity.YoujiTaskExecLog;
 import com.cloud.base.core.modules.youji.code.util.YouJiOkHttpClientUtil;
 import com.cloud.base.core.modules.youji.properties.YouJiServerProperties;
 import com.cloud.base.core.modules.youji.scheduler.SendTaskToWorker;
@@ -49,6 +51,9 @@ public class YouJiManageServiceImpl implements YouJiManageService {
 
     @Autowired
     private TaskInfoDao taskInfoDao;
+
+    @Autowired
+    private YoujiTaskExecLogDao taskExecLogDao;
 
     @Autowired
     private TaskWorkerDao taskWorkerDao;
@@ -463,5 +468,53 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         }
     }
 
+
+    /**
+     * 查询定时任务日志列表
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public PageInfo<YoujiTaskExecLog> queryTaskLog(YouJiTaskInfoLogQueryParam param) throws Exception {
+        log.info("[酉鸡 查询定时任务日志列表] param={}", JSON.toJSONString(param));
+        try {
+            QueryWrapper<YoujiTaskExecLog> taskInfoQueryWrapper = new QueryWrapper<>();
+            LambdaQueryWrapper<YoujiTaskExecLog> queryLambda = taskInfoQueryWrapper.lambda();
+
+            if (StringUtils.isNotBlank(param.getTaskNo())) {
+                queryLambda.like(YoujiTaskExecLog::getTaskNo, "%" + param.getTaskNo() + "%");
+            }
+            if (StringUtils.isNotBlank(param.getTaskName())) {
+                queryLambda.like(YoujiTaskExecLog::getTaskName, "%" + param.getTaskName() + "%");
+            }
+            if (StringUtils.isNotBlank(param.getContactsName())) {
+                queryLambda.like(YoujiTaskExecLog::getContactsName, "%" + param.getContactsName() + "%");
+            }
+            if (StringUtils.isNotBlank(param.getContactsPhone())) {
+                queryLambda.like(YoujiTaskExecLog::getContactsPhone, "%" + param.getContactsPhone() + "%");
+            }
+            if (StringUtils.isNotBlank(param.getContactsEmail())) {
+                queryLambda.like(YoujiTaskExecLog::getContactsEmail, "%" + param.getContactsEmail() + "%");
+            }
+            if (param.getFinishFlag() != null) {
+                queryLambda.eq(YoujiTaskExecLog::getFinishFlag, param.getFinishFlag());
+            }
+            if (param.getExecTimeLow() != null) {
+                queryLambda.ge(YoujiTaskExecLog::getCreateTime, param.getExecTimeLow());
+            }
+            if (param.getExecTimeLow() != null) {
+                queryLambda.le(YoujiTaskExecLog::getCreateTime, param.getExecTimeUp());
+            }
+            PageHelper.startPage(param.getPageNum(), param.getPageSize());
+            List<YoujiTaskExecLog> list = taskExecLogDao.list(queryLambda);
+            PageInfo<YoujiTaskExecLog> pageInfo = new PageInfo<>(list);
+            PageHelper.clearPage();
+            return pageInfo;
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("获取定时任务列表失败"));
+        }
+    }
 }
 

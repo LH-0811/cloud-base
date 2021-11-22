@@ -3,6 +3,7 @@ package com.cloud.base.core.modules.youji.service;
 import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskWorker;
+import com.cloud.base.core.modules.youji.code.repository.entity.YoujiTaskExecLog;
 import com.github.pagehelper.PageInfo;
 
 import javax.validation.Valid;
@@ -90,4 +91,13 @@ public interface YouJiManageService {
      * @param taskNo
      */
     void executeTask(String taskNo) ;
+
+    /**
+     * 查询定时任务日志列表
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    PageInfo<YoujiTaskExecLog> queryTaskLog(YouJiTaskInfoLogQueryParam param) throws Exception;
 }
