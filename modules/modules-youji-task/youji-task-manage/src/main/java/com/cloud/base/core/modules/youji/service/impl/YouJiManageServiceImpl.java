@@ -482,6 +482,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         try {
             QueryWrapper<YoujiTaskExecLog> taskInfoQueryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<YoujiTaskExecLog> queryLambda = taskInfoQueryWrapper.lambda();
+            queryLambda.orderByDesc(YoujiTaskExecLog::getCreateTime);
 
             if (StringUtils.isNotBlank(param.getTaskNo())) {
                 queryLambda.like(YoujiTaskExecLog::getTaskNo, "%" + param.getTaskNo() + "%");
