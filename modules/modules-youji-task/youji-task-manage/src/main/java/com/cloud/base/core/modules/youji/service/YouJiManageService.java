@@ -83,4 +83,11 @@ public interface YouJiManageService {
      * @throws Exception
      */
     void changeTaskEnable(YouJiTaskInfoEnableUpdateParam param) throws Exception;
+
+    /**
+     * 立即执行
+     *
+     * @param taskNo
+     */
+    void executeTask(String taskNo) ;
 }

@@ -2,7 +2,10 @@ package com.cloud.base.core.modules.youji.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.youji.code.param.*;
+import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoBaseInfoUpdateParam;
+import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoCronUpdateParam;
+import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoEnableUpdateParam;
+import com.cloud.base.core.modules.youji.code.param.YouJiTaskInfoQueryParam;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import com.cloud.base.core.modules.youji.service.YouJiManageService;
 import com.github.pagehelper.PageInfo;
@@ -11,16 +14,10 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.concurrent.ScheduledFuture;
 
 /**
  * @author lh0811
@@ -105,5 +102,22 @@ public class YouJiTaskManageController {
         return ServerResponse.createBySuccess("更新成功");
     }
 
+
+    /**
+     * 立即执行定时任务
+     * @param taskNo
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/exec/{taskNo}")
+    @ApiOperation("修改定时任务停止 和 启动")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", dataType = "String", dataTypeClass = String.class, name = "taskNo", value = "参数")
+    })
+    public ServerResponse executeTaskNow(@PathVariable(value = "taskNo") String taskNo) throws Exception {
+        log.info("[酉鸡 定时任务管理接口] 立即执行定时任务 :taskNo={}", taskNo);
+        youJiManageService.executeTask(taskNo);
+        return ServerResponse.createBySuccess("执行成功");
+    }
 
 }

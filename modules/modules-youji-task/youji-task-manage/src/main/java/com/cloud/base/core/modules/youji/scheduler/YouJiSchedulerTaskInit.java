@@ -1,11 +1,6 @@
 package com.cloud.base.core.modules.youji.scheduler;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ScheduledFuture;
-
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
-import com.cloud.base.core.modules.youji.code.util.YouJiOkHttpClientUtil;
 import com.cloud.base.core.modules.youji.service.YouJiManageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +9,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * 酉鸡 定时任务初始化组件
@@ -26,8 +25,6 @@ public class YouJiSchedulerTaskInit implements CommandLineRunner {
 
     @Autowired
     private YouJiManageService youJiManageService;
-    @Autowired
-    private YouJiOkHttpClientUtil httpClientUtil;
 
     private ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
     // 任务容器
@@ -43,7 +40,7 @@ public class YouJiSchedulerTaskInit implements CommandLineRunner {
             YouJiSchedulerEntity schedulerEntity = new YouJiSchedulerEntity();
             schedulerEntity.setTaskNo(taskInfo.getTaskNo());
             schedulerEntity.setTaskInfo(taskInfo);
-            ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(new SendTaskToWorker(taskInfo, youJiManageService,httpClientUtil), new CronTrigger(taskInfo.getCorn()));
+            ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(new SendTaskToWorker(taskInfo.getTaskNo(), youJiManageService), new CronTrigger(taskInfo.getCorn()));
             schedulerEntity.setFuture(schedule);
             schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
         }

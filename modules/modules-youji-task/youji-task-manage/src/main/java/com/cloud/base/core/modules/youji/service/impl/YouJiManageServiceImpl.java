@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
+import com.cloud.base.core.modules.youji.code.constant.YouJiConstant;
 import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskInfoDao;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskWorkerDao;
@@ -32,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -351,7 +353,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             // 覆盖原定时任务执行计划
             schedulerEntity.setTaskNo(taskInfo.getTaskNo());
             schedulerEntity.setTaskInfo(taskInfo);
-            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo, this, httpClientUtil), new CronTrigger(taskInfo.getCorn()));
+            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo.getTaskNo(), this), new CronTrigger(taskInfo.getCorn()));
             schedulerEntity.setFuture(schedule);
             schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
         } else {
@@ -401,7 +403,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             // 覆盖原定时任务执行计划
             schedulerEntity.setTaskNo(taskInfo.getTaskNo());
             schedulerEntity.setTaskInfo(taskInfo);
-            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo, this, httpClientUtil), new CronTrigger(taskInfo.getCorn()));
+            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo.getTaskNo(), this), new CronTrigger(taskInfo.getCorn()));
             schedulerEntity.setFuture(schedule);
             schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
         } else {
@@ -415,6 +417,50 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             schedulerEntityHashMap.remove(taskInfo.getTaskNo());
         }
 
+    }
+
+    @Override
+    public void executeTask(String taskNo) {
+        log.info("[酉鸡 立即执行任务] taskNo={}", taskNo);
+        QueryWrapper<TaskInfo> taskInfoQueryWrapper = new QueryWrapper<>();
+        taskInfoQueryWrapper.lambda().eq(TaskInfo::getTaskNo, taskNo);
+        TaskInfo taskInfo = taskInfoDao.getOne(taskInfoQueryWrapper);
+        if (taskInfo == null) {
+            // todo liuhe 定时任务不存在
+            return;
+        }
+        // 准备参数
+        YouJiWorkerReceiveTaskParam receiveTaskParam = new YouJiWorkerReceiveTaskParam();
+        BeanUtils.copyProperties(taskInfo, receiveTaskParam);
+        log.info("[酉鸡 Manage向Worker 发起任务] taskNo:{} 对应的执行类型:{}", taskInfo.getTaskNo(), taskInfo.getExecType());
+        // 找到目标客户端端
+        if (YouJiConstant.ExecType.SINGLE_NODE.getCode().equals(taskInfo.getExecType())) {
+            log.info("[酉鸡 Manage向Worker 发起任务] taskNo:{} 对应的执行类型:{} 进入单节点执行发布流程", taskInfo.getTaskNo(), taskInfo.getExecType());
+            // todo liuhe 获取到最优的工作节点 (算法待优化 先拿执行次数最少的节点)
+            TaskWorker taskWorker = getSingleNode(taskInfo);
+            // 向该节点发送执行请求
+            try {
+                receiveTaskParam.setWorkerId(taskWorker.getId());
+                httpClientUtil.postJSONParameters("http://" + taskWorker.getWorkerIp() + ":" + taskWorker.getWorkerPort() + "/youji/task/worker/receive", JSON.toJSONString(receiveTaskParam));
+            } catch (IOException e) {
+                // todo liuhe 发起任务 失败
+                log.info("[酉鸡 Manage向Worker 发起任务]  taskNo:{} Worker节点：{}:{} 失败:{}", taskInfo.getTaskNo(), taskWorker.getWorkerIp(), taskWorker.getWorkerPort(), e);
+            }
+        } else if (YouJiConstant.ExecType.ALL_NODE.getCode().equals(taskInfo.getExecType())) {
+            List<TaskWorker> allNode = getAllNode(taskInfo);
+            for (TaskWorker taskWorker : allNode) {
+                try {
+                    receiveTaskParam.setWorkerId(taskWorker.getId());
+                    httpClientUtil.postJSONParameters("http://" + taskWorker.getWorkerIp() + ":" + taskWorker.getWorkerPort() + "/youji/task/worker/receive", JSON.toJSONString(receiveTaskParam));
+                } catch (IOException e) {
+                    // todo liuhe 发起任务 失败
+                    log.info("[酉鸡 Manage向Worker 发起任务]  taskNo:{} Worker节点：{}:{} 失败:{}", taskInfo.getTaskNo(), taskWorker.getWorkerIp(), taskWorker.getWorkerPort(), e);
+                }
+            }
+        } else {
+            // todo liuhe 发起任务 失败
+            log.info("[酉鸡 Manage向Worker 发起任务] taskNo:{} 对应的执行类型不合法:{}", taskInfo.getTaskNo(), taskInfo.getExecType());
+        }
     }
 
 }
