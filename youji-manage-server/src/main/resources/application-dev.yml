@@ -1,0 +1,58 @@
+server:
+  port: 8889
+spring:
+  application:
+    name: youji-manage
+  devtools:
+    add-properties: false
+  jackson:
+    time-zone: GMT+8
+    generator:
+      WRITE_NUMBERS_AS_STRINGS: true
+  cloud:
+    nacos: # 配置nacos
+      discovery: # 服务发现地址
+        server-addr: 127.0.0.1:8848 # nacos 启动地址
+      config:
+        server-addr: 127.0.0.1:8848 # nacos 启动地址
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 使用多数据源时 这个配置便是 默认数据源
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://49.232.166.94:3306/member-user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      username: root
+      password: QQliuhe951@@
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      #Oracle需要打开注释
+      #validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        #login-username: admin
+        #login-password: admin
+        allow:
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+# 健康检查
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

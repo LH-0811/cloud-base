@@ -17,6 +17,7 @@
         <module>authorize-center</module>
         <module>user-center</module>
         <module>code-generator</module>
+        <module>youji-manage-server</module>
     </modules>
 
     <properties>

@@ -36,10 +36,9 @@ public class YouJiRegisterManageController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "YouJiWorkerRegisterTaskParam", dataTypeClass = YouJiWorkerRegisterTaskParam.class, name = "param", value = "参数")
     })
-    public ServerResponse registerWorker(@Valid @RequestBody YouJiWorkerRegisterTaskParam param, HttpServletRequest request) throws Exception {
-        log.info("接收到客户端请求 创建定时任务:Local  addr={},port={},param={}", request.getLocalAddr(), request.getLocalPort(), JSON.toJSON(JSON.toJSONString(param)));
-        log.info("接收到客户端请求 创建定时任务:Remote addr={}, host={},port={},param={}", request.getRemoteAddr(), request.getRemoteHost(), request.getRemotePort(), JSON.toJSON(JSON.toJSONString(param)));
-        youJiManageService.registerWorker(param,request.getLocalAddr(),request.getLocalPort());
+    public ServerResponse registerWorker(@Valid @RequestBody YouJiWorkerRegisterTaskParam param) throws Exception {
+        log.info("接收到客户端请求 创建定时任务:param={}",  JSON.toJSON(JSON.toJSONString(param)));
+        youJiManageService.registerWorker(param);
         return ServerResponse.createBySuccess("成功");
     }
 

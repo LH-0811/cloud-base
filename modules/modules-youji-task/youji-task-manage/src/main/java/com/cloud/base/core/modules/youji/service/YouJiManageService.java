@@ -21,7 +21,7 @@ public interface YouJiManageService {
      * @param param
      * @throws Exception
      */
-    void registerWorker(@Valid YouJiWorkerRegisterTaskParam param, String workerHost, Integer workerPort) throws Exception;
+    void registerWorker(@Valid YouJiWorkerRegisterTaskParam param) throws Exception;
 
     /**
      * 客户端心跳检测

@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -22,6 +23,12 @@ public class YouJiWorkerRegisterTaskParam {
     @NotEmpty(message = "创建参数列表不能为空")
     @ApiModelProperty(value = "创建任务参数列表")
     private List<YouJiTaskForm> paramList;
+
+    @NotBlank(message = "未上传工作节点IP")
+    private String workIP;
+
+    @NotNull(message = "未上传工作节点端口号")
+    private Integer workPort;
 
     @Getter
     @Setter

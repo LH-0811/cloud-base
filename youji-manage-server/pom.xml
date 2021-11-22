@@ -3,61 +3,39 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>user-center</artifactId>
-        <groupId>com.cloud.member</groupId>
+        <artifactId>cloud-base</artifactId>
+        <groupId>com.cloud</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>user-center-server</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>youji-manage-server</artifactId>
 
-    <description>
-        会员平台-用户中心-服务。
-    </description>
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+
 
     <dependencies>
-        <!-- 引用自身api -->
+
         <dependency>
-            <groupId>com.cloud.member</groupId>
-            <artifactId>user-center-api</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <!--   security     -->
-        <dependency>
-            <groupId>com.cloud.modules</groupId>
-            <artifactId>lh-security-client</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <!--  logger      -->
-        <dependency>
-            <groupId>com.cloud.modules</groupId>
-            <artifactId>modules-logger</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <!-- 引入分布式事务-->
-<!--        <dependency>-->
-<!--            <groupId>com.cloud.dependency</groupId>-->
-<!--            <artifactId>dependency-seata</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--        </dependency>-->
-        <!-- 引入流控 sentinel-->
-        <dependency>
-            <groupId>com.cloud.dependency</groupId>
-            <artifactId>dependency-sentinel</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <!-- 引入链路跟踪 -->
-        <dependency>
-            <groupId>com.cloud.dependency</groupId>
-            <artifactId>dependency-sleuth-zipkin</artifactId>
+            <groupId>com.cloud.common</groupId>
+            <artifactId>core-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!-- 引入定时任务 酉鸡 -->
+
+        <dependency>
+            <groupId>com.cloud.dependency</groupId>
+            <artifactId>dependency-alibaba-cloud</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 定时任务模块 -->
         <dependency>
             <groupId>com.cloud.modules</groupId>
-            <artifactId>youji-task-worker</artifactId>
+            <artifactId>youji-task-manage</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -156,5 +134,5 @@
         </profile>
     </profiles>
 
-</project>
 
+</project>

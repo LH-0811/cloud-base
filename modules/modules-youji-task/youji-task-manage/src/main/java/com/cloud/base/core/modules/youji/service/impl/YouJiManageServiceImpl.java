@@ -71,7 +71,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void registerWorker(@Valid YouJiWorkerRegisterTaskParam param, String workerHost, Integer workerPort) throws Exception {
+    public void registerWorker(@Valid YouJiWorkerRegisterTaskParam param) throws Exception {
         log.info("[YouJi-Manage 定时任务worker 注册到manage]YouJiTaskServiceImpl.registerWorker： param={}", JSON.toJSONString(param));
         // 移除无效工作节点
         this.removeDieWorkerNode();
@@ -107,8 +107,8 @@ public class YouJiManageServiceImpl implements YouJiManageService {
                 QueryWrapper<TaskWorker> taskWorkerQueryWrapper = new QueryWrapper<>();
                 taskWorkerQueryWrapper.lambda()
                         .eq(TaskWorker::getTaskId, taskInfo.getId())
-                        .eq(TaskWorker::getWorkerIp, workerHost)
-                        .eq(TaskWorker::getWorkerPort, workerPort);
+                        .eq(TaskWorker::getWorkerIp, param.getWorkIP())
+                        .eq(TaskWorker::getWorkerPort, param.getWorkPort());
                 TaskWorker taskWorker = taskWorkerDao.getOne(taskWorkerQueryWrapper);
                 if (taskWorker == null) {
                     taskWorker = new TaskWorker();
@@ -116,8 +116,8 @@ public class YouJiManageServiceImpl implements YouJiManageService {
                     taskWorker.setTaskId(taskInfo.getId());
                     taskWorker.setTaskNo(taskInfo.getTaskNo());
                     taskWorker.setWorkerAppName("");
-                    taskWorker.setWorkerIp(workerHost);
-                    taskWorker.setWorkerPort(workerPort);
+                    taskWorker.setWorkerIp(param.getWorkIP());
+                    taskWorker.setWorkerPort(param.getWorkPort());
                     taskWorker.setEnableFlag(true);
                     taskWorker.setOnlineFlag(true);
                     taskWorker.setLastHeartBeatTime(new Date());
@@ -178,8 +178,9 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             TaskWorker updateHeartBeat = new TaskWorker();
             updateHeartBeat.setId(taskWorker.getId());
             updateHeartBeat.setOnlineFlag(Boolean.FALSE);
-            if (taskWorker.getBeatFailNum() > 0) {
-                // 失败 次数 +1
+            if (taskWorker.getBeatFailNum() == null) {
+                updateHeartBeat.setBeatFailNum(1);
+            } else {
                 updateHeartBeat.setBeatFailNum(taskWorker.getBeatFailNum() + 1);
             }
             taskWorkerDao.updateById(updateHeartBeat);
