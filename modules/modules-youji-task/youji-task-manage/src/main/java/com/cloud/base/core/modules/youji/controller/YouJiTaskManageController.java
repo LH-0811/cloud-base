@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
+import com.cloud.base.core.modules.youji.code.repository.entity.TaskWorker;
 import com.cloud.base.core.modules.youji.code.repository.entity.YoujiTaskExecLog;
 import com.cloud.base.core.modules.youji.service.YouJiManageService;
 import com.github.pagehelper.PageInfo;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author lh0811
@@ -102,6 +104,7 @@ public class YouJiTaskManageController {
 
     /**
      * 立即执行定时任务
+     *
      * @param taskNo
      * @return
      * @throws Exception
@@ -136,6 +139,41 @@ public class YouJiTaskManageController {
     }
 
 
+    /**
+     * 获取定时任务的工作节点
+     *
+     * @param taskNo
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/work/list/{taskNo}")
+    @ApiOperation("获取定时任务的工作节点")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", dataType = "String", dataTypeClass = String.class, name = "taskNo", value = "参数")
+    })
+    public ServerResponse<List<TaskWorker>> querWorkList(@PathVariable(value = "taskNo") String taskNo) throws Exception {
+        log.info("[酉鸡 获取定时任务的工作节点] 获取定时任务的工作节点 :taskNo={}", taskNo);
+        List<TaskWorker> workerList = youJiManageService.getWorkListByTaskNo(taskNo);
+        return ServerResponse.createBySuccess("获取成功", workerList);
+    }
+
+
+    /**
+     * 修改worker节点是否可用
+     *
+     * @param param
+     * @throws Exception
+     */
+    @PostMapping("/worker/update/enable")
+    @ApiOperation("修改worker节点是否可用")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "body", dataType = "YouJiTaskWorkerEnableUpdateParam", dataTypeClass = YouJiTaskWorkerEnableUpdateParam.class, name = "param", value = "参数")
+    })
+    public ServerResponse changeWorkerEnable(@Valid @RequestBody YouJiTaskWorkerEnableUpdateParam param) throws Exception {
+        log.info("[酉鸡 修改worker节点是否可用] param={}", JSON.toJSONString(param));
+        youJiManageService.changeWorkerEnable(param);
+        return ServerResponse.createBySuccess("更新成功");
+    }
 
 
 }

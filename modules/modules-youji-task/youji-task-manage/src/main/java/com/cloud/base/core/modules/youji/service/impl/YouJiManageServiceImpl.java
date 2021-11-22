@@ -516,5 +516,56 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             throw CommonException.create(e, ServerResponse.createByError("获取定时任务列表失败"));
         }
     }
+
+
+    /**
+     * 获取定时任务的工作节点列表
+     *
+     * @param taskNo
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<TaskWorker> getWorkListByTaskNo(String taskNo) throws Exception {
+        log.info("[酉鸡 获取工作节点列表] taskNo={}", taskNo);
+        QueryWrapper<TaskInfo> taskInfoQueryWrapper = new QueryWrapper<>();
+        taskInfoQueryWrapper.lambda().eq(TaskInfo::getTaskNo, taskNo);
+        TaskInfo taskInfo = taskInfoDao.getOne(taskInfoQueryWrapper);
+        if (taskInfo == null) {
+            throw CommonException.create(ServerResponse.createByError("定时任务不存在"));
+        }
+        try {
+            QueryWrapper<TaskWorker> taskWorkerQueryWrapper = new QueryWrapper<>();
+            taskWorkerQueryWrapper.lambda().eq(TaskWorker::getTaskId, taskInfo.getId());
+            return taskWorkerDao.list(taskWorkerQueryWrapper);
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("获取获取工作节点列表失败"));
+        }
+
+    }
+
+
+    /**
+     * 修改worker节点是否可用
+     *
+     * @param param
+     * @throws Exception
+     */
+    @Override
+    public void changeWorkerEnable(YouJiTaskWorkerEnableUpdateParam param) throws Exception {
+        log.info("[酉鸡 修改worker节点是否可用] param={}", JSON.toJSONString(param));
+        TaskWorker taskWorker = taskWorkerDao.getById(param.getId());
+        if (taskWorker == null) {
+            throw CommonException.create(ServerResponse.createByError("工作节点不存在"));
+        }
+        try {
+            TaskWorker updateWorker = new TaskWorker();
+            updateWorker.setId(param.getId());
+            updateWorker.setEnableFlag(param.getEnableFlag());
+            taskWorkerDao.updateById(updateWorker);
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("获取获取工作节点列表失败"));
+        }
+    }
 }
 

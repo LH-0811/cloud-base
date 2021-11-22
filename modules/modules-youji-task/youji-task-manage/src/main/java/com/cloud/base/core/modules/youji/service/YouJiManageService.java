@@ -29,10 +29,11 @@ public interface YouJiManageService {
      *
      * @throws Exception
      */
-    void heartBeatCheckWorker() ;
+    void heartBeatCheckWorker();
 
     /**
      * 获取到全部（可用）定时任务
+     *
      * @return
      */
     List<TaskInfo> getAllEnableTaskInfo();
@@ -90,7 +91,7 @@ public interface YouJiManageService {
      *
      * @param taskNo
      */
-    void executeTask(String taskNo) ;
+    void executeTask(String taskNo);
 
     /**
      * 查询定时任务日志列表
@@ -100,4 +101,22 @@ public interface YouJiManageService {
      * @throws Exception
      */
     PageInfo<YoujiTaskExecLog> queryTaskLog(YouJiTaskInfoLogQueryParam param) throws Exception;
+
+    /**
+     * 获取定时任务的工作节点列表
+     *
+     * @param taskNo
+     * @return
+     * @throws Exception
+     */
+    List<TaskWorker> getWorkListByTaskNo(String taskNo) throws Exception;
+
+
+    /**
+     * 修改worker节点是否可用
+     *
+     * @param param
+     * @throws Exception
+     */
+    void changeWorkerEnable(YouJiTaskWorkerEnableUpdateParam param) throws Exception;
 }
