@@ -2,6 +2,7 @@ package com.cloud.base.core.modules.youji.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.core.modules.youji.code.exception.YouJiException;
 import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskWorker;
@@ -116,7 +117,12 @@ public class YouJiTaskManageController {
     })
     public ServerResponse executeTaskNow(@PathVariable(value = "taskNo") String taskNo) throws Exception {
         log.info("[酉鸡 定时任务管理接口] 立即执行定时任务 :taskNo={}", taskNo);
-        youJiManageService.executeTask(taskNo);
+        try {
+            youJiManageService.executeTask(taskNo);
+        }catch (YouJiException e){
+            // 获取到酉鸡框架定义的异常信息并记录日志
+        }
+
         return ServerResponse.createBySuccess("执行成功");
     }
 

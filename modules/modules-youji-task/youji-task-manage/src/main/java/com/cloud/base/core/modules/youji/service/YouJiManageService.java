@@ -91,7 +91,7 @@ public interface YouJiManageService {
      *
      * @param taskNo
      */
-    void executeTask(String taskNo);
+    void executeTask(String taskNo) throws Exception;
 
     /**
      * 查询定时任务日志列表

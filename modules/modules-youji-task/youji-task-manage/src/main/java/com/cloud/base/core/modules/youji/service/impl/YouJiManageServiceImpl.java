@@ -7,6 +7,7 @@ import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.modules.youji.code.constant.YouJiConstant;
+import com.cloud.base.core.modules.youji.code.exception.YouJiException;
 import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskInfoDao;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskWorkerDao;
@@ -19,6 +20,7 @@ import com.cloud.base.core.modules.youji.properties.YouJiServerProperties;
 import com.cloud.base.core.modules.youji.scheduler.SendTaskToWorker;
 import com.cloud.base.core.modules.youji.scheduler.YouJiSchedulerEntity;
 import com.cloud.base.core.modules.youji.scheduler.YouJiSchedulerTaskInit;
+import com.cloud.base.core.modules.youji.service.YouJiExceptionService;
 import com.cloud.base.core.modules.youji.service.YouJiManageService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -69,6 +71,9 @@ public class YouJiManageServiceImpl implements YouJiManageService {
 
     @Autowired
     private YouJiSchedulerTaskInit youJiSchedulerTaskInit;
+
+    @Autowired
+    private YouJiExceptionService youJiExceptionService;
 
     /**
      * 注册定时任务
@@ -358,7 +363,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             // 覆盖原定时任务执行计划
             schedulerEntity.setTaskNo(taskInfo.getTaskNo());
             schedulerEntity.setTaskInfo(taskInfo);
-            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo.getTaskNo(), this), new CronTrigger(taskInfo.getCorn()));
+            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo.getTaskNo(), this,youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
             schedulerEntity.setFuture(schedule);
             schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
         } else {
@@ -408,7 +413,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             // 覆盖原定时任务执行计划
             schedulerEntity.setTaskNo(taskInfo.getTaskNo());
             schedulerEntity.setTaskInfo(taskInfo);
-            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo.getTaskNo(), this), new CronTrigger(taskInfo.getCorn()));
+            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo.getTaskNo(), this,youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
             schedulerEntity.setFuture(schedule);
             schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
         } else {
@@ -425,14 +430,13 @@ public class YouJiManageServiceImpl implements YouJiManageService {
     }
 
     @Override
-    public void executeTask(String taskNo) {
+    public void executeTask(String taskNo) throws Exception {
         log.info("[酉鸡 立即执行任务] taskNo={}", taskNo);
         QueryWrapper<TaskInfo> taskInfoQueryWrapper = new QueryWrapper<>();
         taskInfoQueryWrapper.lambda().eq(TaskInfo::getTaskNo, taskNo);
         TaskInfo taskInfo = taskInfoDao.getOne(taskInfoQueryWrapper);
         if (taskInfo == null) {
-            // todo liuhe 定时任务不存在
-            return;
+            throw new YouJiException(YouJiConstant.YouJiErrorEnum.NOT_EXIST_TASK.getCode(),YouJiConstant.YouJiErrorEnum.NOT_EXIST_TASK.getMsg()+":"+taskNo);
         }
         // 准备参数
         YouJiWorkerReceiveTaskParam receiveTaskParam = new YouJiWorkerReceiveTaskParam();
@@ -443,13 +447,16 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             log.info("[酉鸡 Manage向Worker 发起任务] taskNo:{} 对应的执行类型:{} 进入单节点执行发布流程", taskInfo.getTaskNo(), taskInfo.getExecType());
             // todo liuhe 获取到最优的工作节点 (算法待优化 先拿执行次数最少的节点)
             TaskWorker taskWorker = getSingleNode(taskInfo);
+            if (taskWorker == null) {
+                throw new YouJiException(YouJiConstant.YouJiErrorEnum.NOT_FIND_WORKER,taskInfo);
+            }
             // 向该节点发送执行请求
             try {
                 receiveTaskParam.setWorkerId(taskWorker.getId());
                 httpClientUtil.postJSONParameters("http://" + taskWorker.getWorkerIp() + ":" + taskWorker.getWorkerPort() + "/youji/task/worker/receive", JSON.toJSONString(receiveTaskParam));
             } catch (IOException e) {
-                // todo liuhe 发起任务 失败
                 log.info("[酉鸡 Manage向Worker 发起任务]  taskNo:{} Worker节点：{}:{} 失败:{}", taskInfo.getTaskNo(), taskWorker.getWorkerIp(), taskWorker.getWorkerPort(), e);
+                throw new YouJiException(YouJiConstant.YouJiErrorEnum.FAIL_SEND_TASK_TO_WORKER,taskInfo,taskWorker);
             }
         } else if (YouJiConstant.ExecType.ALL_NODE.getCode().equals(taskInfo.getExecType())) {
             List<TaskWorker> allNode = getAllNode(taskInfo);
@@ -458,13 +465,13 @@ public class YouJiManageServiceImpl implements YouJiManageService {
                     receiveTaskParam.setWorkerId(taskWorker.getId());
                     httpClientUtil.postJSONParameters("http://" + taskWorker.getWorkerIp() + ":" + taskWorker.getWorkerPort() + "/youji/task/worker/receive", JSON.toJSONString(receiveTaskParam));
                 } catch (IOException e) {
-                    // todo liuhe 发起任务 失败
                     log.info("[酉鸡 Manage向Worker 发起任务]  taskNo:{} Worker节点：{}:{} 失败:{}", taskInfo.getTaskNo(), taskWorker.getWorkerIp(), taskWorker.getWorkerPort(), e);
+                    throw new YouJiException(YouJiConstant.YouJiErrorEnum.FAIL_SEND_TASK_TO_WORKER,taskInfo,taskWorker);
                 }
             }
         } else {
-            // todo liuhe 发起任务 失败
             log.info("[酉鸡 Manage向Worker 发起任务] taskNo:{} 对应的执行类型不合法:{}", taskInfo.getTaskNo(), taskInfo.getExecType());
+            throw new YouJiException(YouJiConstant.YouJiErrorEnum.TASK_EXEC_TYPE_ERR,taskInfo);
         }
     }
 

@@ -40,8 +40,6 @@ public class YouJiWorkerServiceImpl implements YouJiWorkerService {
     @Autowired
     private IdWorker idWorker;
 
-    @Autowired
-    private YouJiWorkerProperties properties;
 
 
     /**
@@ -52,16 +50,17 @@ public class YouJiWorkerServiceImpl implements YouJiWorkerService {
      */
     @Override
     public void finishTask(YouJiWorkerReceiveTaskParam param, ServerResponse serverResponse) throws Exception {
+
+        // 获取到工作节点
+        TaskWorker taskWorker = taskWorkerDao.getById(param.getWorkerId());
         // 1. 记录任务执行日志
         YoujiTaskExecLog execLog = new YoujiTaskExecLog();
         execLog.setId(idWorker.nextId());
         execLog.setTaskNo(param.getTaskNo());
         execLog.setTaskName(param.getTaskName());
         execLog.setWorkerId(param.getWorkerId());
-        execLog.setCorn(param.getCorn());
-        execLog.setTaskUrl(param.getTaskUrl());
-        execLog.setTaskBeanName(param.getTaskBeanName());
-        execLog.setTaskMethod(param.getTaskMethod());
+        execLog.setWorkerIp(taskWorker.getWorkerIp());
+        execLog.setWorkerPort(taskWorker.getWorkerPort());
         execLog.setTaskParam(param.getTaskParam());
         execLog.setContactsName(param.getContactsName());
         execLog.setContactsPhone(param.getContactsPhone());
@@ -72,7 +71,6 @@ public class YouJiWorkerServiceImpl implements YouJiWorkerService {
         execLog.setUpdateTime(new Date());
         youjiTaskExecLogDao.save(execLog);
         // 2. 修改worker信息
-        TaskWorker taskWorker = taskWorkerDao.getById(param.getWorkerId());
         TaskWorker workerUpdateInfo = new TaskWorker();
         workerUpdateInfo.setId(taskWorker.getId());
         workerUpdateInfo.setExecTaskNum(taskWorker.getExecTaskNum() == null ? 1 : taskWorker.getExecTaskNum() + 1);

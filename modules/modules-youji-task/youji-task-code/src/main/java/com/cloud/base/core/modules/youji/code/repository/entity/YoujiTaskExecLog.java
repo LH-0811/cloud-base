@@ -32,11 +32,7 @@ public class YoujiTaskExecLog implements Serializable {
 	@TableId(type= IdType.NONE)
 	@ApiModelProperty(value="主键id")
 	private Long id;
-	/**
-	 * 工作节点id
-	 */
-	@ApiModelProperty(value="工作节点id")
-	private Long workerId;
+
 	/**
 	 * 任务编号
 	 */
@@ -47,31 +43,31 @@ public class YoujiTaskExecLog implements Serializable {
 	 */
 	@ApiModelProperty(value="任务名称")
 	private String taskName;
+
 	/**
-	 * 任务执行表达式
+	 * 工作节点id
 	 */
-	@ApiModelProperty(value="任务执行表达式")
-	private String corn;
+	@ApiModelProperty(value="工作节点id")
+	private Long workerId;
+
 	/**
-	 * 任务执行触发的url地址
+	 * 工作节点ip
 	 */
-	@ApiModelProperty(value="任务执行触发的url地址")
-	private String taskUrl;
+	@ApiModelProperty(value="工作节点ip")
+	private String workerIp;
+
 	/**
-	 * 应用上下文执行中对应的全限定类名
+	 * 工作节点端口号
 	 */
-	@ApiModelProperty(value="应用上下文执行中对应的全限定类名")
-	private String taskBeanName;
-	/**
-	 * 应用上下文中对应的方法名，或者url的请求类型
-	 */
-	@ApiModelProperty(value="应用上下文中对应的方法名，或者url的请求类型")
-	private String taskMethod;
+	@ApiModelProperty(value="工作节点端口号")
+	private Integer workerPort;
+
 	/**
 	 * 参数:只支持字符串类型参数
 	 */
 	@ApiModelProperty(value="参数:只支持字符串类型参数")
 	private String taskParam;
+
 	/**
 	 * 联系人
 	 */
