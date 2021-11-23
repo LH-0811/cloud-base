@@ -1,9 +1,6 @@
 # springcloud 脚手架项目
 
 
-sentinel：http://49.232.166.94:9000/#/login
-zipkin：http://49.232.166.94:9411/zipkin
-
 ## 项目概述
 
 springboot+springcloud
@@ -43,12 +40,15 @@ maven：实现多环境打包、直推镜像到docker私服。
 由于springboot遵循 约定大于配置的原则。所以本工程中所有的额类都在的包路径都在com.cloud.base下。
 
 如果新建的业务项目有规定使用指定的基础包路径则需要在启动类增加包扫描注解将com.cloud.base下的所有类加入到扫描范围下。
+
 ```
 @ComponentScan(basePackages = "com.cloud.base")
 ```
+
 如果可以继续使用com.cloud.base 则约定将启动类放在该路径下即可。
 
 ## 模块划分
+
 ```
 父工程:
 
@@ -56,15 +56,17 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |
 |--common - 通用工具类和包  <groupId>com.cloud.common</groupId>
 |   |
-|   |--core-common  通用包
+|   |--core-common  通用包 该包包含了SpringMVC的依赖，会与WebFlux的服务有冲突
 |   |
-|   |--core-common-sentinel 通用包sentinel版（如果项目中使用了sentinel需要使用这个包，用来帮助sentinel统计接口异常数）
+|   |--core-exception 自定义异常和请求统一返回类
 |
 |--dependency - 三方功能依赖集合 无任何实现 <groupId>com.cloud.dependency</groupId>
 |   |
 |   |--dependency-alibaba-cloud 关于alibaba-cloud的依赖集合
 |   |
 |   |--dependency-mybatis-tk 关于ORM mybatis+tk.mybatis+pagehelper的依赖集合
+|   |
+|   |--dependency-mybatis-plus 关于ORM mybatis+mybatis—plus+pagehelper的依赖集合
 |   |
 |   |--dependency-seata 关于分布式事务seata的依赖集合
 |   |
@@ -80,50 +82,55 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |   |
 |   |--modules-multi-datasource 多数据功能封装
 |   |
-|   |--modules-security 安全授权鉴权框架封装
-|   |--modules-lh-security 安全授权鉴权框架封装 modules-security的替代品 后期就去掉了modules-security
+|   |--modules-lh-security 分布式安全授权鉴权框架封装
 |   |
-|   |--modules-zk-distributed-util 基于ZooKeeper的分布式环境下数据一致性工具包
+|   |--modules-youji-task 酉鸡-分布式定时任务管理模块
 |   |
-|   |--modules-es-util es能力快速集成功能模块（开发中）
-|   |
-|   |--modules-reids-util redis能力快速集成功能模块（计划开发）
-|   |
-|   |--modules-mq-util mq能力快速集成功能模块(计划开发：计划支持多种mq中间件:ActiveMQ、RabbitMq、RocketMq)
-|   |
-|   |--modules-kafuka kafuka能力快速集成功能模块(计划开发)
-|   |
-|--cloud-gateway - spring cloud gateway 应用 <groupId>com.cloud.base</groupId>
 |
-|--example - 示例项目 <groupId>com.cloud.base</groupId>
-|   |
-|   |--boot-example springboot单体应用集成示例
-|   |
-|   |--cloud-example springcloud应用集成示例
+|   
+|   
+| 以下是独立部署的应用 以下服务启动后配合前端工程使用 (https://gitee.com/lh_0811/cloud-base-angular-admin)
+|
+|--cloud-gateway  应用网关
+|
+|--authorize-center 集成了modules-lh-security 的授权中心，提供统一授权和鉴权
+|   
+|--code-generator 代码生成工具
+|
+|--user-center 用户中心 提供用户管理和权限管理的相关服务
+|
+|--youji-manage-server 集成了modules-youji-task 的定时任务管理服务端
 ```
+
 ## 版本使用说明
+
 ```
 <springboot.version>2.4.2</springboot.version>
 <springcloud.version>2020.0.3</springcloud.version>
 <springcloud-alibaba.version>2021.1</springcloud-alibaba.version>
 ```
 
-
 ## 多环境打包说明
+
 在需要独立打包的模块resources资源目录下增加不同环境的配置文件
+
 ```
 application-dev.yml
 application-test.yml
 application-prod.yml
 ```
+
 修改application.yml
+
 ```
 spring:
   profiles:
     active: @profileActive@
 ```
+
 在需要独立打包的模块下的pom文件中添加一下打包配置。
-```
+
+``` xml
 <build>
     <plugins>
         <plugin>
@@ -187,6 +194,7 @@ spring:
 ```
 
 mvn打包命令
+
 ```
 # 打开发环境
 mvn clean package -P dev -Dmaven.test.skip=ture
@@ -197,9 +205,11 @@ mvn clean package -P prod -Dmaven.test.skip=ture
 ```
 
 ## 整合dockerfile插件，可直接将jar包构建为docker image 并推送到远程仓库
+
 增加插件依赖
-```
- <!-- docker image build -->
+
+``` xml
+<!-- docker image build -->
 <plugin>
     <groupId>com.spotify</groupId>
     <artifactId>dockerfile-maven-plugin</artifactId>
@@ -208,23 +218,26 @@ mvn clean package -P prod -Dmaven.test.skip=ture
         <execution>
             <id>default</id>
             <goals>
-                <goal>build</goal>
+                <!--如果package时不想用docker打包,就注释掉这个goal-->
+                <!--                        <goal>build</goal>-->
                 <goal>push</goal>
             </goals>
         </execution>
     </executions>
     <configuration>
-        <repository>registry.cn-hangzhou.aliyuncs.com/lh0811/lh0811-docer</repository>
-        <tag>${profileActive}-${project.artifactId}-${project.version}</tag>
-        <username>2329385085@qq.com</username>
-        <password>QQliuhe951@@</password>
+        <repository>49.232.166.94:8099/example/${project.artifactId}</repository>
+        <tag>${profileActive}-${project.version}</tag>
+        <username>admin</username>
+        <password>Harbor12345</password>
         <buildArgs>
             <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
         </buildArgs>
     </configuration>
 </plugin>
 ```
+
 在pom.xml同级目录下增加Dockerfile
+
 ```
 FROM registry.cn-hangzhou.aliyuncs.com/lh0811/lh0811-docer:lh-jdk1.8-0.0.1
 MAINTAINER lh0811
