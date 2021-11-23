@@ -5,6 +5,8 @@ import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.ip.StringUtils;
 import com.cloud.base.core.modules.youji.code.param.YouJiWorkerReceiveTaskParam;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class YouJiWorkerTaskReceiveController {
 
     @PostMapping("/receive")
     @ApiOperation("酉鸡 工作节点接收任务接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", dataType = "YouJiWorkerReceiveTaskParam", dataTypeClass = YouJiWorkerReceiveTaskParam.class, name = "param", value = "参数")
+    })
     public ServerResponse receiveWorker(@Valid @RequestBody YouJiWorkerReceiveTaskParam param) throws Exception {
         log.info("[酉鸡 Worker 接收到执行任务] param={}", JSON.toJSONString(param));
         try {

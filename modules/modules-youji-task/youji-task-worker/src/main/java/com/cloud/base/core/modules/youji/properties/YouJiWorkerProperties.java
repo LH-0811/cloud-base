@@ -21,4 +21,10 @@ public class YouJiWorkerProperties {
     @ApiModelProperty(value = "管理服务端口")
     private Integer managePort = 9301;
 
+    @ApiModelProperty(value = "当前工作节点ip")
+    private String currentWorkerIp = "127.0.0.1";
+
+    @ApiModelProperty(value = "当前工作节点端口")
+    private Integer currentWorkerPort = 9301;
+
 }

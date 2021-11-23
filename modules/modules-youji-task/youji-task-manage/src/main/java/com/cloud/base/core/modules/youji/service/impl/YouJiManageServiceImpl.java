@@ -122,6 +122,8 @@ public class YouJiManageServiceImpl implements YouJiManageService {
                     taskInfo.setUpdateTime(new Date());
                     taskInfo.setLastExecTime(null);
                     taskInfoDao.save(taskInfo);
+                    // 注册后立即启动定时任务
+                    youJiSchedulerTaskScannerInit.saveTask(taskInfo);
                 }
                 // 根据worker的ip port 查看worker表中是否已经有改工作节点。
                 QueryWrapper<TaskWorker> taskWorkerQueryWrapper = new QueryWrapper<>();
@@ -388,32 +390,34 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         updateInfo.setCorn(param.getCron());
         updateInfo.setUpdateTime(new Date());
         taskInfoDao.updateById(updateInfo);
-
-        // 更新定时任务执行计划
-        HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskScannerInit.getSchedulerEntityHashMap();
-        // 获取原任务的执行计划
-        YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
-        // 如果该任务是可用状态 需要直接停用启动
-        if (taskInfo.getEnableFlag()) {
-            taskInfo.setCorn(param.getCron());
-            if (schedulerEntity == null) {
-                schedulerEntity = new YouJiSchedulerEntity();
-            } else {
-                if (!schedulerEntity.getFuture().isCancelled()) {
-                    // 取消定时任务 如果执行中是否中断
-                    schedulerEntity.getFuture().cancel(true);
-                }
-            }
-            // 覆盖原定时任务执行计划
-            schedulerEntity.setTaskNo(taskInfo.getTaskNo());
-            schedulerEntity.setTaskInfo(taskInfo);
-            ScheduledFuture<?> schedule = youJiSchedulerTaskScannerInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorkerComponent(taskInfo.getTaskNo(), this, youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
-            schedulerEntity.setFuture(schedule);
-            schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
-        } else {
-            // 如果是停用状态
-            schedulerEntityHashMap.remove(taskInfo.getTaskNo());
-        }
+        taskInfo.setCorn(param.getCron());
+        // 保存定时任务修改
+        youJiSchedulerTaskScannerInit.saveTask(taskInfo);
+//        // 更新定时任务执行计划
+//        HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskScannerInit.getSchedulerEntityHashMap();
+//        // 获取原任务的执行计划
+//        YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
+//        // 如果该任务是可用状态 需要直接停用启动
+//        if (taskInfo.getEnableFlag()) {
+//            taskInfo.setCorn(param.getCron());
+//            if (schedulerEntity == null) {
+//                schedulerEntity = new YouJiSchedulerEntity();
+//            } else {
+//                if (!schedulerEntity.getFuture().isCancelled()) {
+//                    // 取消定时任务 如果执行中是否中断
+//                    schedulerEntity.getFuture().cancel(true);
+//                }
+//            }
+//            // 覆盖原定时任务执行计划
+//            schedulerEntity.setTaskNo(taskInfo.getTaskNo());
+//            schedulerEntity.setTaskInfo(taskInfo);
+//            ScheduledFuture<?> schedule = youJiSchedulerTaskScannerInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorkerComponent(taskInfo.getTaskNo(), this, youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
+//            schedulerEntity.setFuture(schedule);
+//            schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
+//        } else {
+//            // 如果是停用状态
+//            schedulerEntityHashMap.remove(taskInfo.getTaskNo());
+//        }
     }
 
 
@@ -437,39 +441,42 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         updateInfo.setEnableFlag(param.getEnableFlag());
         updateInfo.setUpdateTime(new Date());
         taskInfoDao.updateById(updateInfo);
+
         taskInfo.setEnableFlag(param.getEnableFlag());
+        // 保存定时任务修改
+        youJiSchedulerTaskScannerInit.saveTask(taskInfo);
 
-        // 更新定时任务执行计划
-        HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskScannerInit.getSchedulerEntityHashMap();
-        // 获取原任务的执行计划
-        YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
+//        // 更新定时任务执行计划
+//        HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskScannerInit.getSchedulerEntityHashMap();
+//        // 获取原任务的执行计划
+//        YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
 
-        if (param.getEnableFlag()) {
-            // 启动定时任务
-            if (schedulerEntity == null) {
-                schedulerEntity = new YouJiSchedulerEntity();
-            } else {
-                if (!schedulerEntity.getFuture().isCancelled()) {
-                    // 取消定时任务 如果执行中是否中断
-                    schedulerEntity.getFuture().cancel(true);
-                }
-            }
-            // 覆盖原定时任务执行计划
-            schedulerEntity.setTaskNo(taskInfo.getTaskNo());
-            schedulerEntity.setTaskInfo(taskInfo);
-            ScheduledFuture<?> schedule = youJiSchedulerTaskScannerInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorkerComponent(taskInfo.getTaskNo(), this, youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
-            schedulerEntity.setFuture(schedule);
-            schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
-        } else {
-            // 停止定时任务
-            if (schedulerEntity != null) {
-                if (!schedulerEntity.getFuture().isCancelled()) {
-                    // 取消定时任务 如果执行中是否中断
-                    schedulerEntity.getFuture().cancel(true);
-                }
-            }
-            schedulerEntityHashMap.remove(taskInfo.getTaskNo());
-        }
+//        if (param.getEnableFlag()) {
+//            // 启动定时任务
+//            if (schedulerEntity == null) {
+//                schedulerEntity = new YouJiSchedulerEntity();
+//            } else {
+//                if (!schedulerEntity.getFuture().isCancelled()) {
+//                    // 取消定时任务 如果执行中是否中断
+//                    schedulerEntity.getFuture().cancel(true);
+//                }
+//            }
+//            // 覆盖原定时任务执行计划
+//            schedulerEntity.setTaskNo(taskInfo.getTaskNo());
+//            schedulerEntity.setTaskInfo(taskInfo);
+//            ScheduledFuture<?> schedule = youJiSchedulerTaskScannerInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorkerComponent(taskInfo.getTaskNo(), this, youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
+//            schedulerEntity.setFuture(schedule);
+//            schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
+//        } else {
+//            // 停止定时任务
+//            if (schedulerEntity != null) {
+//                if (!schedulerEntity.getFuture().isCancelled()) {
+//                    // 取消定时任务 如果执行中是否中断
+//                    schedulerEntity.getFuture().cancel(true);
+//                }
+//            }
+//            schedulerEntityHashMap.remove(taskInfo.getTaskNo());
+//        }
 
     }
 

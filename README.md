@@ -1,6 +1,6 @@
 # springcloud 脚手架项目
 ## 系统架构图
-![avatar](./3_image/服务架构图.png)
+![avatar](cloud-base/1_assets/image/服务架构图.png)
 ## 快速启动
 1.本地启动nacos: http://127.0.0.1:8848
 ```shell
@@ -53,11 +53,11 @@ maven：实现多环境打包、直推镜像到docker私服。
 
 ## 项目预览
 前端项目地址：https://gitee.com/lh_0811/cloud-base-angular-admin
-![avatar](./3_image/用户管理.jpg)
-![avatar](./3_image/资源管理.png)
-![avatar](./3_image/流控.jpg)
-![avatar](./3_image/代码生成.jpg)
-![avatar](./3_image/定时任务管理.jpg)
+![avatar](cloud-base/1_assets/image/用户管理.jpg)
+![avatar](cloud-base/1_assets/image/资源管理.png)
+![avatar](cloud-base/1_assets/image/流控.jpg)
+![avatar](cloud-base/1_assets/image/代码生成.jpg)
+![avatar](cloud-base/1_assets/image/定时任务管理.jpg)
 
 ## 新建业务工程模块说明。
 

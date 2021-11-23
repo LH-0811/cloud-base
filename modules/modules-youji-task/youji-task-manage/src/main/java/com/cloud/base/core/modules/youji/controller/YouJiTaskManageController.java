@@ -113,7 +113,7 @@ public class YouJiTaskManageController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/exec/{taskNo}")
+    @GetMapping("/exec/{taskNo}")
     @ApiOperation("修改定时任务停止 和 启动")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", dataType = "String", dataTypeClass = String.class, name = "taskNo", value = "参数")

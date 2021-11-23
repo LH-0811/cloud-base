@@ -46,6 +46,9 @@ public class YouJiTaskScanner implements CommandLineRunner {
     @Autowired
     private WorkerRegisterNetwork registerNetwork;
 
+    @Autowired
+    private YouJiWorkerProperties workerProperties;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -81,8 +84,8 @@ public class YouJiTaskScanner implements CommandLineRunner {
         }
 
         // 将注册请求发送到管理端
-        param.setWorkIP("127.0.0.1");
-        param.setWorkPort(9301);
+        param.setWorkIP(workerProperties.getCurrentWorkerIp());
+        param.setWorkPort(workerProperties.getCurrentWorkerPort());
         registerNetwork.registerToManage(param);
 
         log.info("[酉鸡 Worder 扫描并注册定时任务] YouJiTaskScanner 完成");

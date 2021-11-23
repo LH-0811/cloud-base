@@ -56,3 +56,8 @@ management:
     web:
       exposure:
         include: "*"
+
+youji:
+  server:
+    heart-beat-corn: 0/5 * * * * ?
+    die-no-heart-num: 10

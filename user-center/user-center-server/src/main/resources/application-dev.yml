@@ -150,3 +150,5 @@ youji:
   worker:
     manage-host: 127.0.0.1
     manage-port: 8889
+    current-worker-ip: 127.0.0.1
+    current-worker-port: 9301

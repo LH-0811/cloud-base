@@ -4,6 +4,7 @@ import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import com.cloud.base.core.modules.youji.scheduler.entity.YouJiSchedulerEntity;
 import com.cloud.base.core.modules.youji.service.YouJiExceptionService;
 import com.cloud.base.core.modules.youji.service.YouJiManageService;
+import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -52,11 +53,30 @@ public class YouJiSchedulerTaskScannerInit implements CommandLineRunner {
         log.info("[酉鸡 服务Manage初始化定时任务] YouJiSchedulerTaskInit 完成");
     }
 
-    public HashMap<String, YouJiSchedulerEntity> getSchedulerEntityHashMap() {
-        return schedulerEntityHashMap;
-    }
-
-    public ThreadPoolTaskScheduler getThreadPoolTaskScheduler() {
-        return threadPoolTaskScheduler;
+    // 保存定时任务修改并立即生效启动定时任务
+    public void saveTask(TaskInfo taskInfo) {
+        // 获取原任务的执行计划
+        YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
+        // 先中断之前的定时任务
+        if (schedulerEntity == null) {
+            schedulerEntity = new YouJiSchedulerEntity();
+        } else {
+            if (!schedulerEntity.getFuture().isCancelled()) {
+                // 取消定时任务 如果执行中是否中断
+                schedulerEntity.getFuture().cancel(true);
+            }
+        }
+        // 如果该任务是可用状态 需要直接停用启动
+        if (taskInfo.getEnableFlag()) {
+            // 覆盖原定时任务执行计划
+            schedulerEntity.setTaskNo(taskInfo.getTaskNo());
+            schedulerEntity.setTaskInfo(taskInfo);
+            ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(new SendTaskToWorkerComponent(taskInfo.getTaskNo(), youJiManageService, youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
+            schedulerEntity.setFuture(schedule);
+            schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
+        } else {
+            // 如果是停用状态
+            schedulerEntityHashMap.remove(taskInfo.getTaskNo());
+        }
     }
 }
