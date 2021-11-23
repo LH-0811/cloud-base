@@ -1,4 +1,6 @@
 # springcloud 脚手架项目
+## 系统架构图
+![avatar]()
 ## 快速启动
 1.本地启动nacos: http://127.0.0.1:8848
 ```shell
