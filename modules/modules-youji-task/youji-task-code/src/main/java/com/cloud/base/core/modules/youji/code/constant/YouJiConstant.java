@@ -33,6 +33,7 @@ public class YouJiConstant {
         NOT_FIND_WORKER("1002", "未获取到工作节点"),
         FAIL_SEND_TASK_TO_WORKER("1003", "向工作节点发送任务失败"),
         TASK_EXEC_TYPE_ERR("1004", "任务执行方式不合法"),
+        WORKER_TASK_RESP_ERR("1005", "工作节点返回响应格式不正确"),
         ;
         private String code;
         private String msg;

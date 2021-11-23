@@ -7,6 +7,7 @@ import com.cloud.base.core.common.exception.CommonException;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.IdWorker;
 import com.cloud.base.core.modules.youji.code.constant.YouJiConstant;
+import com.cloud.base.core.modules.youji.code.dto.GetWorkerDto;
 import com.cloud.base.core.modules.youji.code.exception.YouJiException;
 import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.dao.TaskInfoDao;
@@ -17,9 +18,10 @@ import com.cloud.base.core.modules.youji.code.repository.entity.TaskWorker;
 import com.cloud.base.core.modules.youji.code.repository.entity.YoujiTaskExecLog;
 import com.cloud.base.core.modules.youji.code.util.YouJiOkHttpClientUtil;
 import com.cloud.base.core.modules.youji.properties.YouJiServerProperties;
-import com.cloud.base.core.modules.youji.scheduler.SendTaskToWorker;
-import com.cloud.base.core.modules.youji.scheduler.YouJiSchedulerEntity;
-import com.cloud.base.core.modules.youji.scheduler.YouJiSchedulerTaskInit;
+import com.cloud.base.core.modules.youji.scheduler.SendTaskToWorkerComponent;
+import com.cloud.base.core.modules.youji.scheduler.YouJiSchedulerGetWorkerComponent;
+import com.cloud.base.core.modules.youji.scheduler.entity.YouJiSchedulerEntity;
+import com.cloud.base.core.modules.youji.scheduler.YouJiSchedulerTaskScannerInit;
 import com.cloud.base.core.modules.youji.service.YouJiExceptionService;
 import com.cloud.base.core.modules.youji.service.YouJiManageService;
 import com.github.pagehelper.PageHelper;
@@ -30,11 +32,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -70,10 +70,18 @@ public class YouJiManageServiceImpl implements YouJiManageService {
     private YouJiOkHttpClientUtil httpClientUtil;
 
     @Autowired
-    private YouJiSchedulerTaskInit youJiSchedulerTaskInit;
+    private YouJiSchedulerTaskScannerInit youJiSchedulerTaskScannerInit;
 
     @Autowired
     private YouJiExceptionService youJiExceptionService;
+
+    @Autowired
+    private YouJiSchedulerGetWorkerComponent getWorkerComponent;
+
+    @Autowired
+    private YoujiTaskExecLogDao youjiTaskExecLogDao;
+
+    //////////////// 定时任务流程处理
 
     /**
      * 注册定时任务
@@ -214,40 +222,6 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         return taskInfoDao.list(taskInfoQueryWrapper);
     }
 
-    @Override
-    public TaskWorker getSingleNode(TaskInfo taskInfo) {
-        log.info("[YouJi-Manage 挑选一个工作节点] date={}", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-        QueryWrapper<TaskWorker> taskWorkerQueryWrapper = new QueryWrapper<>();
-
-        // todo 暂时先拿执行次数最少的在线可用
-        taskWorkerQueryWrapper.lambda()
-                .eq(TaskWorker::getTaskId, taskInfo.getId())
-                .eq(TaskWorker::getTaskNo, taskInfo.getTaskNo())
-                .eq(TaskWorker::getBeatFailNum, 0)
-                .eq(TaskWorker::getEnableFlag, Boolean.TRUE)
-                .eq(TaskWorker::getOnlineFlag, Boolean.TRUE)
-                .orderByAsc(TaskWorker::getExecTaskNum);
-
-        List<TaskWorker> taskWorkerList = taskWorkerDao.list(taskWorkerQueryWrapper);
-        if (CollectionUtils.isEmpty(taskWorkerList)) {
-            return null;
-        }
-        return taskWorkerList.get(0);
-    }
-
-    @Override
-    public List<TaskWorker> getAllNode(TaskInfo taskInfo) {
-        log.info("[YouJi-Manage 获取全部可用的工作节点] date={}", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-        QueryWrapper<TaskWorker> taskWorkerQueryWrapper = new QueryWrapper<>();
-        taskWorkerQueryWrapper.lambda()
-                .eq(TaskWorker::getTaskId, taskInfo.getId())
-                .eq(TaskWorker::getTaskNo, taskInfo.getTaskNo())
-                .eq(TaskWorker::getBeatFailNum, 0)
-                .eq(TaskWorker::getEnableFlag, Boolean.TRUE)
-                .eq(TaskWorker::getOnlineFlag, Boolean.TRUE)
-                .orderByAsc(TaskWorker::getExecTaskNum);
-        return taskWorkerDao.list(taskWorkerQueryWrapper);
-    }
 
     /**
      * 移除无效的工作节点
@@ -260,6 +234,76 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         taskWorkerDao.remove(taskWorkerDeleteQueryWrapper);
     }
 
+    /**
+     * 执行定时任务
+     *
+     * @param taskNo
+     * @throws YouJiException
+     */
+    @Override
+    public void executeTask(String taskNo) throws YouJiException {
+        log.info("[酉鸡 立即执行任务] taskNo={}", taskNo);
+        // 获取工作节点
+        GetWorkerDto getWorkerDto = getWorkerComponent.getTaskWorkerByTaskNo(taskNo);
+        // 准备参数
+        YouJiWorkerReceiveTaskParam receiveTaskParam = new YouJiWorkerReceiveTaskParam();
+        BeanUtils.copyProperties(getWorkerDto.getTaskInfo(), receiveTaskParam);
+        log.info("[酉鸡 Manage向Worker 发起任务] taskNo:{} 对应的执行类型:{}", getWorkerDto.getTaskInfo().getTaskNo(), getWorkerDto.getTaskInfo().getExecType());
+        for (TaskWorker taskWorker : getWorkerDto.getTaskWorkerList()) {
+            try {
+                receiveTaskParam.setWorkerId(taskWorker.getId());
+                Response response = httpClientUtil.postJSONParameters("http://" + taskWorker.getWorkerIp() + ":" + taskWorker.getWorkerPort() + "/youji/task/worker/receive", JSON.toJSONString(receiveTaskParam));
+                finishTask(receiveTaskParam, getWorkerDto.getTaskInfo(), taskWorker, response);
+            } catch (IOException e) {
+                log.info("[酉鸡 Manage向Worker 发起任务]  taskNo:{} Worker节点：{}:{} 失败:{}", getWorkerDto.getTaskInfo().getTaskNo(), taskWorker.getWorkerIp(), taskWorker.getWorkerPort(), e);
+                throw new YouJiException(YouJiConstant.YouJiErrorEnum.FAIL_SEND_TASK_TO_WORKER, getWorkerDto.getTaskInfo(), taskWorker, e.getMessage());
+            } catch (YouJiException e) {
+                throw e;
+            }
+        }
+    }
+
+    // 任务执行完成后 这里只处理工作节点成功返回响应的情况
+    private void finishTask(YouJiWorkerReceiveTaskParam param, TaskInfo taskInfo, TaskWorker taskWorker, Response response) throws YouJiException, IOException {
+        ServerResponse serverResponse = null;
+        if (response.code() == 200) { // http 请求响应200
+            try {
+                serverResponse = JSON.parseObject(response.body().string(), ServerResponse.class);
+            } catch (Exception e) {
+                throw new YouJiException(YouJiConstant.YouJiErrorEnum.WORKER_TASK_RESP_ERR, response.body().string());
+            }
+        }
+        // 1. 记录任务执行日志
+        YoujiTaskExecLog execLog = new YoujiTaskExecLog();
+        execLog.setId(idWorker.nextId());
+        execLog.setTaskNo(param.getTaskNo());
+        execLog.setTaskName(param.getTaskName());
+        execLog.setWorkerId(param.getWorkerId());
+        execLog.setWorkerIp(taskWorker.getWorkerIp());
+        execLog.setWorkerPort(taskWorker.getWorkerPort());
+        execLog.setTaskParam(param.getTaskParam());
+        execLog.setContactsName(param.getContactsName());
+        execLog.setContactsPhone(param.getContactsPhone());
+        execLog.setContactsEmail(param.getContactsEmail());
+        execLog.setFinishFlag(serverResponse.isSuccess());
+        execLog.setResultMsg(serverResponse.getMsg());
+        execLog.setCreateTime(new Date());
+        execLog.setUpdateTime(new Date());
+        youjiTaskExecLogDao.save(execLog);
+        // 2. 修改worker信息
+        TaskWorker workerUpdateInfo = new TaskWorker();
+        workerUpdateInfo.setId(taskWorker.getId());
+        workerUpdateInfo.setExecTaskNum(taskWorker.getExecTaskNum() == null ? 1 : taskWorker.getExecTaskNum() + 1);
+        workerUpdateInfo.setLastExecTime(new Date());
+        taskWorkerDao.updateById(workerUpdateInfo);
+        // 3. 修改任务信息
+        TaskInfo updateTask = new TaskInfo();
+        updateTask.setId(taskInfo.getId());
+        updateTask.setExecNum(taskInfo.getExecNum() == null ? 1 : taskInfo.getExecNum() + 1);
+        updateTask.setLastExecTime(new Date());
+        taskInfoDao.updateById(updateTask);
+    }
+    //////////////// 信息管理
 
     /**
      * 查询定时任务列表
@@ -346,7 +390,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         taskInfoDao.updateById(updateInfo);
 
         // 更新定时任务执行计划
-        HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskInit.getSchedulerEntityHashMap();
+        HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskScannerInit.getSchedulerEntityHashMap();
         // 获取原任务的执行计划
         YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
         // 如果该任务是可用状态 需要直接停用启动
@@ -363,7 +407,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             // 覆盖原定时任务执行计划
             schedulerEntity.setTaskNo(taskInfo.getTaskNo());
             schedulerEntity.setTaskInfo(taskInfo);
-            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo.getTaskNo(), this,youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
+            ScheduledFuture<?> schedule = youJiSchedulerTaskScannerInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorkerComponent(taskInfo.getTaskNo(), this, youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
             schedulerEntity.setFuture(schedule);
             schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
         } else {
@@ -396,7 +440,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
         taskInfo.setEnableFlag(param.getEnableFlag());
 
         // 更新定时任务执行计划
-        HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskInit.getSchedulerEntityHashMap();
+        HashMap<String, YouJiSchedulerEntity> schedulerEntityHashMap = youJiSchedulerTaskScannerInit.getSchedulerEntityHashMap();
         // 获取原任务的执行计划
         YouJiSchedulerEntity schedulerEntity = schedulerEntityHashMap.get(taskInfo.getTaskNo());
 
@@ -413,7 +457,7 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             // 覆盖原定时任务执行计划
             schedulerEntity.setTaskNo(taskInfo.getTaskNo());
             schedulerEntity.setTaskInfo(taskInfo);
-            ScheduledFuture<?> schedule = youJiSchedulerTaskInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorker(taskInfo.getTaskNo(), this,youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
+            ScheduledFuture<?> schedule = youJiSchedulerTaskScannerInit.getThreadPoolTaskScheduler().schedule(new SendTaskToWorkerComponent(taskInfo.getTaskNo(), this, youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
             schedulerEntity.setFuture(schedule);
             schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
         } else {
@@ -427,52 +471,6 @@ public class YouJiManageServiceImpl implements YouJiManageService {
             schedulerEntityHashMap.remove(taskInfo.getTaskNo());
         }
 
-    }
-
-    @Override
-    public void executeTask(String taskNo) throws Exception {
-        log.info("[酉鸡 立即执行任务] taskNo={}", taskNo);
-        QueryWrapper<TaskInfo> taskInfoQueryWrapper = new QueryWrapper<>();
-        taskInfoQueryWrapper.lambda().eq(TaskInfo::getTaskNo, taskNo);
-        TaskInfo taskInfo = taskInfoDao.getOne(taskInfoQueryWrapper);
-        if (taskInfo == null) {
-            throw new YouJiException(YouJiConstant.YouJiErrorEnum.NOT_EXIST_TASK.getCode(),YouJiConstant.YouJiErrorEnum.NOT_EXIST_TASK.getMsg()+":"+taskNo);
-        }
-        // 准备参数
-        YouJiWorkerReceiveTaskParam receiveTaskParam = new YouJiWorkerReceiveTaskParam();
-        BeanUtils.copyProperties(taskInfo, receiveTaskParam);
-        log.info("[酉鸡 Manage向Worker 发起任务] taskNo:{} 对应的执行类型:{}", taskInfo.getTaskNo(), taskInfo.getExecType());
-        // 找到目标客户端端
-        if (YouJiConstant.ExecType.SINGLE_NODE.getCode().equals(taskInfo.getExecType())) {
-            log.info("[酉鸡 Manage向Worker 发起任务] taskNo:{} 对应的执行类型:{} 进入单节点执行发布流程", taskInfo.getTaskNo(), taskInfo.getExecType());
-            // todo liuhe 获取到最优的工作节点 (算法待优化 先拿执行次数最少的节点)
-            TaskWorker taskWorker = getSingleNode(taskInfo);
-            if (taskWorker == null) {
-                throw new YouJiException(YouJiConstant.YouJiErrorEnum.NOT_FIND_WORKER,taskInfo);
-            }
-            // 向该节点发送执行请求
-            try {
-                receiveTaskParam.setWorkerId(taskWorker.getId());
-                httpClientUtil.postJSONParameters("http://" + taskWorker.getWorkerIp() + ":" + taskWorker.getWorkerPort() + "/youji/task/worker/receive", JSON.toJSONString(receiveTaskParam));
-            } catch (IOException e) {
-                log.info("[酉鸡 Manage向Worker 发起任务]  taskNo:{} Worker节点：{}:{} 失败:{}", taskInfo.getTaskNo(), taskWorker.getWorkerIp(), taskWorker.getWorkerPort(), e);
-                throw new YouJiException(YouJiConstant.YouJiErrorEnum.FAIL_SEND_TASK_TO_WORKER,taskInfo,taskWorker);
-            }
-        } else if (YouJiConstant.ExecType.ALL_NODE.getCode().equals(taskInfo.getExecType())) {
-            List<TaskWorker> allNode = getAllNode(taskInfo);
-            for (TaskWorker taskWorker : allNode) {
-                try {
-                    receiveTaskParam.setWorkerId(taskWorker.getId());
-                    httpClientUtil.postJSONParameters("http://" + taskWorker.getWorkerIp() + ":" + taskWorker.getWorkerPort() + "/youji/task/worker/receive", JSON.toJSONString(receiveTaskParam));
-                } catch (IOException e) {
-                    log.info("[酉鸡 Manage向Worker 发起任务]  taskNo:{} Worker节点：{}:{} 失败:{}", taskInfo.getTaskNo(), taskWorker.getWorkerIp(), taskWorker.getWorkerPort(), e);
-                    throw new YouJiException(YouJiConstant.YouJiErrorEnum.FAIL_SEND_TASK_TO_WORKER,taskInfo,taskWorker);
-                }
-            }
-        } else {
-            log.info("[酉鸡 Manage向Worker 发起任务] taskNo:{} 对应的执行类型不合法:{}", taskInfo.getTaskNo(), taskInfo.getExecType());
-            throw new YouJiException(YouJiConstant.YouJiErrorEnum.TASK_EXEC_TYPE_ERR,taskInfo);
-        }
     }
 
 

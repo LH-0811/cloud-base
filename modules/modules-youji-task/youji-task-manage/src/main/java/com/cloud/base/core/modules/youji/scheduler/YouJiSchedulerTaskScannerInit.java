@@ -1,6 +1,7 @@
 package com.cloud.base.core.modules.youji.scheduler;
 
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
+import com.cloud.base.core.modules.youji.scheduler.entity.YouJiSchedulerEntity;
 import com.cloud.base.core.modules.youji.service.YouJiExceptionService;
 import com.cloud.base.core.modules.youji.service.YouJiManageService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import java.util.concurrent.ScheduledFuture;
 @Slf4j
 @Order(value = Integer.MAX_VALUE)
 @Component
-public class YouJiSchedulerTaskInit implements CommandLineRunner {
+public class YouJiSchedulerTaskScannerInit implements CommandLineRunner {
 
 
     @Autowired
@@ -44,7 +45,7 @@ public class YouJiSchedulerTaskInit implements CommandLineRunner {
             YouJiSchedulerEntity schedulerEntity = new YouJiSchedulerEntity();
             schedulerEntity.setTaskNo(taskInfo.getTaskNo());
             schedulerEntity.setTaskInfo(taskInfo);
-            ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(new SendTaskToWorker(taskInfo.getTaskNo(), youJiManageService,youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
+            ScheduledFuture<?> schedule = threadPoolTaskScheduler.schedule(new SendTaskToWorkerComponent(taskInfo.getTaskNo(), youJiManageService,youJiExceptionService), new CronTrigger(taskInfo.getCorn()));
             schedulerEntity.setFuture(schedule);
             schedulerEntityHashMap.put(taskInfo.getTaskNo(), schedulerEntity);
         }

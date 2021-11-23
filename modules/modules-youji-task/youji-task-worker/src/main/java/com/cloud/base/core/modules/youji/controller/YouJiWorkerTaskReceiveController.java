@@ -4,17 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.cloud.base.core.common.response.ServerResponse;
 import com.cloud.base.core.common.util.ip.StringUtils;
 import com.cloud.base.core.modules.youji.code.param.YouJiWorkerReceiveTaskParam;
-import com.cloud.base.core.modules.youji.service.YouJiWorkerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 @Slf4j
 @Api(tags = "酉鸡-任务接收接口")
@@ -24,9 +25,6 @@ public class YouJiWorkerTaskReceiveController {
 
     @Autowired
     private ApplicationContext applicationContext;
-
-    @Autowired
-    private YouJiWorkerService youJiWorkerService;
 
     @PostMapping("/receive")
     @ApiOperation("酉鸡 工作节点接收任务接口")
@@ -51,8 +49,6 @@ public class YouJiWorkerTaskReceiveController {
                     serverResponse = ServerResponse.createBySuccess("执行成功");
                 }
             }
-            // 工作节点完成工作后 增加日志
-            youJiWorkerService.finishTask(param, serverResponse);
             return serverResponse;
         } catch (Exception e) {
             return ServerResponse.createByError("定时任务执行失败:"+e.getLocalizedMessage());

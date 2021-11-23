@@ -19,29 +19,35 @@ import lombok.Setter;
 public class YouJiException extends Exception {
     private String code;
     private String errMsg;
+    private String descStr;
     private TaskInfo taskInfo;
     private TaskWorker taskWorker;
 
 
-    public YouJiException(String code,String errMsg){
+    public YouJiException(String code, String errMsg, String descStr) {
         this.code = code;
         this.errMsg = errMsg;
+        this.descStr = descStr;
     }
 
-    public YouJiException(YouJiConstant.YouJiErrorEnum errorEnum){
+    public YouJiException(YouJiConstant.YouJiErrorEnum errorEnum, String descStr) {
         this.code = errorEnum.getCode();
         this.errMsg = errorEnum.getMsg();
+        this.descStr = descStr;
     }
-    public YouJiException(YouJiConstant.YouJiErrorEnum errorEnum,TaskInfo taskInfo){
+
+    public YouJiException(YouJiConstant.YouJiErrorEnum errorEnum, TaskInfo taskInfo, String descStr) {
         this.code = errorEnum.getCode();
         this.errMsg = errorEnum.getMsg();
         this.taskInfo = taskInfo;
+        this.descStr = descStr;
     }
 
-    public YouJiException(YouJiConstant.YouJiErrorEnum errorEnum,TaskInfo taskInfo,TaskWorker taskWorker){
+    public YouJiException(YouJiConstant.YouJiErrorEnum errorEnum, TaskInfo taskInfo, TaskWorker taskWorker, String descStr) {
         this.code = errorEnum.getCode();
         this.errMsg = errorEnum.getMsg();
         this.taskInfo = taskInfo;
         this.taskWorker = taskWorker;
+        this.descStr = descStr;
     }
 }

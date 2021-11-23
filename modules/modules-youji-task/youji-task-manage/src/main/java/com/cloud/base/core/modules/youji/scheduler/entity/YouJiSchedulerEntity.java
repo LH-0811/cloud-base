@@ -1,4 +1,4 @@
-package com.cloud.base.core.modules.youji.scheduler;
+package com.cloud.base.core.modules.youji.scheduler.entity;
 
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import io.swagger.annotations.ApiModel;

@@ -55,7 +55,7 @@ public class YouJiExceptionServiceImpl implements YouJiExceptionService {
         execLog.setContactsPhone(taskInfo.getContactsPhone());
         execLog.setContactsEmail(taskInfo.getContactsEmail());
         execLog.setFinishFlag(Boolean.FALSE);
-        execLog.setResultMsg(exception.getErrMsg());
+        execLog.setResultMsg(exception.getErrMsg()+":"+exception.getDescStr());
         execLog.setCreateTime(new Date());
         execLog.setUpdateTime(new Date());
         youjiTaskExecLogDao.save(execLog);

@@ -1,5 +1,6 @@
 package com.cloud.base.core.modules.youji.service;
 
+import com.cloud.base.core.modules.youji.code.exception.YouJiException;
 import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskWorker;
@@ -39,23 +40,6 @@ public interface YouJiManageService {
     List<TaskInfo> getAllEnableTaskInfo();
 
     /**
-     * 获取到 一个工作接单来执行定时任务
-     *
-     * @param taskInfo
-     * @return
-     */
-    TaskWorker getSingleNode(TaskInfo taskInfo);
-
-    /**
-     * 获取到全部的工作节点
-     *
-     * @param taskInfo
-     * @return
-     */
-    List<TaskWorker> getAllNode(TaskInfo taskInfo);
-
-
-    /**
      * 查询定时任务列表
      *
      * @param param
@@ -91,7 +75,7 @@ public interface YouJiManageService {
      *
      * @param taskNo
      */
-    void executeTask(String taskNo) throws Exception;
+    void executeTask(String taskNo) throws YouJiException;
 
     /**
      * 查询定时任务日志列表

@@ -6,13 +6,13 @@ import com.cloud.base.core.modules.youji.service.YouJiManageService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SendTaskToWorker implements Runnable {
+public class SendTaskToWorkerComponent implements Runnable {
 
     private YouJiManageService youJiManageService;
     private String taskNo;
     private YouJiExceptionService youJiExceptionService;
 
-    public SendTaskToWorker(String taskNo, YouJiManageService youJiManageService,YouJiExceptionService youJiExceptionService) {
+    public SendTaskToWorkerComponent(String taskNo, YouJiManageService youJiManageService, YouJiExceptionService youJiExceptionService) {
         this.taskNo = taskNo;
         this.youJiManageService = youJiManageService;
         this.youJiExceptionService = youJiExceptionService;

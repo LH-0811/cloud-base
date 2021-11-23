@@ -7,6 +7,7 @@ import com.cloud.base.core.modules.youji.code.param.*;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskInfo;
 import com.cloud.base.core.modules.youji.code.repository.entity.TaskWorker;
 import com.cloud.base.core.modules.youji.code.repository.entity.YoujiTaskExecLog;
+import com.cloud.base.core.modules.youji.service.YouJiExceptionService;
 import com.cloud.base.core.modules.youji.service.YouJiManageService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -33,6 +34,8 @@ public class YouJiTaskManageController {
     @Autowired
     private YouJiManageService youJiManageService;
 
+    @Autowired
+    private YouJiExceptionService youJiExceptionService;
 
     /**
      * 查询定时任务列表
@@ -119,8 +122,9 @@ public class YouJiTaskManageController {
         log.info("[酉鸡 定时任务管理接口] 立即执行定时任务 :taskNo={}", taskNo);
         try {
             youJiManageService.executeTask(taskNo);
-        }catch (YouJiException e){
+        } catch (YouJiException e) {
             // 获取到酉鸡框架定义的异常信息并记录日志
+            youJiExceptionService.logException(e);
         }
 
         return ServerResponse.createBySuccess("执行成功");
