@@ -1,6 +1,6 @@
 # springcloud 脚手架项目
 ## 系统架构图
-![avatar](./服务架构图.png)
+![avatar](./3_image/服务架构图.png)
 ## 快速启动
 1.本地启动nacos: http://127.0.0.1:8848
 ```shell
@@ -50,6 +50,14 @@ maven：实现多环境打包、直推镜像到docker私服。
 另一方面现在springboot springcloud 已经springcloud-alibaba的版本迭代速度越来越快。
 
 为了保证我们的封装和集成方式在新版本中依然正常运行，需要用该项目进行最新版本的适配实验。这样可以更快的在项目中集合工程中的功能模块。
+
+## 项目预览
+前端项目地址：https://gitee.com/lh_0811/cloud-base-angular-admin
+![avatar](./3_image/用户管理.jpg)
+![avatar](./3_image/资源管理.png)
+![avatar](./3_image/流控.jpg)
+![avatar](./3_image/代码生成.jpg)
+![avatar](./3_image/定时任务管理.jpg)
 
 ## 新建业务工程模块说明。
 
