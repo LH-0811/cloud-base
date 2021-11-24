@@ -122,9 +122,30 @@ public class YouJiManageServiceImpl implements YouJiManageService {
                     taskInfo.setUpdateTime(new Date());
                     taskInfo.setLastExecTime(null);
                     taskInfoDao.save(taskInfo);
-                    // 注册后立即启动定时任务
-                    youJiSchedulerTaskScannerInit.saveTask(taskInfo);
+                }else {
+                    // 当数据库中已经存在该任务时，则更新任务信息。
+//                    taskInfo.setId(idWorker.nextId());
+                    taskInfo.setTaskType(youJiTaskForm.getTaskType());
+                    taskInfo.setExecType(youJiTaskForm.getExecType());
+                    taskInfo.setTaskNo(youJiTaskForm.getTaskNo());
+                    taskInfo.setTaskName(youJiTaskForm.getTaskName());
+                    taskInfo.setCorn(youJiTaskForm.getCorn());
+                    taskInfo.setTaskUrl(youJiTaskForm.getTaskUrl());
+                    taskInfo.setTaskBeanName(youJiTaskForm.getTaskBeanName());
+                    taskInfo.setTaskMethod(youJiTaskForm.getTaskMethod());
+                    taskInfo.setTaskParam(youJiTaskForm.getTaskParam());
+                    taskInfo.setContactsName(youJiTaskForm.getContactsName());
+                    taskInfo.setContactsPhone(youJiTaskForm.getContactsPhone());
+                    taskInfo.setContactsEmail(youJiTaskForm.getContactsEmail());
+                    taskInfo.setEnableFlag(youJiTaskForm.getEnableFlag());
+                    taskInfo.setCreateTime(new Date());
+                    taskInfo.setUpdateTime(new Date());
+//                    taskInfo.setLastExecTime(null);
+                    taskInfoDao.updateById(taskInfo);
                 }
+                // 注册后立即启动定时任务
+                youJiSchedulerTaskScannerInit.saveTask(taskInfo);
+
                 // 根据worker的ip port 查看worker表中是否已经有改工作节点。
                 QueryWrapper<TaskWorker> taskWorkerQueryWrapper = new QueryWrapper<>();
                 taskWorkerQueryWrapper.lambda()
