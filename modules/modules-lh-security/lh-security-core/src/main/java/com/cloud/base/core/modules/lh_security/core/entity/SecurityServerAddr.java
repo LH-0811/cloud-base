@@ -18,6 +18,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SecurityServerAddr {
 
+    @ApiModelProperty(value = "是否是cloud项目")
+    private Boolean isCloud;
+
     @ApiModelProperty(value = "安全框架服务端地址")
     private String address;
 

@@ -12,10 +12,12 @@ import com.cloud.base.core.modules.lh_security.client.util.OkHttpClientUtil;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
 import com.cloud.base.core.modules.lh_security.core.entity.SecurityRes;
 import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
+import com.cloud.base.core.modules.lh_security.server.authentication.SecurityCheckAuthority;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 
@@ -40,6 +42,8 @@ public class DefaultSecurityClientImpl implements SecurityClient {
     @Autowired
     private OkHttpClientUtil okHttpClientUtil;
 
+    @Autowired
+    private ApplicationContext applicationContext;
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -50,17 +54,28 @@ public class DefaultSecurityClientImpl implements SecurityClient {
             throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityProperties.getNoAuthorizedCode()), "未上传用户token", ""));
         }
         SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
-        String reqUrl = serverAddr.toHttpAddrAndPort() + securityProperties.getServerUrlOfTokenToAuthority();
-        log.debug("获取到token:{}", token);
-        log.debug("请求访问权限验证服务端地址:{}", reqUrl);
-        Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new TokenToAuthorityParam(token)));
-        ServerResponse<SecurityAuthority> serverResponse = JSON.parseObject(response.body().string(), new TypeReference<ServerResponse<SecurityAuthority>>() {
-        });
-        if (serverResponse.isSuccess()) {
-            return serverResponse.getData();
+        if (serverAddr.getIsCloud()) {
+            String reqUrl = serverAddr.toHttpAddrAndPort() + securityProperties.getServerUrlOfTokenToAuthority();
+            log.debug("获取到token:{}", token);
+            log.debug("请求访问权限验证服务端地址:{}", reqUrl);
+            Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new TokenToAuthorityParam(token)));
+            ServerResponse<SecurityAuthority> serverResponse = JSON.parseObject(response.body().string(), new TypeReference<ServerResponse<SecurityAuthority>>() {
+            });
+            if (serverResponse.isSuccess()) {
+                return serverResponse.getData();
+            } else {
+                throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityProperties.getNoAuthorizedCode()), "token无效,请登录后重试", ""));
+            }
         } else {
-            throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityProperties.getNoAuthorizedCode()), "token无效,请登录后重试", ""));
+            log.info("非Cloud应用,本地校验权限");
+            SecurityCheckAuthority securityCheckAuthority = applicationContext.getBean(SecurityCheckAuthority.class);
+            log.info("非Cloud应用,本地校验权限,获取到权限校验组件 SecurityCheckAuthority={}", securityCheckAuthority);
+            if (securityCheckAuthority != null) {
+                SecurityAuthority securityAuthority = securityCheckAuthority.getSecurityAuthorityByToken(token);
+                return securityAuthority;
+            }
         }
+        throw CommonException.create(ServerResponse.createByError("token解析失败。"));
     }
 
     @Override

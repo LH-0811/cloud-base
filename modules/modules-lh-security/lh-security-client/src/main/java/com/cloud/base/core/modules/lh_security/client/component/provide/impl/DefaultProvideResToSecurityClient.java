@@ -50,9 +50,9 @@ public class DefaultProvideResToSecurityClient implements ProvideResToSecurityCl
                 throw CommonException.create(ServerResponse.createByError("未获取到用户中心服务示例"));
             }
             ServiceInstance serviceInstance = instances.get(RandomUtils.nextInt(0, instances.size()));
-            return new SecurityServerAddr(serviceInstance.getHost(),serviceInstance.getPort());
+            return new SecurityServerAddr(Boolean.TRUE,serviceInstance.getHost(),serviceInstance.getPort());
         }else {
-            return new SecurityServerAddr("127.0.0.1",port);
+            return new SecurityServerAddr(Boolean.FALSE,"127.0.0.1",port);
         }
     }
 }
