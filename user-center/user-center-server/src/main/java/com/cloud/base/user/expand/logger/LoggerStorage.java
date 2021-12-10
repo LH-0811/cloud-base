@@ -1,8 +1,8 @@
 package com.cloud.base.user.expand.logger;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cloud.base.core.modules.logger.adapter.LhitLoggerStorageAdapter;
-import com.cloud.base.core.modules.logger.entity.LhitLoggerEntity;
+import com.cloud.base.modules.logger.adapter.LhitLoggerStorageAdapter;
+import com.cloud.base.modules.logger.entity.LhitLoggerEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

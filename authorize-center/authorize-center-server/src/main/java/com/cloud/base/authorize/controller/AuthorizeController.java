@@ -2,11 +2,11 @@ package com.cloud.base.authorize.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.cloud.base.authorize.security.verification.UsernamePasswordVerification;
-import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.lh_security.core.param.TokenParam;
-import com.cloud.base.core.modules.lh_security.core.properties.SecurityProperties;
-import com.cloud.base.core.modules.lh_security.core.vo.AuthenticationVo;
-import com.cloud.base.core.modules.lh_security.server.service.SecurityServer;
+import com.cloud.base.common.response.ServerResponse;
+import com.cloud.base.modules.security.core.param.TokenParam;
+import com.cloud.base.modules.security.core.properties.SecurityProperties;
+import com.cloud.base.modules.security.core.vo.AuthenticationVo;
+import com.cloud.base.modules.security.server.service.SecurityServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

@@ -1,6 +1,6 @@
 package com.cloud.base.user.param;
 
-import com.cloud.base.core.common.entity.CommonEntity;
+import com.cloud.base.common.entity.CommonEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

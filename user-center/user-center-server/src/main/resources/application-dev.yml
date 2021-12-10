@@ -146,6 +146,7 @@ logging:
   level:
     com.cloud.base.user.repository.dao:  debug
     com.alibaba.nacos: error
+
 youji:
   worker:
     manage-host: 127.0.0.1

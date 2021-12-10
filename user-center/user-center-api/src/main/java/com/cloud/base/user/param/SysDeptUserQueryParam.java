@@ -1,12 +1,10 @@
 package com.cloud.base.user.param;
 
-import com.cloud.base.core.common.entity.CommonEntity;
-import io.swagger.annotations.ApiModel;
+import com.cloud.base.common.entity.CommonEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 

@@ -1,6 +1,6 @@
 package com.cloud.base.user.api;
 
-import com.cloud.base.core.common.response.ServerResponse;
+import com.cloud.base.common.response.ServerResponse;
 import com.cloud.base.user.param.UserOfMchtQueryParam;
 import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;

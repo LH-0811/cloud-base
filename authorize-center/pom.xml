@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cloud.member</groupId>
+    <groupId>com.cloud.authorize</groupId>
     <artifactId>authorize-center</artifactId>
     <packaging>pom</packaging>
     <modules>

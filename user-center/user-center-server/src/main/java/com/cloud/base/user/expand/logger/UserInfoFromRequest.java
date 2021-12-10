@@ -1,8 +1,8 @@
 package com.cloud.base.user.expand.logger;
 
-import com.cloud.base.core.modules.lh_security.client.service.SecurityClient;
-import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
-import com.cloud.base.core.modules.logger.adapter.LhitLoggerUserInfoFromRequestAdapter;
+import com.cloud.base.modules.security.client.service.SecurityClient;
+import com.cloud.base.modules.security.core.entity.SecurityAuthority;
+import com.cloud.base.modules.logger.adapter.LhitLoggerUserInfoFromRequestAdapter;
 import com.cloud.base.user.repository.dao.SysUserDao;
 import com.cloud.base.user.repository.entity.SysUser;
 import lombok.extern.slf4j.Slf4j;

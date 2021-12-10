@@ -19,7 +19,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.cloud.base.core.modules.youji.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.cloud.base.modules.youji.controller"))
                 .paths(PathSelectors.any())
                 .build();
 

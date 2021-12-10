@@ -1,9 +1,9 @@
 package com.cloud.base.user.controller;
 
-import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
-import com.cloud.base.core.modules.lh_security.client.component.annotation.TokenToAuthority;
-import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.common.response.ServerResponse;
+import com.cloud.base.modules.security.client.component.annotation.HasUrl;
+import com.cloud.base.modules.security.client.component.annotation.TokenToAuthority;
+import com.cloud.base.modules.security.core.entity.SecurityAuthority;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.entity.SysRes;

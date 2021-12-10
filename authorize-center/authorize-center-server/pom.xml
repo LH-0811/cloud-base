@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>authorize-center</artifactId>
-        <groupId>com.cloud.member</groupId>
+        <groupId>com.cloud.authorize</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -22,7 +22,7 @@
 
         <!-- 引入用户api -->
         <dependency>
-            <groupId>com.cloud.member</groupId>
+            <groupId>com.cloud.user</groupId>
             <artifactId>user-center-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <exclusions>

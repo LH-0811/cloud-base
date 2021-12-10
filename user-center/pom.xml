@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cloud.member</groupId>
+    <groupId>com.cloud.user</groupId>
     <artifactId>user-center</artifactId>
     <packaging>pom</packaging>
 

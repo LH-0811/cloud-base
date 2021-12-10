@@ -1,8 +1,8 @@
 package com.cloud.base.user.controller;
 
-import com.cloud.base.core.common.response.ServerResponse;
-import com.cloud.base.core.modules.lh_security.client.component.annotation.HasUrl;
-import com.cloud.base.core.modules.lh_security.core.entity.SecurityAuthority;
+import com.cloud.base.common.response.ServerResponse;
+import com.cloud.base.modules.security.client.component.annotation.HasUrl;
+import com.cloud.base.modules.security.core.entity.SecurityAuthority;
 import com.cloud.base.user.param.SysPositionCreateParam;
 import com.cloud.base.user.param.SysPositionQueryParam;
 import com.cloud.base.user.service.SysPositionService;

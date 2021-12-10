@@ -1,17 +1,10 @@
 package com.cloud.base.user.controller;
 
-import com.alibaba.nacos.api.naming.NamingFactory;
-import com.alibaba.nacos.api.naming.NamingService;
-import com.alibaba.nacos.api.naming.pojo.Instance;
-import com.cloud.base.core.modules.youji.code.annotation.EnableYouJi;
-import com.cloud.base.core.modules.youji.code.annotation.YouJiTask;
-import com.cloud.base.user.param.SysUserCreateParam;
-import com.cloud.base.user.param.SysUserUpdateParam;
+import com.cloud.base.modules.youji.code.annotation.EnableYouJi;
+import com.cloud.base.modules.youji.code.annotation.YouJiTask;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 测试

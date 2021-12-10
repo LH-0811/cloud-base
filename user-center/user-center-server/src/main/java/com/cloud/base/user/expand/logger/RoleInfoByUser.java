@@ -1,7 +1,7 @@
 package com.cloud.base.user.expand.logger;
 
-import com.cloud.base.core.common.entity.CommonMethod;
-import com.cloud.base.core.modules.logger.adapter.LhitLoggerRoleInfoByUserAdapter;
+import com.cloud.base.common.entity.CommonMethod;
+import com.cloud.base.modules.logger.adapter.LhitLoggerRoleInfoByUserAdapter;
 import com.cloud.base.user.repository.entity.SysRole;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.SysUserService;

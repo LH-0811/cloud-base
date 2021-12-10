@@ -9,6 +9,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cloud.common</groupId>
     <artifactId>common</artifactId>
     <packaging>pom</packaging>
 
