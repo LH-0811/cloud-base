@@ -27,7 +27,7 @@ spring:
       type: web # 数据传输方式，web 表示以 HTTP 报文的形式向服务端发送数据
   sleuth:
     sampler:
-      probability: 1.0 # 收集数据百分比，默认 0.1（10%） 生成中最好不要配置1 影响性能。
+      probability: 0.1 # 收集数据百分比，默认 0.1（10%） 生成中最好不要配置1 影响性能。
 feign:
   httpclient:
     enabled: true

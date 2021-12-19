@@ -36,6 +36,7 @@ spring:
         url-pattern: /druid/*
         #login-username: admin
         #login-password: admin
+        allow:
       filter:
         stat:
           log-slow-sql: true
@@ -48,27 +49,62 @@ spring:
     nacos: # 配置nacos
       discovery: # 服务发现地址
         server-addr: 49.232.166.94:8848 # nacos 启动地址
+        metadata:
+          is-druid: true
+      config:
+        server-addr: 49.232.166.94:8848 # nacos 启动地址
     sentinel: # 配置sentinel
+      enabled: true
       transport:
-        dashboard: 127.0.0.1:9000 # 配置sentinel dashboard 启动地址
+        dashboard: 49.232.166.94:9000 # 配置sentinel dashboard 启动地址
         port: 8719 # 直接写8719 端口号默认是8719 如果被占用就是+1 直到找到未被占用端口
-        client-ip: localhost #这个配置时告知sentinel通过哪个ip来ping服务。所以这个ip必须是sentinel所在服务器能ping通的
+        client-ip: 127.0.0.1 #这个配置时告知sentinel通过哪个ip来ping服务。所以这个ip必须是sentinel所在服务器能ping通的
       filter:
         url-patterns: /** # 默认是/* 这里改成/** 则会监控所有的请求
   zipkin:
-    base-url: http://49.232.166.94:9411/ # 服务端地址
+    base-url: http://49.232.166.94/:9411/ # 服务端地址
     sender:
       type: web # 数据传输方式，web 表示以 HTTP 报文的形式向服务端发送数据
   sleuth:
     sampler:
-      probability: 1.0 # 收集数据百分比，默认 0.1（10%） 生成中最好不要配置1 影响性能。
-mybatis:
+      probability: 0.1 # 收集数据百分比，默认 0.1（10%） 生成中最好不要配置1 影响性能。
+
+# mybatis-plus相关配置
+mybatis-plus:
+  # xml扫描，多个目录用逗号或者分号分隔（告诉 Mapper 所对应的 XML 文件位置）
+  mapper-locations: classpath:**/*Mapper.xml
+  # 以下配置均有默认值,可以不设置
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 1
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 1
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    #refresh-mapper: false
+    #数据库大写下划线转换
+    #capital-mode: true
+    #序列接口实现类配置
+    #key-generator: com.baomidou.springboot.xxx
+    #逻辑删除配置
+    #logic-delete-value: 0 # 逻辑已删除值(默认为 1)
+    #logic-not-delete-value: 1 # 逻辑未删除值(默认为 0)
+    #自定义填充策略接口实现
+    #meta-object-handler: com.zhengqing.config.MyMetaObjectHandler
+    #自定义SQL注入器
+    #sql-injector: com.baomidou.springboot.xxx
   configuration:
+    # 是否开启自动驼峰命名规则映射:从数据库列名到Java属性驼峰命名的类似映射
     map-underscore-to-camel-case: true
-  type-aliases-package: com.cloud.base.member.user.repository.entity
-mapper:
-  not-empty: false
-  identity: MYSQL
+    cache-enabled: false
+    # 如果查询结果中包含空值的列，则 MyBatis 在映射的时候，不会映射这个字段
+    #    call-setters-on-nulls: true
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 解决oracle更新数据为null时无法转换报错，mysql不会出现此情况
+    jdbc-type-for-null: 'null'
+  type-aliases-package: com.cloud.base.user.repository.entity
 pagehelper:
   helper-dialect: mysql
   reasonable: true
@@ -84,7 +120,6 @@ pagehelper:
 #        max-wait: -1
 #        max-idle: 500
 #        min-idle: 0
-
 feign:
   httpclient:
     enabled: true
@@ -107,5 +142,16 @@ management: # 健康检查暴露端点
 #  application-id: cloud-example-account
 #  tx-service-group: my_test_tx_group
 #  service:
-#    #    vgroup-mapping.my_test_tx_group: default
-#    grouplist: { "default": "49.232.166.94:8091" }
+##    vgroup-mapping.my_test_tx_group: default
+#    grouplist: { "default": "127.0.0.1:8091" }
+logging:
+  level:
+    com.cloud.base.user.repository.dao:  debug
+    com.alibaba.nacos: error
+
+youji:
+  worker:
+    manage-host: 127.0.0.1
+    manage-port: 8889
+    current-worker-ip: 127.0.0.1
+    current-worker-port: 9301

@@ -1,10 +1,10 @@
-spring:
+#spring:
 #  application:
 #    name: gateway
-  cloud:
-    nacos:
-      config:
-        server-addr: 127.0.0.1:8848 # nacos 启动地址
+#  cloud:
+#    nacos:
+#      config:
+#        server-addr: 127.0.0.1:8848 # nacos 启动地址
 #        file-extension: yaml
 #        namespace: 2adfab9d-7e77-4ab0-bc0a-1470247b0755
 #        extension-configs:
