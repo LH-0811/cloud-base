@@ -35,7 +35,7 @@ public class DefaultProvideResToSecurityClient implements ProvideResToSecurityCl
 
     @Override
     public String getTokenFromApplicationContext() {
-        log.info("****************从上下文中获取token-{}****************");
+//        log.info("****************从上下文中获取token-{}****************");
         ServletRequestAttributes ra= (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request =  ra.getRequest();
         String header = request.getHeader(securityProperties.getTokenKey());
@@ -47,7 +47,7 @@ public class DefaultProvideResToSecurityClient implements ProvideResToSecurityCl
         if (securityProperties.getUseCloud()){
             List<ServiceInstance> instances = discoveryClient.getInstances(securityProperties.getServerName());
             if (CollectionUtils.isEmpty(instances)){
-                throw CommonException.create(ServerResponse.createByError("未获取到用户中心服务示例"));
+                throw CommonException.create(ServerResponse.createByError("未获取到用户中心服务实例"));
             }
             ServiceInstance serviceInstance = instances.get(RandomUtils.nextInt(0, instances.size()));
             return new SecurityServerAddr(Boolean.TRUE,serviceInstance.getHost(),serviceInstance.getPort());

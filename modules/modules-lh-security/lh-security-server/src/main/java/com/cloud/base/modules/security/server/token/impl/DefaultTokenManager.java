@@ -46,17 +46,9 @@ public class DefaultTokenManager implements TokenManager {
     // 初始化缓存 过期时间在配置文件中指定
     @PostConstruct
     private void init() {
-        this.userIdTokenCache = CacheBuilder.newBuilder().expireAfterWrite(Long.valueOf(securityProperties.getExpire()), TimeUnit.MINUTES)
-                /*.removalListener(new RemovalListener<String, String>() {
-            public void onRemoval(RemovalNotification<String, String> notification) {
-                log.info("用户id:{} token:{} 已过期", notification.getKey(), notification.getValue());
-            }})*/
+        this.userIdTokenCache = CacheBuilder.newBuilder().expireAfterAccess(Long.valueOf(securityProperties.getExpire()), TimeUnit.MINUTES)
                 .build();
-        this.tokenAuthorityCache = CacheBuilder.newBuilder().expireAfterWrite(Long.valueOf(securityProperties.getExpire()), TimeUnit.MINUTES)
-                /*.removalListener(new RemovalListener<String, SecurityAuthority>() {
-            public void onRemoval(RemovalNotification<String, SecurityAuthority> notification) {
-                log.info("token:{} authority:{} 已过期", notification.getKey(), JSON.toJSONString(notification.getValue()));
-            }})*/
+        this.tokenAuthorityCache = CacheBuilder.newBuilder().expireAfterAccess(Long.valueOf(securityProperties.getExpire()), TimeUnit.MINUTES)
                 .build();
     }
 
@@ -125,11 +117,7 @@ public class DefaultTokenManager implements TokenManager {
 
     @Override
     public void delayExpired(String token) throws Exception {
-        // 获取到权限信息
-        SecurityAuthority authority = tokenAuthorityCache.getIfPresent(token);
-        // 从新保存
-        tokenAuthorityCache.put(token, authority);
-        userIdTokenCache.put(authority.getSecurityUser().getId(), token);
+        //  使用cache中expireAfterAccess策略，则可以不用续期了，每次访问缓存会自动续期。
     }
 
 }

@@ -56,8 +56,8 @@ public class DefaultSecurityClientImpl implements SecurityClient {
         SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
         if (serverAddr.getIsCloud()) {
             String reqUrl = serverAddr.toHttpAddrAndPort() + securityProperties.getServerUrlOfTokenToAuthority();
-            log.debug("获取到token:{}", token);
-            log.debug("请求访问权限验证服务端地址:{}", reqUrl);
+//            log.debug("获取到token:{}", token);
+//            log.debug("请求访问权限验证服务端地址:{}", reqUrl);
             Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new TokenToAuthorityParam(token)));
             ServerResponse<SecurityAuthority> serverResponse = JSON.parseObject(response.body().string(), new TypeReference<ServerResponse<SecurityAuthority>>() {
             });
@@ -67,9 +67,9 @@ public class DefaultSecurityClientImpl implements SecurityClient {
                 throw CommonException.create(ServerResponse.createByError(Integer.valueOf(securityProperties.getNoAuthorizedCode()), "token无效,请登录后重试", ""));
             }
         } else {
-            log.info("非Cloud应用,本地校验权限");
+//            log.info("非Cloud应用,本地校验权限");
             SecurityCheckAuthority securityCheckAuthority = applicationContext.getBean(SecurityCheckAuthority.class);
-            log.info("非Cloud应用,本地校验权限,获取到权限校验组件 SecurityCheckAuthority={}", securityCheckAuthority);
+//            log.info("非Cloud应用,本地校验权限,获取到权限校验组件 SecurityCheckAuthority={}", securityCheckAuthority);
             if (securityCheckAuthority != null) {
                 SecurityAuthority securityAuthority = securityCheckAuthority.getSecurityAuthorityByToken(token);
                 return securityAuthority;

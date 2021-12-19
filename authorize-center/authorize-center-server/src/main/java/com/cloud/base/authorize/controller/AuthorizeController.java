@@ -32,14 +32,6 @@ public class AuthorizeController {
     @Autowired
     private SecurityServer securityServer;
 
-    @Autowired
-    private SecurityProperties securityProperties;
-
-    @PostConstruct
-    public void init(){
-        log.info("securityProperties:{}", JSON.toJSONString(securityProperties));
-    }
-
     @PostMapping("/login/username_password")
     @ApiOperation("系统用户登录")
     @ApiImplicitParams({
