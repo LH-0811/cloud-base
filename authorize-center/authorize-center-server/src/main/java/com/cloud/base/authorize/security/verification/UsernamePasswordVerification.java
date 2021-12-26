@@ -1,6 +1,6 @@
 package com.cloud.base.authorize.security.verification;
 
-import com.cloud.base.modules.security.server.voucher.SecurityVoucher;
+import com.cloud.base.modules.xugou.core.server.api.voucher.SecurityVoucher;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 

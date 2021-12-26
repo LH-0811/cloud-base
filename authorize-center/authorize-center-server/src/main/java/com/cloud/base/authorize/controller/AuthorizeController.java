@@ -1,12 +1,10 @@
 package com.cloud.base.authorize.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.cloud.base.authorize.security.verification.UsernamePasswordVerification;
 import com.cloud.base.common.response.ServerResponse;
-import com.cloud.base.modules.security.core.param.TokenParam;
-import com.cloud.base.modules.security.core.properties.SecurityProperties;
-import com.cloud.base.modules.security.core.vo.AuthenticationVo;
-import com.cloud.base.modules.security.server.service.SecurityServer;
+import com.cloud.base.modules.xugou.core.model.param.TokenParam;
+import com.cloud.base.modules.xugou.core.model.vo.AuthenticationVo;
+import com.cloud.base.modules.xugou.server.service.SecurityServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -15,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.PostConstruct;
 
 /**
  * @author lh0811

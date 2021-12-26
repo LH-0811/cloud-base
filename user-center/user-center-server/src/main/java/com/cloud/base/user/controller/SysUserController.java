@@ -1,9 +1,9 @@
 package com.cloud.base.user.controller;
 
 import com.cloud.base.common.response.ServerResponse;
-import com.cloud.base.modules.security.client.component.annotation.HasUrl;
-import com.cloud.base.modules.security.client.component.annotation.TokenToAuthority;
-import com.cloud.base.modules.security.core.entity.SecurityAuthority;
+import com.cloud.base.modules.xugou.client.component.annotation.HasUrl;
+import com.cloud.base.modules.xugou.client.component.annotation.TokenToAuthority;
+import com.cloud.base.modules.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.entity.SysRes;

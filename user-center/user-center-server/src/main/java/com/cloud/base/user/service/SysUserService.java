@@ -1,7 +1,7 @@
 package com.cloud.base.user.service;
 
 
-import com.cloud.base.modules.security.core.entity.SecurityAuthority;
+import com.cloud.base.modules.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.entity.SysRes;

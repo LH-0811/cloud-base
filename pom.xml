@@ -29,7 +29,7 @@
         <!--  三方库 版本管理  -->
 <!--        <springboot.version>2.3.9.RELEASE</springboot.version>-->
         <springboot.version>2.4.2</springboot.version>
-        <springcloud.version>2020.0.3</springcloud.version>
+        <springcloud.version>2020.0.1</springcloud.version>
         <springcloud-alibaba.version>2021.1</springcloud-alibaba.version>
 
 

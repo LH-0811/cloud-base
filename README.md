@@ -1,4 +1,7 @@
 # springcloud 脚手架项目
+
+> 作者： LH0811 QQ邮箱:2329385085@qq.com (加qq好友请标注来意)
+
 ## 系统架构图
 ![avatar](./1_assets/image/服务架构图.jpg)
 ## 快速启动
@@ -106,7 +109,7 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |   |
 |   |--modules-multi-datasource 多数据功能封装
 |   |
-|   |--modules-lh-security 分布式安全授权鉴权框架封装
+|   |--modules-xugou-security 戌狗-分布式安全授权鉴权框架封装
 |   |
 |   |--modules-youji-task 酉鸡-分布式定时任务管理模块
 |   |

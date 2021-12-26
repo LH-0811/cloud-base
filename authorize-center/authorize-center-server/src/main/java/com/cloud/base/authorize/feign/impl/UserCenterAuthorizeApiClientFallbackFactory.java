@@ -3,7 +3,7 @@ package com.cloud.base.authorize.feign.impl;
 import com.cloud.base.alibaba_cloud.fallback.FeignFallbackFactory;
 import com.cloud.base.authorize.feign.UserCenterAuthorizeApiClient;
 import com.cloud.base.common.response.ServerResponse;
-import com.cloud.base.modules.security.core.entity.SecurityAuthority;
+import com.cloud.base.modules.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.param.UsernamePasswordVerificationParam;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;

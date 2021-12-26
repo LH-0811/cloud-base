@@ -27,7 +27,7 @@
         <!--   security     -->
         <dependency>
             <groupId>com.cloud.modules</groupId>
-            <artifactId>lh-security-client</artifactId>
+            <artifactId>xugou-security-client</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!--  logger      -->

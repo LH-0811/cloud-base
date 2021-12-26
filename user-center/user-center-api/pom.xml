@@ -46,7 +46,7 @@
         </dependency>
         <dependency>
             <groupId>com.cloud.modules</groupId>
-            <artifactId>lh-security-core</artifactId>
+            <artifactId>xugou-security-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

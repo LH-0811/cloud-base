@@ -1,7 +1,7 @@
 package com.cloud.base.user.api;
 
 import com.cloud.base.common.response.ServerResponse;
-import com.cloud.base.modules.security.core.entity.SecurityAuthority;
+import com.cloud.base.modules.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.param.UsernamePasswordVerificationParam;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

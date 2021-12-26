@@ -1,8 +1,8 @@
 package com.cloud.base.user.controller;
 
 import com.cloud.base.common.response.ServerResponse;
-import com.cloud.base.modules.security.client.component.annotation.HasUrl;
-import com.cloud.base.modules.security.core.entity.SecurityAuthority;
+import com.cloud.base.modules.xugou.client.component.annotation.HasUrl;
+import com.cloud.base.modules.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.param.SysRoleCreateParam;
 import com.cloud.base.user.param.SysRoleQueryParam;
 import com.cloud.base.user.param.SysRoleUpdateParam;

@@ -18,7 +18,7 @@
     <modules>
         <module>modules-multi-datasource</module>
         <module>modules-logger</module>
-        <module>modules-lh-security</module>
+        <module>modules-xugou-security</module>
         <module>modules-youji-task</module>
     </modules>
 

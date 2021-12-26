@@ -55,15 +55,11 @@ management: # 健康检查暴露端点
 ##    vgroup-mapping.my_test_tx_group: default
 #    grouplist: { "default": "127.0.0.1:8091" }
 
-lhit:
+xugou:
   security:
-    server-url-of-check-url: /security/check_url
-    server-url-of-check-perms-code: /security/check_perms_code
-    server-url-of-check-static-res-path: /security/check_static_res_path
-    server-url-of-token-to-authority: /security/token_to_authority
+    server-url-of-token-to-authority: /xugou/security/token_to_authority
     token-key: LHTOKEN
     expire: 9999999
-
 
 logging:
   level:

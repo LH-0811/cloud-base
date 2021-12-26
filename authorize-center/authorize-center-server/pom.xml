@@ -44,7 +44,7 @@
         <!-- 安全框架 服务端依赖 -->
         <dependency>
             <groupId>com.cloud.modules</groupId>
-            <artifactId>lh-security-server</artifactId>
+            <artifactId>xugou-security-server</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
