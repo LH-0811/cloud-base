@@ -183,7 +183,9 @@ public class AuthorizeController {
 除了@HasUrl注解外，还提供了
 
 HasPermsCode - 验证是否有权限码权限
+
 HasStaticResPath - 验证是否有该静态资源的访问权限
+
 TokenToAuthority - 将token转换为当前权限描述类，可用于检验用户是否登录
 
 详细的使用示例 可以参考本项目中的user-center模块实现和使用。
