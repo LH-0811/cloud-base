@@ -1,31 +1,5 @@
-server:
-  port: 8800
 spring:
-#  redis:
-#    host: 49.232.166.94
-#    port: 6379
-#    password: QQliuhe951@@
-#    jedis:
-#      pool:
-#        max-active: 8
-#        max-wait: -1
-#        max-idle: 500
-#        min-idle: 0
-  devtools:
-    add-properties: false
-  jackson:
-    time-zone: GMT+8
-    generator:
-      WRITE_NUMBERS_AS_STRINGS: true
-  application:
-    name: cloud-gateway
   cloud:
-    #gateway 设置使用服务名路由 默认服务名是大写
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true #gateway 服务名小写 (不建议)
     nacos: # 配置nacos
       discovery: # 服务发现地址
         server-addr: 49.232.166.94:8848 # nacos 启动地址
@@ -45,12 +19,3 @@ spring:
   sleuth:
     sampler:
       probability: 0.1 # 收集数据百分比，默认 0.1（10%） 生成中最好不要配置1 影响性能。
-# 健康检查
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-logging:
-  level:
-    com.alibaba.nacos: error

@@ -1,3 +1,28 @@
+server:
+  port: 8800
+
 spring:
   profiles:
     active: '@profileActive@'
+  devtools:
+    add-properties: false
+  jackson:
+    time-zone: GMT+8
+    generator:
+      WRITE_NUMBERS_AS_STRINGS: true
+  application:
+    name: cloud-gateway
+  cloud:
+    #gateway 设置使用服务名路由 默认服务名是大写
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true #gateway 服务名小写 (不建议)
+
+# 健康检查
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

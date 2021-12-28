@@ -1,50 +1,9 @@
-server:
-  port: 9301
 spring:
-  application:
-    name: user-center-server
-  jackson:
-    serialization:
-      FAIL_ON_EMPTY_BEANS: false
-    time-zone: GMT+8
-    generator:
-      # 避免Long类型丢失经度
-      WRITE_NUMBERS_AS_STRINGS: true
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    # 使用多数据源时 这个配置便是 默认数据源
     druid:
-      driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://49.232.166.94:3306/member-user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
       username: root
       password: QQliuhe951@@
-      initial-size: 10
-      max-active: 100
-      min-idle: 10
-      max-wait: 60000
-      pool-prepared-statements: true
-      max-pool-prepared-statement-per-connection-size: 20
-      time-between-eviction-runs-millis: 60000
-      min-evictable-idle-time-millis: 300000
-      #Oracle需要打开注释
-      #validation-query: SELECT 1 FROM DUAL
-      test-while-idle: true
-      test-on-borrow: false
-      test-on-return: false
-      stat-view-servlet:
-        enabled: true
-        url-pattern: /druid/*
-        #login-username: admin
-        #login-password: admin
-        allow:
-      filter:
-        stat:
-          log-slow-sql: true
-          slow-sql-millis: 1000
-          merge-sql: false
-        wall:
-          config:
-            multi-statement-allow: true
   cloud:
     nacos: # 配置nacos
       discovery: # 服务发现地址
@@ -68,86 +27,6 @@ spring:
   sleuth:
     sampler:
       probability: 0.1 # 收集数据百分比，默认 0.1（10%） 生成中最好不要配置1 影响性能。
-
-# mybatis-plus相关配置
-mybatis-plus:
-  # xml扫描，多个目录用逗号或者分号分隔（告诉 Mapper 所对应的 XML 文件位置）
-  mapper-locations: classpath:**/*Mapper.xml
-  # 以下配置均有默认值,可以不设置
-  global-config:
-    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
-    id-type: 1
-    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
-    field-strategy: 1
-    #驼峰下划线转换
-    db-column-underline: true
-    #刷新mapper 调试神器
-    #refresh-mapper: false
-    #数据库大写下划线转换
-    #capital-mode: true
-    #序列接口实现类配置
-    #key-generator: com.baomidou.springboot.xxx
-    #逻辑删除配置
-    #logic-delete-value: 0 # 逻辑已删除值(默认为 1)
-    #logic-not-delete-value: 1 # 逻辑未删除值(默认为 0)
-    #自定义填充策略接口实现
-    #meta-object-handler: com.zhengqing.config.MyMetaObjectHandler
-    #自定义SQL注入器
-    #sql-injector: com.baomidou.springboot.xxx
-  configuration:
-    # 是否开启自动驼峰命名规则映射:从数据库列名到Java属性驼峰命名的类似映射
-    map-underscore-to-camel-case: true
-    cache-enabled: false
-    # 如果查询结果中包含空值的列，则 MyBatis 在映射的时候，不会映射这个字段
-    #    call-setters-on-nulls: true
-    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
-    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    # 解决oracle更新数据为null时无法转换报错，mysql不会出现此情况
-    jdbc-type-for-null: 'null'
-  type-aliases-package: com.cloud.base.user.repository.entity
-pagehelper:
-  helper-dialect: mysql
-  reasonable: true
-  support-methods-arguments: true
-  params: count=countSql
-#  redis:
-#    host: 49.232.166.94
-#    port: 6379
-#    password: QQliuhe951@@
-#    jedis:
-#      pool:
-#        max-active: 8
-#        max-wait: -1
-#        max-idle: 500
-#        min-idle: 0
-feign:
-  httpclient:
-    enabled: true
-  client:
-    config:
-      default:  # 服务名，default表示所有服务
-        connectTimeout: 10000  #请求连接超时
-        readTimeout: 10000  #请求处理超时
-        loggerLevel: none  # full | basic | none | headers
-  sentinel:
-    enabled: true
-
-management: # 健康检查暴露端点
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-#seata:
-#  enabled: true
-#  application-id: cloud-example-account
-#  tx-service-group: my_test_tx_group
-#  service:
-##    vgroup-mapping.my_test_tx_group: default
-#    grouplist: { "default": "127.0.0.1:8091" }
-logging:
-  level:
-    com.cloud.base.user.repository.dao:  debug
-    com.alibaba.nacos: error
 
 youji:
   worker:

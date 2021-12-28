@@ -1,3 +1,45 @@
+server:
+  port: 9300
+
 spring:
   profiles:
     active: '@profileActive@'
+  application:
+    name: authorize-center-server
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+    time-zone: GMT+8
+    generator:
+      # 避免Long类型丢失经度
+      WRITE_NUMBERS_AS_STRINGS: true
+feign:
+  httpclient:
+    enabled: true
+  client:
+    config:
+      default:  # 服务名，default表示所有服务
+        connectTimeout: 10000  #请求连接超时
+        readTimeout: 10000  #请求处理超时
+        loggerLevel: none  # full | basic | none | headers
+  sentinel:
+    enabled: true
+management: # 健康检查暴露端点
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+#seata:
+#  enabled: true
+#  application-id: cloud-example-account
+#  tx-service-group: my_test_tx_group
+#  service:
+##    vgroup-mapping.my_test_tx_group: default
+#    grouplist: { "default": "127.0.0.1:8091" }
+
+xugou:
+  security:
+    server-url-of-token-to-authority: /xugou/security/token_to_authority
+    token-key: LHTOKEN
+    expire: 9999999
+
