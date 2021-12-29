@@ -21,10 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -38,13 +38,13 @@ import java.util.List;
 @Service("sysDeptService")
 public class SysDeptServiceImpl implements SysDeptService {
 
-    @Autowired
+    @Resource
     private IdWorker idWorker;
 
-    @Autowired
+    @Resource
     private SysDeptDao sysDeptDao;
 
-    @Autowired
+    @Resource
     private SysUserDeptRelDao sysUserDeptRelDao;
 
 
@@ -78,7 +78,7 @@ public class SysDeptServiceImpl implements SysDeptService {
                 parent.setIsLeaf(Boolean.FALSE);
                 sysDeptDao.updateById(parent);
             } else {
-                sysDept.setRouter("0,"+sysDept.getId());
+                sysDept.setRouter("0," + sysDept.getId());
             }
 
             sysDeptDao.save(sysDept);
@@ -100,7 +100,7 @@ public class SysDeptServiceImpl implements SysDeptService {
             QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysDept> lambda = queryWrapper.lambda();
             if (StringUtils.isNotBlank(deptName)) {
-                lambda.like(SysDept::getName,"%" + deptName + "%");
+                lambda.like(SysDept::getName, "%" + deptName + "%");
             }
             // 所有的资源列表
             List<SysDept> sysDeptList = sysDeptDao.list(queryWrapper);
@@ -138,7 +138,7 @@ public class SysDeptServiceImpl implements SysDeptService {
 
         // 检查子部门
         QueryWrapper<SysDept> childQuery = new QueryWrapper<>();
-        childQuery.lambda().eq(SysDept::getParentId,deptId);
+        childQuery.lambda().eq(SysDept::getParentId, deptId);
         List<SysDept> childrenList = sysDeptDao.list(childQuery);
         if (CollectionUtils.isNotEmpty(childrenList)) {
             throw CommonException.create(ServerResponse.createByError("部门下有所属子部门不能删除"));
@@ -146,7 +146,7 @@ public class SysDeptServiceImpl implements SysDeptService {
 
         // 检测部门用户
         QueryWrapper<SysUserDeptRel> queryRel = new QueryWrapper<>();
-        queryRel.lambda().eq(SysUserDeptRel::getDeptId,deptId);
+        queryRel.lambda().eq(SysUserDeptRel::getDeptId, deptId);
         List<SysUserDeptRel> userDeptRelationList = sysUserDeptRelDao.list(queryRel);
         if (CollectionUtils.isNotEmpty(userDeptRelationList)) {
             throw CommonException.create(ServerResponse.createByError("部门下有用户不能删除"));
@@ -157,8 +157,8 @@ public class SysDeptServiceImpl implements SysDeptService {
 
             // 更新父节点的是否叶子节点状态
             QueryWrapper<SysDept> pChildrenQuery = new QueryWrapper<>();
-            pChildrenQuery.lambda().eq(SysDept::getParentId,sysDept.getParentId());
-            if (sysDeptDao.count(pChildrenQuery) == 0){
+            pChildrenQuery.lambda().eq(SysDept::getParentId, sysDept.getParentId());
+            if (sysDeptDao.count(pChildrenQuery) == 0) {
                 SysDept pUpdateParam = new SysDept();
                 pUpdateParam.setId(sysDept.getParentId());
                 pUpdateParam.setIsLeaf(Boolean.TRUE);
@@ -169,8 +169,6 @@ public class SysDeptServiceImpl implements SysDeptService {
             throw CommonException.create(e, ServerResponse.createByError("删除部门信息失败,请联系管理员！"));
         }
     }
-
-
 
 
     /**

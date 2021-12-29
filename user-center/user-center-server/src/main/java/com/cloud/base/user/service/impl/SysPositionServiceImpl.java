@@ -82,7 +82,7 @@ public class SysPositionServiceImpl implements SysPositionService {
         try {
             // 删除岗位和用户关系
             QueryWrapper<SysUserPositionRel> userPositionRelQuery = new QueryWrapper<>();
-            userPositionRelQuery.lambda().eq(SysUserPositionRel::getPositionId,positionId);
+            userPositionRelQuery.lambda().eq(SysUserPositionRel::getPositionId, positionId);
             sysUserPositionRelDao.remove(userPositionRelQuery);
             // 删除岗位信息
             sysPositionDao.removeById(positionId);
@@ -105,10 +105,10 @@ public class SysPositionServiceImpl implements SysPositionService {
             LambdaQueryWrapper<SysPosition> lambda = queryWrapper.lambda();
             lambda.orderByDesc(SysPosition::getCreateTime);
             if (StringUtils.isNotBlank(param.getNo())) {
-                lambda.eq(SysPosition::getNo,param.getNo());
+                lambda.eq(SysPosition::getNo, param.getNo());
             }
             if (StringUtils.isNotBlank(param.getName())) {
-                lambda.like(SysPosition::getName,"%" + param.getName() + "%");
+                lambda.like(SysPosition::getName, "%" + param.getName() + "%");
             }
             if (param.getCreateTimeLow() != null) {
                 lambda.ge(SysPosition::getCreateTime, param.getCreateTimeLow());
@@ -120,7 +120,7 @@ public class SysPositionServiceImpl implements SysPositionService {
             List<SysPosition> sysPositions = sysPositionDao.list(queryWrapper);
             PageInfo pageInfo = new PageInfo(sysPositions);
             PageHelper.clearPage();
-            pageInfo.setList(JSONArray.parseArray(JSON.toJSONString(sysPositions),SysPositionVo.class));
+            pageInfo.setList(JSONArray.parseArray(JSON.toJSONString(sysPositions), SysPositionVo.class));
             log.info("完成 查询岗位信息");
             return pageInfo;
         } catch (Exception e) {

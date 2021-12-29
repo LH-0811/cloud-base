@@ -25,10 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,20 +43,19 @@ import java.util.stream.Collectors;
 @Service("sysRoleService")
 public class SysRoleServiceImpl implements SysRoleService {
 
-
-    @Autowired
+    @Resource
     private SysRoleDao sysRoleDao;
 
-    @Autowired
+    @Resource
     private SysRoleResRelDao sysRoleResRelDao;
 
-    @Autowired
+    @Resource
     private SysUserRoleRelDao sysUserRoleRelDao;
 
-    @Autowired
+    @Resource
     private SysResDao sysResDao;
 
-    @Autowired
+    @Resource
     private IdWorker idWorker;
 
 // //////////////// 角色管理
@@ -69,7 +68,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     public void createRole(SysRoleCreateParam param, SysUser sysUser) throws Exception {
         log.info("进入 SysAdminServiceImpl.createRole:" + JSON.toJSONString(param));
         QueryWrapper<SysRole> roleNameQueryWrapper = new QueryWrapper<>();
-        roleNameQueryWrapper.lambda().eq(SysRole::getName,param.getName());
+        roleNameQueryWrapper.lambda().eq(SysRole::getName, param.getName());
         if (sysRoleDao.count(roleNameQueryWrapper) > 0) {
             throw CommonException.create(ServerResponse.createByError("角色名称已经存在"));
         }
@@ -96,7 +95,6 @@ public class SysRoleServiceImpl implements SysRoleService {
         }
     }
 
-
     /**
      * 修改系统角色信息
      */
@@ -119,7 +117,7 @@ public class SysRoleServiceImpl implements SysRoleService {
             if (CollectionUtils.isNotEmpty(param.getResIdList())) {
 
                 QueryWrapper<SysRoleResRel> roleResDelQueryWrapper = new QueryWrapper<>();
-                roleResDelQueryWrapper.lambda().eq(SysRoleResRel::getRoleId,param.getId());
+                roleResDelQueryWrapper.lambda().eq(SysRoleResRel::getRoleId, param.getId());
                 sysRoleResRelDao.remove(roleResDelQueryWrapper);
 
                 List<SysRoleResRel> sysRoleResRelList = param.getResIdList().stream().map(resId -> new SysRoleResRel(idWorker.nextId(), sysRole.getId(), resId)).collect(Collectors.toList());
@@ -148,7 +146,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 
 
         QueryWrapper<SysUserRoleRel> userRoleExistQueryWrapper = new QueryWrapper<>();
-        userRoleExistQueryWrapper.lambda().eq(SysUserRoleRel::getRoleId,roleId);
+        userRoleExistQueryWrapper.lambda().eq(SysUserRoleRel::getRoleId, roleId);
         if (sysUserRoleRelDao.count(userRoleExistQueryWrapper) > 0) {
             log.info("角色有关联用户不可删除");
             throw CommonException.create(ServerResponse.createByError("角色有关联用户不可删除"));
@@ -159,7 +157,7 @@ public class SysRoleServiceImpl implements SysRoleService {
             SysRoleResRel deleteByRoleId = new SysRoleResRel();
             deleteByRoleId.setRoleId(roleId);
             QueryWrapper<SysRoleResRel> roleResDelWrapper = new QueryWrapper<>();
-            roleResDelWrapper.lambda().eq(SysRoleResRel::getRoleId,roleId);
+            roleResDelWrapper.lambda().eq(SysRoleResRel::getRoleId, roleId);
             sysRoleResRelDao.remove(roleResDelWrapper);
             log.info("完成 SysAdminServiceImpl.deleteRole:" + roleId);
         } catch (Exception e) {
@@ -178,16 +176,16 @@ public class SysRoleServiceImpl implements SysRoleService {
         try {
             QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysRole> lambda = queryWrapper.lambda();
-            lambda.orderByDesc(SysRole::getSortNum,SysRole::getCreateTime);
+            lambda.orderByDesc(SysRole::getSortNum, SysRole::getCreateTime);
 
             if (StringUtils.isNotEmpty(param.getName())) {
-                lambda.like(SysRole::getName,"%" + param.getName() + "%");
+                lambda.like(SysRole::getName, "%" + param.getName() + "%");
             }
             if (StringUtils.isNotEmpty(param.getNo())) {
-                lambda.eq(SysRole::getNo,param.getNo());
+                lambda.eq(SysRole::getNo, param.getNo());
             }
             if (param.getActiveFlag() != null) {
-                lambda.eq(SysRole::getActiveFlag,param.getActiveFlag());
+                lambda.eq(SysRole::getActiveFlag, param.getActiveFlag());
             }
             PageHelper.startPage(param.getPageNum(), param.getPageSize());
             List<SysRole> sysRoles = sysRoleDao.list(queryWrapper);
@@ -203,12 +201,12 @@ public class SysRoleServiceImpl implements SysRoleService {
                 SysRoleResRel queryParam = new SysRoleResRel();
                 queryParam.setRoleId(role.getId());
                 QueryWrapper<SysRoleResRel> roleResQuery = new QueryWrapper<>();
-                roleResQuery.lambda().eq(SysRoleResRel::getRoleId,role.getId());
+                roleResQuery.lambda().eq(SysRoleResRel::getRoleId, role.getId());
                 List<SysRoleResRel> sysRoleResRels = sysRoleResRelDao.list(roleResQuery);
                 if (CollectionUtils.isNotEmpty(sysRoleResRels)) {
                     List<Long> resIds = sysRoleResRels.stream().map(sysRoleResRel -> sysRoleResRel.getResId()).collect(Collectors.toList());
                     List<SysRes> sysResList = sysResDao.listByIds(resIds);
-                    List<SysResVo> sysResVoList = JSONArray.parseArray(JSON.toJSONString(sysResList),SysResVo.class);
+                    List<SysResVo> sysResVoList = JSONArray.parseArray(JSON.toJSONString(sysResList), SysResVo.class);
                     sysRoleVo.setSysResList(sysResVoList);
                 }
                 return sysRoleVo;
@@ -235,9 +233,9 @@ public class SysRoleServiceImpl implements SysRoleService {
         try {
             QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysRole> lambda = queryWrapper.lambda();
-            lambda.orderByDesc(SysRole::getSortNum,SysRole::getCreateTime);
+            lambda.orderByDesc(SysRole::getSortNum, SysRole::getCreateTime);
             if (StringUtils.isNotBlank(roleName)) {
-                lambda.eq(SysRole::getName,roleName);
+                lambda.eq(SysRole::getName, roleName);
             }
             List<SysRole> roles = sysRoleDao.list(queryWrapper);
             log.info("完成 获取角色列表");
@@ -261,7 +259,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         }
         try {
             QueryWrapper<SysRoleResRel> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().eq(SysRoleResRel::getRoleId,roleId);
+            queryWrapper.lambda().eq(SysRoleResRel::getRoleId, roleId);
             List<SysRoleResRel> roleResList = sysRoleResRelDao.list(queryWrapper);
             if (org.apache.commons.collections4.CollectionUtils.isEmpty(roleResList)) {
                 return Lists.newArrayList();
