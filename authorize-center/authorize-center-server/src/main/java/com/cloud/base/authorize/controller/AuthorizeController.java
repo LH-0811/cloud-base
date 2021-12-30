@@ -1,10 +1,10 @@
 package com.cloud.base.authorize.controller;
 
 import com.cloud.base.authorize.security.verification.UsernamePasswordVerification;
-import com.cloud.base.common.response.ServerResponse;
-import com.cloud.base.modules.xugou.core.model.param.TokenParam;
-import com.cloud.base.modules.xugou.core.model.vo.AuthenticationVo;
-import com.cloud.base.modules.xugou.server.service.SecurityServer;
+import com.cloud.base.common.core.response.ServerResponse;
+import com.cloud.base.common.xugou.core.model.param.TokenParam;
+import com.cloud.base.common.xugou.core.model.vo.AuthenticationVo;
+import com.cloud.base.common.xugou.server.service.SecurityServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

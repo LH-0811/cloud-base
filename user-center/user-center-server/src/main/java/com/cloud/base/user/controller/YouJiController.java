@@ -1,7 +1,7 @@
 package com.cloud.base.user.controller;
 
-import com.cloud.base.modules.youji.code.annotation.EnableYouJi;
-import com.cloud.base.modules.youji.code.annotation.YouJiTask;
+import com.cloud.base.common.youji.code.annotation.EnableYouJi;
+import com.cloud.base.common.youji.code.annotation.YouJiTask;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
 package com.cloud.base.user.service;
 
-import com.cloud.base.modules.xugou.core.model.entity.SecurityAuthority;
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.SysDeptUserQueryParam;
 import com.cloud.base.user.param.SysUserUpdatePasswordParam;

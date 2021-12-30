@@ -21,7 +21,7 @@
         <!-- 通用包 -->
         <dependency>
             <groupId>com.cloud.common</groupId>
-            <artifactId>core-common</artifactId>
+            <artifactId>common-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -45,7 +45,7 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.cloud.modules</groupId>
+            <groupId>com.cloud.common</groupId>
             <artifactId>xugou-security-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>

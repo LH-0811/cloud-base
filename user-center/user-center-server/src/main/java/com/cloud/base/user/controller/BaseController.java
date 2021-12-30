@@ -1,14 +1,12 @@
 package com.cloud.base.user.controller;
 
-import com.cloud.base.common.exception.CommonException;
-import com.cloud.base.common.response.ResponseCode;
-import com.cloud.base.common.response.ServerResponse;
-import com.cloud.base.modules.xugou.core.model.entity.SecurityAuthority;
+import com.cloud.base.common.core.exception.CommonException;
+import com.cloud.base.common.core.response.ResponseCode;
+import com.cloud.base.common.core.response.ServerResponse;
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.CurrentUserService;
-import com.cloud.base.user.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

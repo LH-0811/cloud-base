@@ -11,22 +11,20 @@
 
     <groupId>com.cloud.youji</groupId>
     <artifactId>youji-manage-server</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
 
 
     <dependencies>
 
         <dependency>
             <groupId>com.cloud.common</groupId>
-            <artifactId>core-common</artifactId>
+            <artifactId>common-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
 
+        <!-- springcloud -->
         <dependency>
             <groupId>com.cloud.dependency</groupId>
             <artifactId>dependency-alibaba-cloud</artifactId>
@@ -35,7 +33,7 @@
 
         <!-- 定时任务模块 -->
         <dependency>
-            <groupId>com.cloud.modules</groupId>
+            <groupId>com.cloud.common</groupId>
             <artifactId>youji-task-manage</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

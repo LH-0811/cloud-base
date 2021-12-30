@@ -39,6 +39,8 @@ management: # 健康检查暴露端点
 
 xugou:
   security:
+    use-cloud: true
+    server-name: authorize-center-server
     server-url-of-token-to-authority: /xugou/security/token_to_authority
     token-key: LHTOKEN
     expire: 9999999

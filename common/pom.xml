@@ -12,12 +12,17 @@
 
     <groupId>com.cloud.common</groupId>
     <artifactId>common</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
     <packaging>pom</packaging>
 
     <description>通用模块</description>
 
     <modules>
-        <module>core-common</module>
-        <module>core-exception</module>
+        <module>common-core</module>
+        <module>common-logger</module>
+        <module>common-multisource</module>
+        <module>common-youji-task</module>
+        <module>common-xugou-security</module>
     </modules>
 </project>

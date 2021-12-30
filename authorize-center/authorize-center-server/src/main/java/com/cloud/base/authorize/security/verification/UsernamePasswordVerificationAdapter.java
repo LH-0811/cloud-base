@@ -2,10 +2,10 @@ package com.cloud.base.authorize.security.verification;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cloud.base.authorize.feign.UserCenterAuthorizeApiClient;
-import com.cloud.base.common.exception.CommonException;
-import com.cloud.base.common.response.ServerResponse;
-import com.cloud.base.modules.xugou.core.model.entity.SecurityAuthority;
-import com.cloud.base.modules.xugou.core.server.api.authentication.SecurityVoucherVerification;
+import com.cloud.base.common.core.exception.CommonException;
+import com.cloud.base.common.core.response.ServerResponse;
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
+import com.cloud.base.common.xugou.core.server.api.authentication.SecurityVoucherVerification;
 import com.cloud.base.user.param.UsernamePasswordVerificationParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

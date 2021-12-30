@@ -1,0 +1,54 @@
+package com.cloud.base.common.xugou.client.component.annotation;
+
+import com.cloud.base.common.core.exception.CommonException;
+import com.cloud.base.common.core.response.ServerResponse;
+import com.cloud.base.common.xugou.client.service.SecurityClient;
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
+
+
+@Aspect
+@Slf4j
+public class HasPermsCodeAop {
+
+    @Autowired
+    private SecurityClient securityClient;
+
+
+    @Pointcut("@within(com.cloud.base.common.xugou.client.component.annotation.HasPermsCode) || @annotation(com.cloud.base.common.xugou.client.component.annotation.HasPermsCode)")
+    public void annotationPointCut() {
+    }
+
+
+    @Around("annotationPointCut()")
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.debug("进入HasPermsCodeAop切面");
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        HasPermsCode annotation = signature.getMethod().getAnnotation(HasPermsCode.class);
+        String permsCode = annotation.permsCode();
+        if (StringUtils.isBlank(permsCode))
+            throw CommonException.create(ServerResponse.createByError("使用@HasPermsCode注解，必须填写permsCode。"));
+
+        // 判断是否有permsCode
+        SecurityAuthority securityAuthority = securityClient.hasPermsCode(permsCode);
+
+        // 补充参数
+        Object[] args = joinPoint.getArgs();
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            if (arg instanceof SecurityAuthority)
+                args[i] = securityAuthority;
+        }
+        Object proceed = joinPoint.proceed(args);
+        log.debug("退出HasPermsCodeAop切面");
+        return proceed;
+    }
+
+}

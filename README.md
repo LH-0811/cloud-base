@@ -85,7 +85,13 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |   |
 |   |--core-common  通用包 该包包含了SpringMVC的依赖，会与WebFlux的服务有冲突
 |   |
-|   |--core-exception 自定义异常和请求统一返回类
+|   |--common-logger 日志功能封装
+|   |
+|   |--common-multisource 多数据功能封装
+|   |
+|   |--common-xugou-security 戌狗-分布式安全授权鉴权框架封装
+|   |
+|   |--common-youji-task 酉鸡-分布式定时任务管理模块
 |
 |--dependency - 三方功能依赖集合 无任何实现 <groupId>com.cloud.dependency</groupId>
 |   |
@@ -103,19 +109,6 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |   |
 |   |--dependency-sleuth-zipkin 关于链路跟踪sleuth-zipkin的依赖集合
 |
-|--modules - 自定义自实现的功能组件模块 <groupId>com.cloud.modules</groupId>
-|   |
-|   |--modules-logger 日志功能封装
-|   |
-|   |--modules-multi-datasource 多数据功能封装
-|   |
-|   |--modules-xugou-security 戌狗-分布式安全授权鉴权框架封装
-|   |
-|   |--modules-youji-task 酉鸡-分布式定时任务管理模块
-|   |
-|
-|   
-|   
 | 以下是独立部署的应用 以下服务启动后配合前端工程使用 (https://gitee.com/lh_0811/cloud-base-angular-admin)
 |
 |--cloud-gateway  应用网关

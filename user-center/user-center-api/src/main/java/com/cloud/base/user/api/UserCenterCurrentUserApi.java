@@ -1,6 +1,6 @@
 package com.cloud.base.user.api;
 
-import com.cloud.base.common.response.ServerResponse;
+import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.user.vo.SysUserVo;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

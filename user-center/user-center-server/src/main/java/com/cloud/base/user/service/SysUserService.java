@@ -1,17 +1,10 @@
 package com.cloud.base.user.service;
 
 
-import com.cloud.base.modules.xugou.core.model.entity.SecurityAuthority;
-import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
-import com.cloud.base.user.repository.entity.SysRes;
-import com.cloud.base.user.repository.entity.SysRole;
 import com.cloud.base.user.repository.entity.SysUser;
-import com.cloud.base.user.vo.MenuVo;
 import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
-
-import java.util.List;
 
 /**
  * 系统-系统用户表(SysUser)表数据库 服务接口

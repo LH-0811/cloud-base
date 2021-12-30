@@ -16,7 +16,7 @@
 
         <dependency>
             <groupId>com.cloud.common</groupId>
-            <artifactId>core-common</artifactId>
+            <artifactId>common-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

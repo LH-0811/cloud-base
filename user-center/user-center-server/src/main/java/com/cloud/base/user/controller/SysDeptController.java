@@ -1,8 +1,8 @@
 package com.cloud.base.user.controller;
 
-import com.cloud.base.common.response.ServerResponse;
-import com.cloud.base.modules.xugou.client.component.annotation.HasUrl;
-import com.cloud.base.modules.xugou.core.model.entity.SecurityAuthority;
+import com.cloud.base.common.core.response.ServerResponse;
+import com.cloud.base.common.xugou.client.component.annotation.HasUrl;
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.param.SysDeptCreateParam;
 import com.cloud.base.user.service.SysDeptService;
 import com.cloud.base.user.vo.SysDeptVo;

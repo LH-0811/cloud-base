@@ -16,7 +16,7 @@
         <!-- 通用包 -->
         <dependency>
             <groupId>com.cloud.common</groupId>
-            <artifactId>core-common</artifactId>
+            <artifactId>common-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -43,15 +43,15 @@
 
         <!-- 安全框架 服务端依赖 -->
         <dependency>
-            <groupId>com.cloud.modules</groupId>
+            <groupId>com.cloud.common</groupId>
             <artifactId>xugou-security-server</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!--  logger      -->
         <dependency>
-            <groupId>com.cloud.modules</groupId>
-            <artifactId>modules-logger</artifactId>
+            <groupId>com.cloud.common</groupId>
+            <artifactId>common-logger</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

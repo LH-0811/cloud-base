@@ -14,7 +14,7 @@ import com.cloud.base.generator.model.param.SetDataBaseParam;
 import com.cloud.base.generator.model.param.TableQueryParam;
 import com.cloud.base.generator.properties.DataBaseProperties;
 import com.cloud.base.generator.repository.service.SysGeneratorService;
-import com.cloud.base.common.response.ServerResponse;
+import com.cloud.base.common.core.response.ServerResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

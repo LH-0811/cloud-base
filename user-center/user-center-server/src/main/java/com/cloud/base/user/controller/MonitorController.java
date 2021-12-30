@@ -1,7 +1,7 @@
 package com.cloud.base.user.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.cloud.base.common.response.ServerResponse;
+import com.cloud.base.common.core.response.ServerResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
