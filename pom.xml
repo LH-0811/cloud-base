@@ -10,13 +10,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>cloud-gateway</module>
-        <module>common</module>
-        <module>dependency</module>
-        <module>authorize-center</module>
-        <module>user-center</module>
-        <module>code-generator</module>
-        <module>youji-manage-server</module>
+        <module>base-dependency</module>
+        <module>base-common</module>
+        <module>base-code-gen</module>
+        <module>base-application</module>
     </modules>
 
     <properties>

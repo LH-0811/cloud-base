@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.cloud.dependency</groupId>
+        <artifactId>base-dependency</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cloud.dependency</groupId>
+    <artifactId>dependency-sentinel-gateway</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+
+    <dependencies>
+        <!-- 引入 sentinel-->
+        <dependency>
+            <groupId>com.cloud.dependency</groupId>
+            <artifactId>dependency-sentinel</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <!-- 引入 sentinel+ gateway-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
