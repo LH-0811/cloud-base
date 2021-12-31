@@ -5,18 +5,51 @@
 ## 系统架构图
 ![avatar](./1_assets/image/服务架构图.jpg)
 ## 快速启动
+需要的数据库表在：https://gitee.com/lh_0811/cloud-base/tree/master/base-application/user-center/db 目录下
+
+### 本地app启动
+
 1.本地启动nacos: http://localhost:8848
+
 ```shell
 sh startup.sh -m standalone
 ```
 2.本地启动sentinel: http://localhost:9000
+
 ```shell
 nohup java -Dauth.enabled=false -Dserver.port=9000 -jar sentinel-dashboard-1.8.1.jar &
 ```
 3.本地启动zipkin: http://localhost:9411/
+
 ```shell
 nohup java -jar zipkin-server-2.23.2-exec.jar &
 ```
+
+### 利用docker快速部署本地环境
+
+1. 启动nacos http://localhost:8848
+
+   ```shell
+   docker run -d \
+   --name nacos \
+   -e MODE=standalone \
+   -p 8848:8848 \
+   -v /Users/lh0811/Work/Data/Docker/nacos/config:/home/nacos/config \
+   -v /Users/lh0811/Work/Data/Docker/nacos/data:/home/nacos/data \
+   nacos/nacos-server:2.0.2
+   ```
+
+2. 启动sentinel: http://localhost:9000
+
+   ```shell
+   docker run -d --name sentinel -p 9000:9000 lh0811/localhst-sentinel:1.8.1
+   ```
+
+3. 启动zipkin: http://localhost:9411/
+
+   ```shell
+   docker run -d --name zipkin -p 9411:9411 lh0811/localhst-zipkin:2.23.4
+   ```
 
 
 
@@ -81,9 +114,9 @@ maven：实现多环境打包、直推镜像到docker私服。
 
 cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |
-|--common - 通用工具类和包  <groupId>com.cloud.common</groupId>
+|--base-common - 通用工具类和包  <groupId>com.cloud.common</groupId>
 |   |
-|   |--core-common  通用包 该包包含了SpringMVC的依赖，会与WebFlux的服务有冲突
+|   |--common-core  通用包 该包包含了SpringMVC的依赖，会与WebFlux的服务有冲突
 |   |
 |   |--common-logger 日志功能封装
 |   |
@@ -93,7 +126,7 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |   |
 |   |--common-youji-task 酉鸡-分布式定时任务管理模块
 |
-|--dependency - 三方功能依赖集合 无任何实现 <groupId>com.cloud.dependency</groupId>
+|--base-dependency - 三方功能依赖集合 无任何实现 <groupId>com.cloud.dependency</groupId>
 |   |
 |   |--dependency-alibaba-cloud 关于alibaba-cloud的依赖集合
 |   |
@@ -109,24 +142,24 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 |   |
 |   |--dependency-sleuth-zipkin 关于链路跟踪sleuth-zipkin的依赖集合
 |
-| 以下是独立部署的应用 以下服务启动后配合前端工程使用 (https://gitee.com/lh_0811/cloud-base-angular-admin)
+|--base-code-gen  代码生成工具
 |
-|--cloud-gateway  应用网关
-|
-|--authorize-center 集成了modules-lh-security 的授权中心，提供统一授权和鉴权
-|   
-|--code-generator 代码生成工具
-|
-|--user-center 用户中心 提供用户管理和权限管理的相关服务
-|
-|--youji-manage-server 集成了modules-youji-task 的定时任务管理服务端
+|--base-application 以下是独立部署的应用 
+|		|
+|		|--base-authorize 基础授权中心应用
+|		|
+|		|--base-gateway 网关应用应用
+|		|
+|		|--user-center 用户中心服务应用
+|		|
+|		|--youji-manage-server 定时任务管理应用
 ```
 
 ## 版本使用说明
 
-```
+```xml
 <springboot.version>2.4.2</springboot.version>
-<springcloud.version>2020.0.3</springcloud.version>
+<springcloud.version>2020.0.1</springcloud.version>
 <springcloud-alibaba.version>2021.1</springcloud-alibaba.version>
 ```
 
@@ -258,10 +291,10 @@ mvn clean package -P prod -Dmaven.test.skip=ture
 
 在pom.xml同级目录下增加Dockerfile
 
-```
-FROM registry.cn-hangzhou.aliyuncs.com/lh0811/lh0811-docer:lh-jdk1.8-0.0.1
+```dockerfile
+FROM openjdk:8u171
 MAINTAINER lh0811
-ADD  ./target/${JAR_FILE} /opt/app.jar
+ADD ./target/${JAR_FILE} /opt/app.jar
 RUN chmod +x /opt/app.jar
 CMD java -jar /opt/app.jar
 ```
