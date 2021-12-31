@@ -5,7 +5,7 @@
 #  cloud:
 #    nacos:
 #      config:
-#        server-addr: 127.0.0.1:8848 # nacos 启动地址
+#        server-addr: localhost:8848 # nacos 启动地址
 #        file-extension: yaml
 #        namespace: 481a933a-5972-4cb8-90de-b4d91a8ce4a3
 #        # group: dev

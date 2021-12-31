@@ -25,9 +25,9 @@
 ```yaml
 youji:
   worker:
-    manage-host: 127.0.0.1 # 管理端服务ip
+    manage-host: localhost # 管理端服务ip
     manage-port: 8889 # 管理端服务端口
-    current-worker-ip: 127.0.0.1 # 当前工作节点ip
+    current-worker-ip: localhost # 当前工作节点ip
     current-worker-port: 9301 # 当前工作节点端口
 ```
 3. 使用注解注册定时任务到管理端

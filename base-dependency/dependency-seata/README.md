@@ -57,9 +57,9 @@ store {
     dbType = "mysql"
     # 这里如果数据库是5.7以上的版本 包路径加上cj
     driverClassName = "com.mysql.cj.jdbc.Driver"
-    url = "jdbc:mysql://127.0.0.1:3306/example-seata"
+    url = "jdbc:mysql://localhost:3306/example-seata"
     user = "root"
-    password = "liuhe@20211231"
+    password = "123456"
     minConn = 5
     maxConn = 100
     globalTable = "global_table"
@@ -244,7 +244,7 @@ store.db.dbType=mysql
 store.db.driverClassName=com.mysql.cj.jdbc.Driver
 store.db.url=jdbc:mysql://127.0.0.1:3306/example-seata?useUnicode=true
 store.db.user=root
-store.db.password=liuhe@20211231
+store.db.password=123456
 store.db.minConn=5
 store.db.maxConn=30
 store.db.globalTable=global_table
