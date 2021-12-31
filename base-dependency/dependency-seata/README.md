@@ -57,9 +57,9 @@ store {
     dbType = "mysql"
     # 这里如果数据库是5.7以上的版本 包路径加上cj
     driverClassName = "com.mysql.cj.jdbc.Driver"
-    url = "jdbc:mysql://49.232.166.94:3306/example-seata"
+    url = "jdbc:mysql://127.0.0.1:3306/example-seata"
     user = "root"
-    password = "QQliuhe951@@"
+    password = "liuhe@20211231"
     minConn = 5
     maxConn = 100
     globalTable = "global_table"
@@ -100,7 +100,7 @@ registry {
   nacos {
     application = "seata-server"
     # 修改nacos地址
-    serverAddr = "49.232.166.94:8848"
+    serverAddr = "127.0.0.1:8848"
     group = "SEATA_GROUP"
     # 在nacos中新增的命名空间的id
     namespace = "1c04b365-d834-442a-8b8d-a28861d1fc00"
@@ -242,9 +242,9 @@ store.file.sessionReloadReadSize=100
 store.db.datasource=druid
 store.db.dbType=mysql
 store.db.driverClassName=com.mysql.cj.jdbc.Driver
-store.db.url=jdbc:mysql://49.232.166.94:3306/example-seata?useUnicode=true
+store.db.url=jdbc:mysql://127.0.0.1:3306/example-seata?useUnicode=true
 store.db.user=root
-store.db.password=QQliuhe951@@
+store.db.password=liuhe@20211231
 store.db.minConn=5
 store.db.maxConn=30
 store.db.globalTable=global_table
@@ -288,7 +288,7 @@ metrics.exporterPrometheusPort=9898
 ```
 将脚本复制到config.txt同级目录下，执行命令将config.txt中的配置导入到nacos中
 ```
-sh nacos-config.sh -h 49.232.166.94 -p 8848 -g SEATA_GROUP -t 1c04b365-d834-442a-8b8d-a28861d1fc00 -u nacos -w nacos
+sh nacos-config.sh -h 127.0.0.1 -p 8848 -g SEATA_GROUP -t 1c04b365-d834-442a-8b8d-a28861d1fc00 -u nacos -w nacos
 ```
 -h nacos 注册中心地址
 
@@ -324,7 +324,7 @@ seata:
   application-id: cloud-example-storage
   tx-service-group: my_test_tx_group
   service:
-    grouplist: { "default": "49.232.166.94:8091" }
+    grouplist: { "default": "127.0.0.1:8091" }
 ```
 
 ## 3. 使用示例

@@ -7,9 +7,9 @@ spring:
         server-addr: 127.0.0.1:8848 # nacos 启动地址
   datasource:
     druid:
-      url: jdbc:mysql://49.232.166.94:3306/member-user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://127.0.0.1:3306/member-user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
       username: root
-      password: QQliuhe951@@
+      password: liuhe@20211231
 youji:
   server:
     heart-beat-corn: 0/5 * * * * ?

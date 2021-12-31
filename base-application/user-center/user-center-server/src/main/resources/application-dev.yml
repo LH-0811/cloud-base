@@ -1,9 +1,9 @@
 spring:
   datasource:
     druid:
-      url: jdbc:mysql://49.232.166.94:3306/member-user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://127.0.0.1:3306/member-user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
       username: root
-      password: QQliuhe951@@
+      password: liuhe@20211231
   cloud:
     nacos: # 配置nacos
       discovery: # 服务发现地址

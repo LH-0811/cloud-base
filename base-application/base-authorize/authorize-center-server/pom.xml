@@ -124,7 +124,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <repository>49.232.166.94:8099/example/${project.artifactId}</repository>
+                    <repository>127.0.0.1:8099/example/${project.artifactId}</repository>
                     <tag>${profileActive}-${project.version}</tag>
                     <username>admin</username>
                     <password>Harbor12345</password>

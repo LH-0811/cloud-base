@@ -32,7 +32,7 @@ nohup java -Dserver.port=9411 -Xms512m -Xmx512m  -jar zipkin-server-2.23.2-exec.
 ```
 spring:
   zipkin:
-    base-url: http://49.232.166.94:9411/ # 服务端地址
+    base-url: http://127.0.0.1:9411/ # 服务端地址
     sender:
       type: web # 数据传输方式，web 表示以 HTTP 报文的形式向服务端发送数据
   sleuth:
@@ -121,10 +121,10 @@ CREATE TABLE IF NOT EXISTS zipkin_dependencies (
 ```
 nohup java -jar zipkin-server-2.23.2-exec.jar \
 --STORAGE_TYPE=mysql  \
---MYSQL_HOST=49.232.166.94  \
+--MYSQL_HOST=127.0.0.1  \
 --MYSQL_TCP_PORT=3306  \
 --MYSQL_USER=root  \
---MYSQL_PASS=QQliuhe951@@  \
+--MYSQL_PASS=liuhe@20211231  \
 --MYSQL_DB=example-zipkin &
 ```
 

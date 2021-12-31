@@ -23,9 +23,9 @@ generator:
   # 默认的数据库连接地址
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://49.232.166.94:3306/member-user
+    url: jdbc:mysql://127.0.0.1:3306/member-user
     username: root
-    password: QQliuhe951@@
+    password: liuhe@20211231
   #包名
   package-name: com.cloud.base.code.generator.repository
   #作者
