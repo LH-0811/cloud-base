@@ -151,9 +151,9 @@ public class AuthorizeController {
     @GetMapping("/logout")
     @ApiOperation("用户退出")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
-    public ServerResponse logout(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+    public ServerResponse logout(@RequestHeader(value = CommonConstant.TokenKey, defaultValue = "") String token) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserController-logout");
         securityServer.tokenDestroy(new TokenParam(token));
@@ -234,7 +234,7 @@ public class SysPositionController extends BaseController {
     @PostMapping("/create")
     @ApiOperation("创建岗位信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysPositionCreateParam", dataTypeClass = SysPositionCreateParam.class, name = "param", value = "参数")
     })
     public ServerResponse createPosition(@Validated @RequestBody SysPositionCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -250,7 +250,7 @@ public class SysPositionController extends BaseController {
     @DeleteMapping("/delete/{positionId}")
     @ApiOperation("删除岗位信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "positionId", value = "岗位id")
     })
     public ServerResponse deletePosition(@PathVariable(value = "positionId") Long positionId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -266,7 +266,7 @@ public class SysPositionController extends BaseController {
     @PostMapping("/query")
     @ApiOperation("查询岗位信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysPositionQueryParam", dataTypeClass = SysPositionQueryParam.class, name = "param", value = "参数")
     })
     public ServerResponse<PageInfo<SysPositionVo>> queryPosition(@Validated @RequestBody SysPositionQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -282,7 +282,7 @@ public class SysPositionController extends BaseController {
     @GetMapping("/query/all")
     @ApiOperation("查询岗位信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysPositionQueryParam", dataTypeClass = SysPositionQueryParam.class, name = "param", value = "参数")
     })
     public ServerResponse<List<SysPositionVo>> queryAllPosition(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {

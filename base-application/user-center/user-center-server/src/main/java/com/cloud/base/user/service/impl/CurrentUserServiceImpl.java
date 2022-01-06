@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -121,32 +122,29 @@ public class CurrentUserServiceImpl implements CurrentUserService {
         log.info("进入 获取用户菜单树");
         try {
             // 获取用户角色
-            SysUserRoleRel roleSelect = new SysUserRoleRel();
-            roleSelect.setUserId(sysUser.getId());
             QueryWrapper<SysUserRoleRel> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().eq(SysUserRoleRel::getUserId, sysUser.getId());
+            queryWrapper.lambda()
+                    .eq(SysUserRoleRel::getUserId, sysUser.getId());
             List<SysUserRoleRel> roleList = sysUserRoleRelDao.list(queryWrapper);
             if (CollectionUtils.isEmpty(roleList)) {
                 return Lists.newArrayList();
             }
             // 角色id列表
             List<Long> roleIds = roleList.stream().map(ele -> ele.getRoleId()).collect(Collectors.toList());
-            List<Long> resIds = null;
-            if (roleIds.contains(1L)) {
-                resIds = sysResDao.list(new QueryWrapper<>()).stream().map(ele -> ele.getId()).collect(Collectors.toList());
-            } else {
-                QueryWrapper<SysRoleResRel> queryWrapper1 = new QueryWrapper<>();
-                queryWrapper1.lambda().in(SysRoleResRel::getRoleId, roleIds);
-                List<SysRoleResRel> sysRoleReRels = sysRoleResRelDao.list(queryWrapper1);
-                if (CollectionUtils.isEmpty(sysRoleReRels)) {
-                    return Lists.newArrayList();
-                }
-                // 资源id列表
-                resIds = sysRoleReRels.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
+            QueryWrapper<SysRoleResRel> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.lambda().in(SysRoleResRel::getRoleId, roleIds);
+            List<SysRoleResRel> sysRoleReRels = sysRoleResRelDao.list(queryWrapper1);
+            if (CollectionUtils.isEmpty(sysRoleReRels)) {
+                return Lists.newArrayList();
             }
+            // 资源id列表
+            List<Long> resIds = sysRoleReRels.stream().map(ele -> ele.getResId()).collect(Collectors.toList());
 
             // 所有的资源列表
             List<SysRes> sysResList = sysResDao.listByIds(resIds).stream().filter(ele -> ele.getType().equals(UCConstant.Type.GROUP.getCode()) || ele.getType().equals(UCConstant.Type.MENU.getCode())).collect(Collectors.toList());
+            // 按照orderNo 升序排序
+            sysResList = sysResList.stream().sorted(Comparator.comparing(SysRes::getOrderNo)).collect(Collectors.toList());
+
             List<SysResVo> sysResVoList = JSONArray.parseArray(JSON.toJSONString(sysResList), SysResVo.class);
             for (SysResVo sysRes : sysResVoList) {
                 sysRes.setParent(JSON.parseObject(JSON.toJSONString(sysResDao.getById(sysRes.getParentId())), SysResVo.class));

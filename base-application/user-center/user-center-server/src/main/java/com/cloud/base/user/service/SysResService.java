@@ -27,7 +27,7 @@ public interface SysResService {
     /**
      * 获取全部资源树
      */
-    List<SysResVo> getAllResTree() throws Exception;
+    List<SysResVo> getAllResTree(SysUser sysUser) throws Exception;
 
 
 }

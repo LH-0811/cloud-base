@@ -22,6 +22,12 @@ public class SysPositionVo {
     private Long id;
 
     /**
+     * 租户no
+     */
+    @ApiModelProperty(value="租户no")
+    private String tenantNo;
+
+    /**
      * 岗位编号
      */
     @ApiModelProperty(value="岗位编号")

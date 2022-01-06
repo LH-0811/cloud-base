@@ -1,6 +1,7 @@
 package com.cloud.base.authorize.controller;
 
 import com.cloud.base.authorize.security.verification.UsernamePasswordVerification;
+import com.cloud.base.common.core.constant.CommonConstant;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.xugou.core.model.param.TokenParam;
 import com.cloud.base.common.xugou.core.model.vo.AuthenticationVo;
@@ -43,9 +44,9 @@ public class AuthorizeController {
     @GetMapping("/logout")
     @ApiOperation("用户退出")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
-    public ServerResponse logout(@RequestHeader(value = "LHTOKEN", defaultValue = "") String token) throws Exception {
+    public ServerResponse logout(@RequestHeader(value = CommonConstant.TokenKey, defaultValue = "") String token) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserController-logout");
         securityServer.tokenDestroy(new TokenParam(token));

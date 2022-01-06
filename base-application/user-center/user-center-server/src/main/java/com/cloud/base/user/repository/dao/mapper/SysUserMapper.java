@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  *
  * @author lh0811
  * @email lh0811
- * @date 2021-11-10 11:01:37
+ * @date 2022-01-05 18:01:20
  */
 public interface SysUserMapper extends BaseMapper<SysUser> {
 

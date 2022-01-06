@@ -61,6 +61,7 @@ public class SysPositionServiceImpl implements SysPositionService {
             BeanUtils.copyProperties(param, sysPosition);
             // 设置基本信息
             sysPosition.setId(idWorker.nextId());
+            sysPosition.setTenantNo(sysUser.getTenantNo());
             sysPosition.setCreateBy(sysUser.getId());
             sysPosition.setCreateTime(new Date());
             sysPositionDao.save(sysPosition);
@@ -78,11 +79,20 @@ public class SysPositionServiceImpl implements SysPositionService {
     @Transactional(rollbackFor = Exception.class)
     public void deletePosition(Long positionId, SysUser sysUser) throws Exception {
         log.info("开始 删除岗位信息: positionId=" + positionId);
+        SysPosition position = sysPositionDao.getById(positionId);
+        if (position == null) {
+            throw CommonException.create(ServerResponse.createByError("当前岗位信息不存在"));
+        }
+        if (!position.getTenantNo().equals(sysUser.getTenantNo())) {
+            throw CommonException.create(ServerResponse.createByError("非法操作"));
+        }
         // 创建部门信息
         try {
             // 删除岗位和用户关系
             QueryWrapper<SysUserPositionRel> userPositionRelQuery = new QueryWrapper<>();
-            userPositionRelQuery.lambda().eq(SysUserPositionRel::getPositionId, positionId);
+            userPositionRelQuery.lambda()
+                    .eq(SysUserPositionRel::getPositionId, positionId)
+                    .eq(SysUserPositionRel::getTenantNo, sysUser.getTenantNo());
             sysUserPositionRelDao.remove(userPositionRelQuery);
             // 删除岗位信息
             sysPositionDao.removeById(positionId);
@@ -104,6 +114,7 @@ public class SysPositionServiceImpl implements SysPositionService {
             QueryWrapper<SysPosition> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysPosition> lambda = queryWrapper.lambda();
             lambda.orderByDesc(SysPosition::getCreateTime);
+            lambda.eq(SysPosition::getTenantNo, sysUser.getTenantNo());
             if (StringUtils.isNotBlank(param.getNo())) {
                 lambda.eq(SysPosition::getNo, param.getNo());
             }
@@ -136,7 +147,9 @@ public class SysPositionServiceImpl implements SysPositionService {
     public List<SysPositionVo> queryAllPosition(SysUser sysUser) throws Exception {
         log.info("开始 查询岗位列表");
         try {
-            List<SysPosition> sysPositions = sysPositionDao.list();
+            QueryWrapper<SysPosition> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().eq(SysPosition::getTenantNo,sysUser.getTenantNo());
+            List<SysPosition> sysPositions = sysPositionDao.list(queryWrapper);
             List<SysPositionVo> voList = sysPositions.stream().map(ele -> {
                 SysPositionVo sysPositionVo = new SysPositionVo();
                 BeanUtils.copyProperties(ele, sysPositionVo);

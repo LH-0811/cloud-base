@@ -4,11 +4,11 @@ import com.cloud.base.user.repository.entity.SysRole;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * 系统-角色表
+ * 用户中心-角色表
  *
  * @author lh0811
  * @email lh0811
- * @date 2021-11-10 11:01:37
+ * @date 2022-01-05 18:01:20
  */
 public interface SysRoleDao extends IService<SysRole> {
 

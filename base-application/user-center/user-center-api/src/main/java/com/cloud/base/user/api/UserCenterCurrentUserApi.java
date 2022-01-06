@@ -1,5 +1,6 @@
 package com.cloud.base.user.api;
 
+import com.cloud.base.common.core.constant.CommonConstant;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.user.vo.SysUserVo;
 import io.swagger.annotations.ApiImplicitParam;
@@ -20,7 +21,7 @@ public interface UserCenterCurrentUserApi {
     @GetMapping("/sys_user/current_user_info")
     @ApiOperation("获取当前基础信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
     ServerResponse<SysUserVo> getUesrInfo() throws Exception;
 }

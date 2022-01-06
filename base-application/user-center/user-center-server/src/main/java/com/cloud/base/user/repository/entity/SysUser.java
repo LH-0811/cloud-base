@@ -17,7 +17,7 @@ import lombok.Setter;
  * 
  * @author lh0811
  * @email lh0811
- * @date 2021-11-10 11:01:37
+ * @date 2022-01-05 18:01:20
  */
 @Setter
 @Getter
@@ -32,6 +32,11 @@ public class SysUser implements Serializable {
 	@TableId(type= IdType.NONE)
 	@ApiModelProperty(value="系统管理员用户")
 	private Long id;
+	/**
+	 * 租户no
+	 */
+	@ApiModelProperty(value="租户no")
+	private String tenantNo;
 	/**
 	 * 用户名
 	 */

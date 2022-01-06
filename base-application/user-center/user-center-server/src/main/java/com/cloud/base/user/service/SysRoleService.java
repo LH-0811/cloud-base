@@ -48,7 +48,7 @@ public interface SysRoleService {
      * @return
      * @throws Exception
      */
-    List<SysRole> getRoleList(String roleName) throws Exception;
+    List<SysRole> getRoleList(String roleName, SysUser sysUser) throws Exception;
 
 
     /**

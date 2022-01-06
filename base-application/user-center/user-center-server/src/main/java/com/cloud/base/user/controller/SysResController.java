@@ -1,8 +1,10 @@
 package com.cloud.base.user.controller;
 
+import com.cloud.base.common.core.constant.CommonConstant;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.xugou.client.component.annotation.HasUrl;
 import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
+import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.param.SysResCreateParam;
 import com.cloud.base.user.service.SysResService;
 import com.cloud.base.user.vo.SysResVo;
@@ -40,7 +42,7 @@ public class SysResController extends BaseController {
     @PostMapping("/create")
     @ApiOperation("创建权限")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysResCreateParam", dataTypeClass = SysResCreateParam.class, name = "param", value = "参数")
     })
     public ServerResponse createRes(@Validated @RequestBody SysResCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -56,7 +58,7 @@ public class SysResController extends BaseController {
     @DeleteMapping("/delete/{resId}")
     @ApiOperation("删除权限信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysResCreateParam", dataTypeClass = SysResCreateParam.class, name = "param", value = "参数")
     })
     public ServerResponse deleteRes(@PathVariable(value = "resId") Long resId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -73,15 +75,14 @@ public class SysResController extends BaseController {
     @GetMapping("/tree")
     @ApiOperation("获取全部资源树")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
     public ServerResponse<List<SysResVo>> getAllResTree(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取全部资源树 接口 : SysAdminController-getAllResTree ");
-        List<SysResVo> allResTree = sysResService.getAllResTree();
+        List<SysResVo> allResTree = sysResService.getAllResTree(getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("获取成功", allResTree);
     }
-
 
 
 }

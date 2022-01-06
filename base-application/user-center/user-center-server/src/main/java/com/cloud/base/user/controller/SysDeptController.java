@@ -1,8 +1,10 @@
 package com.cloud.base.user.controller;
 
+import com.cloud.base.common.core.constant.CommonConstant;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.xugou.client.component.annotation.HasUrl;
 import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
+import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.param.SysDeptCreateParam;
 import com.cloud.base.user.service.SysDeptService;
 import com.cloud.base.user.vo.SysDeptVo;
@@ -38,7 +40,7 @@ public class SysDeptController extends BaseController {
     @PostMapping("/create")
     @ApiOperation("创建部门 信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysDeptCreateParam", dataTypeClass = SysDeptCreateParam.class, name = "param", value = "参数")
     })
     public ServerResponse createSysDept(@Validated @RequestBody SysDeptCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -54,7 +56,7 @@ public class SysDeptController extends BaseController {
     @GetMapping("/tree/query")
     @ApiOperation("获取部门树")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
     public ServerResponse<List<SysDeptVo>> queryDeptTree(@RequestParam(value = "deptName",required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
@@ -69,7 +71,7 @@ public class SysDeptController extends BaseController {
     @GetMapping("/cascader/query")
     @ApiOperation("获取部门级联列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
     public ServerResponse<List<SysDeptVo>> queryDeptCascader(@RequestParam(value = "deptName",required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
@@ -84,7 +86,7 @@ public class SysDeptController extends BaseController {
     @DeleteMapping("/delete/{deptId}")
     @ApiOperation("删除部门信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "deptId", value = "部门id")
     })
     public ServerResponse deleteSysDept(@PathVariable(value = "deptId") Long deptId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {

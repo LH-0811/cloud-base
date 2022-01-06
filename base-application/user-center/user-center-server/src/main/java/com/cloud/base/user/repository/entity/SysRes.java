@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 系统-资源表
+ * 用户中心-资源表
  * 
  * @author lh0811
  * @email lh0811
- * @date 2021-11-10 11:01:35
+ * @date 2022-01-05 18:01:19
  */
 @Setter
 @Getter
@@ -33,6 +33,11 @@ public class SysRes implements Serializable {
 	@ApiModelProperty(value="资源id")
 	private Long id;
 	/**
+	 * 租户no
+	 */
+	@ApiModelProperty(value="租户no")
+	private String tenantNo;
+	/**
 	 * 父节点id
 	 */
 	@ApiModelProperty(value="父节点id")
@@ -45,7 +50,7 @@ public class SysRes implements Serializable {
 	/**
 	 * 类型：0-菜单组 1-"菜单" 2-"接口" 3-"权限码",4-"静态资源"
 	 */
-	@ApiModelProperty(value="类型：0-菜单组 1-菜单 2-接口 3-权限码,4-静态资源")
+	@ApiModelProperty(value="类型：0-菜单组 1-\"菜单\" 2-\"接口\" 3-\"权限码\",4-\"静态资源\"")
 	private Integer type;
 	/**
 	 * 权限标识符

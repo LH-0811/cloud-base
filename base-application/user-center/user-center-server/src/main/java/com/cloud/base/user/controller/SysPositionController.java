@@ -1,8 +1,10 @@
 package com.cloud.base.user.controller;
 
+import com.cloud.base.common.core.constant.CommonConstant;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.xugou.client.component.annotation.HasUrl;
 import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
+import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.param.SysPositionCreateParam;
 import com.cloud.base.user.param.SysPositionQueryParam;
 import com.cloud.base.user.service.SysPositionService;
@@ -41,7 +43,7 @@ public class SysPositionController extends BaseController {
     @PostMapping("/create")
     @ApiOperation("创建岗位信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysPositionCreateParam", dataTypeClass = SysPositionCreateParam.class, name = "param", value = "参数")
     })
     public ServerResponse createPosition(@Validated @RequestBody SysPositionCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -57,7 +59,7 @@ public class SysPositionController extends BaseController {
     @DeleteMapping("/delete/{positionId}")
     @ApiOperation("删除岗位信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "positionId", value = "岗位id")
     })
     public ServerResponse deletePosition(@PathVariable(value = "positionId") Long positionId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -73,7 +75,7 @@ public class SysPositionController extends BaseController {
     @PostMapping("/query")
     @ApiOperation("查询岗位信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysPositionQueryParam", dataTypeClass = SysPositionQueryParam.class, name = "param", value = "参数")
     })
     public ServerResponse<PageInfo<SysPositionVo>> queryPosition(@Validated @RequestBody SysPositionQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -89,7 +91,7 @@ public class SysPositionController extends BaseController {
     @GetMapping("/query/all")
     @ApiOperation("查询岗位信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysPositionQueryParam", dataTypeClass = SysPositionQueryParam.class, name = "param", value = "参数")
     })
     public ServerResponse<List<SysPositionVo>> queryAllPosition(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {

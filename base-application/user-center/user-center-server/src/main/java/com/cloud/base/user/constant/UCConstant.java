@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
  */
 public class UCConstant {
 
+
     //：0-静态资源 1-目录 2-菜单 3-按钮 4-接口
     @Getter
     @AllArgsConstructor
@@ -46,4 +47,32 @@ public class UCConstant {
             return null;
         }
     }
+
+    /**
+     * 业务序号枚举
+     */
+    public interface SerialBizType {
+        String TenantNo = "sys_tenant_no";
+    }
+
+
+    /**
+     * 重要角色枚举类
+     */
+    //：0-静态资源 1-目录 2-菜单 3-按钮 4-接口
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public enum RoleType {
+
+        TenantMgr(0L, "ROLE000"),
+        SystemMgr(1L, "ROLE001"),
+        ;
+
+        private Long roleId;
+
+        private String roleNo;
+
+    }
+
 }

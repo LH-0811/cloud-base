@@ -100,6 +100,7 @@ public class SysUserServiceImpl implements SysUserService {
             sysUserNew.setId(idWorker.nextId());
             String salt = RandomStringUtils.random(4);
             sysUserNew.setSalt(salt);
+            sysUserNew.setTenantNo(sysUser.getTenantNo());
             sysUserNew.setCreateBy(sysUser.getId());
             sysUserNew.setCreateTime(new Date());
             sysUserNew.setPassword(Md5Util.getMD5Str("123456", salt));
@@ -113,6 +114,7 @@ public class SysUserServiceImpl implements SysUserService {
             if (param.getDeptId() != null) {
                 SysUserDeptRel sysUserDeptRel = new SysUserDeptRel();
                 sysUserDeptRel.setId(idWorker.nextId());
+                sysUserDeptRel.setTenantNo(sysUser.getTenantNo());
                 sysUserDeptRel.setUserId(sysUserNew.getId());
                 sysUserDeptRel.setDeptId(param.getDeptId());
                 sysUserDeptRelDao.save(sysUserDeptRel);
@@ -120,13 +122,13 @@ public class SysUserServiceImpl implements SysUserService {
 
             // 保存用户岗位信息
             if (CollectionUtils.isNotEmpty(param.getPositionIdList())) {
-                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), sysUserNew.getId(), ele)).collect(Collectors.toList());
+                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), sysUser.getTenantNo(), sysUserNew.getId(), ele)).collect(Collectors.toList());
                 sysUserPositionRelDao.saveBatch(sysUserPositionRelList);
             }
 
             // 保存用户角色信息
             if (CollectionUtils.isNotEmpty(param.getRoleIdList())) {
-                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), sysUserNew.getId(), ele)).collect(Collectors.toList());
+                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), sysUser.getTenantNo(), sysUserNew.getId(), ele)).collect(Collectors.toList());
                 sysUserRoleRelDao.saveBatch(sysUserRoleRelList);
             }
 
@@ -163,7 +165,7 @@ public class SysUserServiceImpl implements SysUserService {
                 delSysUserPositionRel.lambda().eq(SysUserPositionRel::getUserId, param.getUserId());
                 sysUserPositionRelDao.remove(delSysUserPositionRel);
 
-                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), param.getUserId(), ele)).collect(Collectors.toList());
+                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), sysUser.getTenantNo(), param.getUserId(), ele)).collect(Collectors.toList());
                 sysUserPositionRelDao.saveBatch(sysUserPositionRelList);
             }
 
@@ -173,7 +175,7 @@ public class SysUserServiceImpl implements SysUserService {
                 delWrapper.lambda().eq(SysUserRoleRel::getUserId, param.getUserId());
                 sysUserRoleRelDao.remove(delWrapper);
 
-                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), param.getUserId(), ele)).collect(Collectors.toList());
+                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), sysUser.getTenantNo(), param.getUserId(), ele)).collect(Collectors.toList());
                 sysUserRoleRelDao.saveBatch(sysUserRoleRelList);
             }
             log.info("完成 修改用户");
@@ -198,6 +200,7 @@ public class SysUserServiceImpl implements SysUserService {
             LambdaQueryWrapper<SysUser> lambda = queryWrapper.lambda();
             lambda.orderByDesc(SysUser::getCreateTime);
             lambda.eq(SysUser::getDelFlag, Boolean.FALSE);
+            lambda.eq(SysUser::getTenantNo, sysUser.getTenantNo());
             if (StringUtils.isNotBlank(param.getUsername())) {
                 lambda.like(SysUser::getUsername, "%" + param.getUsername() + "%");
             }
@@ -290,6 +293,9 @@ public class SysUserServiceImpl implements SysUserService {
         if (checkUser == null) {
             throw CommonException.create(ServerResponse.createByError("用户信息不存在"));
         }
+        if (!checkUser.getTenantNo().equals(sysUser.getTenantNo())) {
+            throw CommonException.create(ServerResponse.createByError("非法操作"));
+        }
         try {
             // 删除用户
             checkUser.setDelFlag(true);
@@ -313,6 +319,9 @@ public class SysUserServiceImpl implements SysUserService {
         SysUser checkUser = sysUserDao.getById(userId);
         if (checkUser == null) {
             throw CommonException.create(ServerResponse.createByError("用户信息不存在"));
+        }
+        if (!checkUser.getTenantNo().equals(sysUser.getTenantNo())) {
+            throw CommonException.create(ServerResponse.createByError("非法操作"));
         }
         try {
             // 重置用户名密码

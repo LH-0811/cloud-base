@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  *
  * @author lh0811
  * @email lh0811
- * @date 2021-11-10 11:01:42
+ * @date 2022-01-05 18:01:19
  */
 @Service
 public class SysDictDaoImpl extends ServiceImpl<SysDictMapper, SysDict> implements SysDictDao {

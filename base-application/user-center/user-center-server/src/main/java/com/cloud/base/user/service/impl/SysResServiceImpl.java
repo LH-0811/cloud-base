@@ -69,6 +69,7 @@ public class SysResServiceImpl implements SysResService {
             BeanUtils.copyProperties(param, sysRes);
 
             sysRes.setId(idWorker.nextId());
+            sysRes.setTenantNo(sysUser.getTenantNo());
             sysRes.setCreateBy(sysUser.getId());
             sysRes.setCreateTime(new Date());
 
@@ -104,9 +105,14 @@ public class SysResServiceImpl implements SysResService {
         if (sysRes == null) {
             throw CommonException.create(ServerResponse.createByError("权限信息不存在"));
         }
+        if (!sysRes.getTenantNo().equals(sysUser.getTenantNo())) {
+            throw CommonException.create(ServerResponse.createByError("非法操作"));
+        }
 
         QueryWrapper<SysRes> resQueryWrapper = new QueryWrapper<>();
-        resQueryWrapper.lambda().eq(SysRes::getParentId, resId);
+        resQueryWrapper.lambda()
+                .eq(SysRes::getParentId, resId)
+                .eq(SysRes::getTenantNo, sysUser.getTenantNo());
         if (sysResDao.count(resQueryWrapper) > 0) {
             throw CommonException.create(ServerResponse.createByError("当前资源有子资源，不能删除"));
         }
@@ -142,11 +148,13 @@ public class SysResServiceImpl implements SysResService {
      * @throws Exception 异常
      */
     @Override
-    public List<SysResVo> getAllResTree() throws Exception {
+    public List<SysResVo> getAllResTree(SysUser sysUser) throws Exception {
         log.info("进入 获取全部资源树");
         try {
             // 所有的资源列表
-            List<SysRes> sysResList = sysResDao.list();
+            QueryWrapper<SysRes> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().eq(SysRes::getTenantNo, sysUser.getTenantNo());
+            List<SysRes> sysResList = sysResDao.list(queryWrapper);
             List<SysResVo> sysResVoList = JSONArray.parseArray(JSON.toJSONString(sysResList), SysResVo.class);
             for (SysResVo sysRes : sysResVoList) {
                 sysRes.setTitle(sysRes.getName() + "[" + UCConstant.Type.getDescByCode(sysRes.getType()) + "]");

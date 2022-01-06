@@ -1,5 +1,6 @@
 package com.cloud.base.user.controller;
 
+import com.cloud.base.common.core.constant.CommonConstant;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.xugou.client.component.annotation.HasUrl;
 import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
@@ -48,7 +49,7 @@ public class SysRoleController extends BaseController {
     @PostMapping("/create")
     @ApiOperation("创建系统角色信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleCreateParam", dataTypeClass = SysRoleCreateParam.class, name = "param", value = "参数")
     })
     public ServerResponse createRole(@Validated @RequestBody SysRoleCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -64,7 +65,7 @@ public class SysRoleController extends BaseController {
     @PostMapping("/update")
     @ApiOperation("修改系统角色信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleUpdateParam", dataTypeClass = SysRoleUpdateParam.class, name = "param", value = "参数")
     })
     public ServerResponse updateRole(@Validated @RequestBody SysRoleUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -80,7 +81,7 @@ public class SysRoleController extends BaseController {
     @DeleteMapping("/delete/{roleId}")
     @ApiOperation("删除系统角色信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "roleId", value = "角色id")
     })
     public ServerResponse deleteRole(@PathVariable(name = "roleId") Long roleId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -96,7 +97,7 @@ public class SysRoleController extends BaseController {
     @PostMapping("/query")
     @ApiOperation("查询系统角色信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysRoleQueryParam", dataTypeClass = SysRoleQueryParam.class, name = "param", value = "参数")
     })
     public ServerResponse<PageInfo<SysRoleVo>> queryRole(@Validated @RequestBody SysRoleQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -114,10 +115,10 @@ public class SysRoleController extends BaseController {
      */
     @GetMapping("/query/all_list")
     @ApiOperation("获取角色列表")
-    public ServerResponse<List<SysRole>> getRoleList(@RequestParam(value = "roleName",required = false) String roleName,@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysRole>> getRoleList(@RequestParam(value = "roleName", required = false) String roleName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取角色列表 接口 : SysAdminController-getRoleList ");
-        List<SysRole> roleList = sysRoleService.getRoleList(roleName);
+        List<SysRole> roleList = sysRoleService.getRoleList(roleName, getCurrentSysUser(securityAuthority));
         return ServerResponse.createBySuccess("查询成功", roleList);
     }
 
@@ -127,7 +128,7 @@ public class SysRoleController extends BaseController {
     @GetMapping("/res/by_id/{roleId}")
     @ApiOperation("查询角色资源列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "roleId", value = "角色Id")
     })
     public ServerResponse<List<SysRes>> getSysResListByRoleId(@PathVariable(name = "roleId") Long roleId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {

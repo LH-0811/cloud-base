@@ -1,9 +1,11 @@
 package com.cloud.base.user.controller;
 
+import com.cloud.base.common.core.constant.CommonConstant;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.xugou.client.component.annotation.HasUrl;
 import com.cloud.base.common.xugou.client.component.annotation.TokenToAuthority;
 import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
+import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.entity.SysRes;
@@ -57,7 +59,7 @@ public class SysUserController extends BaseController {
     @PostMapping("/create")
     @ApiOperation("创建用户")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserCreateParam", dataTypeClass = SysUserCreateParam.class, name = "param", value = "参数")
     })
     @HasUrl
@@ -77,7 +79,7 @@ public class SysUserController extends BaseController {
     @PostMapping("/update")
     @ApiOperation("修改用户")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserUpdateParam", dataTypeClass = SysUserUpdateParam.class, name = "param", value = "参数")
     })
     @HasUrl
@@ -98,7 +100,7 @@ public class SysUserController extends BaseController {
     @PostMapping("/query")
     @ApiOperation("查询用户")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserQueryParam", dataTypeClass = SysUserQueryParam.class, name = "param", value = "参数")
     })
     @HasUrl
@@ -115,7 +117,7 @@ public class SysUserController extends BaseController {
     @DeleteMapping("/delete/{userId}")
     @ApiOperation("删除用户")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "userId", value = "用户id")
     })
     @HasUrl
@@ -133,7 +135,7 @@ public class SysUserController extends BaseController {
     @PostMapping("/reset/pwd")
     @ApiOperation("重置用户密码")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserResetPwdParam", dataTypeClass = SysUserResetPwdParam.class, name = "param", value = "参数")
     })
     @HasUrl
@@ -164,7 +166,7 @@ public class SysUserController extends BaseController {
     @GetMapping("/current_user_prems")
     @ApiOperation("获取当前用户权限信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
     @TokenToAuthority
     public ServerResponse<SecurityAuthority> getUesrPremsInfo(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -179,7 +181,7 @@ public class SysUserController extends BaseController {
     @GetMapping("/current_user_info")
     @ApiOperation("获取当前基础信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
     @TokenToAuthority
     public ServerResponse<UserInfoVo> getUserInfo(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -222,7 +224,7 @@ public class SysUserController extends BaseController {
     @PostMapping("/dept/query")
     @ApiOperation("获取部门用户信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysDeptUserQueryParam", dataTypeClass = SysDeptUserQueryParam.class, name = "param", value = "参数")
     })
     @HasUrl
@@ -242,7 +244,7 @@ public class SysUserController extends BaseController {
     @GetMapping("/menu_tree/get")
     @ApiOperation("获取用户菜单树")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
     @TokenToAuthority
     public ServerResponse<List<MenuVo>> getMenuTreeByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -260,7 +262,7 @@ public class SysUserController extends BaseController {
     @PostMapping("/res_list/get")
     @ApiOperation("获取用户资源列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
     @TokenToAuthority
     public ServerResponse<List<SysRes>> getResListByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
@@ -279,7 +281,7 @@ public class SysUserController extends BaseController {
     @PostMapping("/set/pwd")
     @ApiOperation("用户修改密码")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysUserUpdatePasswordParam", dataTypeClass = SysUserUpdatePasswordParam.class, name = "param", value = "参数")
     })
     @TokenToAuthority

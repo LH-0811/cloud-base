@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 系统-角色-权限关系表
+ * 用户中心-权限关系表
  * 
  * @author lh0811
  * @email lh0811
- * @date 2021-11-10 11:01:38
+ * @date 2022-01-05 18:01:20
  */
 @Setter
 @Getter
@@ -32,6 +32,11 @@ public class SysRoleResRel implements Serializable {
 	@TableId(type= IdType.NONE)
 	@ApiModelProperty(value="角色权限关系id")
 	private Long id;
+	/**
+	 * 租户no
+	 */
+	@ApiModelProperty(value="租户no")
+	private String tenantNo;
 	/**
 	 * 角色id
 	 */

@@ -8,6 +8,7 @@
 
 package com.cloud.base.generator.controller;
 
+import com.cloud.base.common.core.constant.CommonConstant;
 import com.cloud.base.generator.model.dto.TableQueryResultDto;
 import com.cloud.base.generator.model.param.GeneratorCodeParam;
 import com.cloud.base.generator.model.param.SetDataBaseParam;
@@ -54,7 +55,7 @@ public class GeneratorController {
     @PostMapping("/db_info/set")
     @ApiOperation("设置当前数据库连接信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SetDataBaseParam", dataTypeClass = SetDataBaseParam.class, name = "param", value = "参数")
     })
     private ServerResponse setDbInfo(@Valid  @RequestBody SetDataBaseParam param) {
@@ -76,7 +77,7 @@ public class GeneratorController {
     @PostMapping("/list")
     @ApiOperation("获取当前数据库数据表")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "TableQueryParam", dataTypeClass = TableQueryParam.class, name = "param", value = "参数")
     })
     public ServerResponse list(@Valid @RequestBody TableQueryParam param) throws Exception {
@@ -90,7 +91,7 @@ public class GeneratorController {
     @PostMapping("/code")
     @ApiOperation("生成代码")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "string", name = "LHTOKEN", value = "用户token"),
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "GeneratorCodeParam", dataTypeClass = GeneratorCodeParam.class, name = "param", value = "要生成的表列表")
     })
     public void code(@Valid @RequestBody GeneratorCodeParam param, HttpServletResponse response) throws Exception {

@@ -68,6 +68,7 @@ public class SysDeptServiceImpl implements SysDeptService {
             BeanUtils.copyProperties(param, sysDept);
             // 设置基本信息
             sysDept.setId(idWorker.nextId());
+            sysDept.setTenantNo(sysUser.getTenantNo());
             sysDept.setCreateBy(sysUser.getId());
             sysDept.setCreateTime(new Date());
 
@@ -99,6 +100,7 @@ public class SysDeptServiceImpl implements SysDeptService {
         try {
             QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysDept> lambda = queryWrapper.lambda();
+            lambda.eq(SysDept::getTenantNo, sysUser.getTenantNo());
             if (StringUtils.isNotBlank(deptName)) {
                 lambda.like(SysDept::getName, "%" + deptName + "%");
             }
@@ -135,10 +137,15 @@ public class SysDeptServiceImpl implements SysDeptService {
             log.info("退出 删除部门信息 部门信息不存在");
             throw CommonException.create(ServerResponse.createByError("部门信息不存在"));
         }
+        if (!sysDept.getTenantNo().equals(sysDept.getTenantNo())) {
+            throw CommonException.create(ServerResponse.createByError("非法操作"));
+        }
 
         // 检查子部门
         QueryWrapper<SysDept> childQuery = new QueryWrapper<>();
-        childQuery.lambda().eq(SysDept::getParentId, deptId);
+        childQuery.lambda()
+                .eq(SysDept::getParentId, deptId)
+                .eq(SysDept::getTenantNo, sysUser.getTenantNo());
         List<SysDept> childrenList = sysDeptDao.list(childQuery);
         if (CollectionUtils.isNotEmpty(childrenList)) {
             throw CommonException.create(ServerResponse.createByError("部门下有所属子部门不能删除"));
@@ -146,18 +153,22 @@ public class SysDeptServiceImpl implements SysDeptService {
 
         // 检测部门用户
         QueryWrapper<SysUserDeptRel> queryRel = new QueryWrapper<>();
-        queryRel.lambda().eq(SysUserDeptRel::getDeptId, deptId);
+        queryRel.lambda()
+                .eq(SysUserDeptRel::getDeptId, deptId)
+                .eq(SysUserDeptRel::getTenantNo, sysUser.getTenantNo());
         List<SysUserDeptRel> userDeptRelationList = sysUserDeptRelDao.list(queryRel);
+
         if (CollectionUtils.isNotEmpty(userDeptRelationList)) {
             throw CommonException.create(ServerResponse.createByError("部门下有用户不能删除"));
         }
 
         try {
             sysDeptDao.removeById(deptId);
-
             // 更新父节点的是否叶子节点状态
             QueryWrapper<SysDept> pChildrenQuery = new QueryWrapper<>();
-            pChildrenQuery.lambda().eq(SysDept::getParentId, sysDept.getParentId());
+            pChildrenQuery.lambda()
+                    .eq(SysDept::getParentId, sysDept.getParentId())
+                    .eq(SysDept::getTenantNo, sysUser.getTenantNo());
             if (sysDeptDao.count(pChildrenQuery) == 0) {
                 SysDept pUpdateParam = new SysDept();
                 pUpdateParam.setId(sysDept.getParentId());
@@ -180,6 +191,7 @@ public class SysDeptServiceImpl implements SysDeptService {
         try {
             QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysDept> lambda = queryWrapper.lambda();
+            lambda.eq(SysDept::getTenantNo, sysUser.getTenantNo());
             if (StringUtils.isNotBlank(deptName)) {
                 lambda.like(SysDept::getName, "%" + deptName + "%");
             }
