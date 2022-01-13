@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,6 +47,7 @@ public class SysUser implements Serializable {
 	/**
 	 * 密码
 	 */
+	@JsonIgnore
 	@ApiModelProperty(value="密码")
 	private String password;
 	/**
@@ -55,6 +58,7 @@ public class SysUser implements Serializable {
 	/**
 	 * 密码盐
 	 */
+	@JsonIgnore
 	@ApiModelProperty(value="密码盐")
 	private String salt;
 	/**
@@ -75,6 +79,7 @@ public class SysUser implements Serializable {
 	/**
 	 * 登录口令
 	 */
+	@JsonIgnore
 	@ApiModelProperty(value="登录口令")
 	private String token;
 	/**

@@ -6,18 +6,20 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cloud.base.common.core.exception.CommonException;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.core.util.IdWorker;
+import com.cloud.base.common.core.util.Md5Util;
 import com.cloud.base.user.constant.UCConstant;
-import com.cloud.base.user.param.SysTenantInfoCreateParam;
-import com.cloud.base.user.param.SysTenantInfoQueryParam;
-import com.cloud.base.user.param.SysTenantInfoUpdateParam;
+import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.dao.SysTenantInfoDao;
-import com.cloud.base.user.repository.entity.SysTenantInfo;
-import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.repository.dao.SysUserDao;
+import com.cloud.base.user.repository.dao.SysUserRoleRelDao;
+import com.cloud.base.user.repository.entity.*;
 import com.cloud.base.user.service.SysSerialService;
 import com.cloud.base.user.service.SysTenantInfoService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 租户管理服务
@@ -44,6 +47,12 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
 
     @Autowired
     private SysSerialService sysSerialService;
+
+    @Autowired
+    private SysUserDao sysUserDao;
+
+    @Autowired
+    private SysUserRoleRelDao sysUserRoleRelDao;
 
 
     /**
@@ -158,6 +167,96 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
     }
 
 
+    /**
+     * 创建该租户的系统管理员
+     */
+    @Override
+    public SysUser getTenantMgrUser(Long tenantId, SysUser sysUser) throws Exception {
+        log.info("[租户信息管理] 查询租户信息 参数:tenantId={}", tenantId);
+        SysTenantInfo sysTenantInfo = sysTenantInfoDao.getById(tenantId);
+        if (sysTenantInfo == null) {
+            throw CommonException.create(ServerResponse.createByError("租户信息不存在"));
+        }
+        SysUser tenantSysMgrUser = sysTenantInfoDao.getTenantSysMgrUser(sysTenantInfo.getTenantNo());
+        if (tenantSysMgrUser != null) {
+            return tenantSysMgrUser;
+        }
+        throw CommonException.create(ServerResponse.createByError("当前租户不存在管理员,请先创建"));
+    }
+
+
+    /**
+     * 创建租户管理员
+     */
+    @Override
+    public SysUser genTenantMgrUser(SysTenantMgrUserCreateParam param, SysUser sysUser) throws Exception {
+        log.info("[租户信息管理] 创建租户系统管理员 参数:{}", JSON.toJSONString(param));
+        SysTenantInfo sysTenantInfo = sysTenantInfoDao.getById(param.getTenantId());
+        if (sysTenantInfo == null) {
+            throw CommonException.create(ServerResponse.createByError("租户信息不存在"));
+        }
+        SysUser tenantSysMgrUser = sysTenantInfoDao.getTenantSysMgrUser(sysTenantInfo.getTenantNo());
+        if (tenantSysMgrUser != null) {
+            throw CommonException.create(ServerResponse.createByError("当前租户已存在管理员"));
+        }
+        QueryWrapper<SysUser> sysUserNameQueryWrapper = new QueryWrapper<>();
+        sysUserNameQueryWrapper.lambda().eq(SysUser::getDelFlag, false).eq(SysUser::getUsername, param.getUsername());
+        if (sysUserDao.count(sysUserNameQueryWrapper) > 0) {
+            throw CommonException.create(ServerResponse.createByError("用户名已经存在"));
+        }
+        QueryWrapper<SysUser> sysUserPhoneQueryWrapper = new QueryWrapper<>();
+        sysUserPhoneQueryWrapper.lambda().eq(SysUser::getDelFlag, false).eq(SysUser::getPhone, param.getPhone());
+        if (sysUserDao.count(sysUserPhoneQueryWrapper) > 0) {
+            throw CommonException.create(ServerResponse.createByError("手机号已经存在"));
+        }
+        // 保存用户信息
+        SysUser sysUserNew = new SysUser();
+        BeanUtils.copyProperties(param, sysUserNew);
+        sysUserNew.setId(idWorker.nextId());
+        String salt = RandomStringUtils.random(4);
+        sysUserNew.setSalt(salt);
+        sysUserNew.setTenantNo(sysUser.getTenantNo());
+        sysUserNew.setCreateBy(sysUser.getId());
+        sysUserNew.setCreateTime(new Date());
+        sysUserNew.setPassword(Md5Util.getMD5Str(UCConstant.DefaultPassword, salt));
+        sysUserNew.setActiveFlag(true);
+        sysUserNew.setDelFlag(false);
+        sysUserNew.setCreateBy(sysUser.getId());
+        sysUserNew.setCreateTime(new Date());
+        sysUserDao.save(sysUserNew);
+        // 保存用户角色信息
+        SysUserRoleRel sysUserRoleRel = new SysUserRoleRel(idWorker.nextId(), sysTenantInfo.getTenantNo(), sysUserNew.getId(), UCConstant.RoleType.SystemMgr.getRoleId());
+        sysUserRoleRelDao.save(sysUserRoleRel);
+        return sysUserNew;
+    }
+
+    /**
+     * 更新租户管理员信息
+     */
+    @Override
+    public void updateTenantMgrUserInfo(SysTenantMgrUserUpdateParam param, SysUser currentSysUser) throws Exception {
+        log.info("[租户信息管理] 更新租户管理员用户信息 参数:{}", JSON.toJSONString(param));
+        SysUser sysUser = sysUserDao.getById(param.getUserId());
+        if (sysUser == null) {
+            throw CommonException.create(ServerResponse.createByError("用户不存在"));
+        }
+        QueryWrapper<SysUserRoleRel> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(SysUserRoleRel::getUserId, param.getUserId());
+        List<SysUserRoleRel> sysUserRoleRelList = sysUserRoleRelDao.list(queryWrapper);
+        if (CollectionUtils.isEmpty(sysUserRoleRelList)) {
+            throw CommonException.create(ServerResponse.createByError("未获取到用户角色信息"));
+        }
+
+        SysUserRoleRel sysUserRoleRel = sysUserRoleRelList.stream().filter(ele -> ele.getRoleId().equals(UCConstant.RoleType.SystemMgr.getRoleId())).findFirst().orElse(null);
+        if (sysUserRoleRel == null) {
+            throw CommonException.create(ServerResponse.createByError("该用户没有系统管理员角色"));
+        }
+        SysUser updateInfo = new SysUser();
+        BeanUtils.copyProperties(param, updateInfo);
+        updateInfo.setUpdateBy(sysUser.getId());
+        updateInfo.setUpdateTime(new Date());
+        sysUserDao.updateById(updateInfo);
+    }
     // =========================== 私有方法 ===========================
 
     /**

@@ -2,6 +2,7 @@ package com.cloud.base.user.repository.dao;
 
 import com.cloud.base.user.repository.entity.SysTenantInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cloud.base.user.repository.entity.SysUser;
 
 /**
  * 系统管理-租户信息管理
@@ -12,4 +13,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SysTenantInfoDao extends IService<SysTenantInfo> {
 
+    /**
+     * 获取当前租户的系统管理员
+     */
+    SysUser getTenantSysMgrUser(String tenantNo) throws Exception;
 }

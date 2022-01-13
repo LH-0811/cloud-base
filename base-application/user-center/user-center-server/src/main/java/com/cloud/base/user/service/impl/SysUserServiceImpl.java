@@ -8,6 +8,7 @@ import com.cloud.base.common.core.exception.CommonException;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.core.util.IdWorker;
 import com.cloud.base.common.core.util.Md5Util;
+import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.param.SysUserCreateParam;
 import com.cloud.base.user.param.SysUserQueryParam;
 import com.cloud.base.user.param.SysUserUpdateParam;
@@ -103,7 +104,7 @@ public class SysUserServiceImpl implements SysUserService {
             sysUserNew.setTenantNo(sysUser.getTenantNo());
             sysUserNew.setCreateBy(sysUser.getId());
             sysUserNew.setCreateTime(new Date());
-            sysUserNew.setPassword(Md5Util.getMD5Str("123456", salt));
+            sysUserNew.setPassword(Md5Util.getMD5Str(UCConstant.DefaultPassword, salt));
             sysUserNew.setActiveFlag(true);
             sysUserNew.setDelFlag(false);
             sysUserNew.setCreateBy(sysUser.getId());
@@ -327,7 +328,7 @@ public class SysUserServiceImpl implements SysUserService {
             // 重置用户名密码
             SysUser updateUser = new SysUser();
             updateUser.setId(checkUser.getId());
-            updateUser.setPassword(Md5Util.getMD5Str("123456", checkUser.getSalt()));
+            updateUser.setPassword(Md5Util.getMD5Str(UCConstant.DefaultPassword, checkUser.getSalt()));
             updateUser.setUpdateBy(sysUser.getId());
             updateUser.setUpdateTime(new Date());
             sysUserDao.updateById(updateUser);

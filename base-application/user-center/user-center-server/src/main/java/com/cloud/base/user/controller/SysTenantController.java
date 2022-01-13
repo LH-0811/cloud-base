@@ -13,6 +13,7 @@ import com.cloud.base.user.repository.entity.SysTenantInfo;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.SysRoleService;
 import com.cloud.base.user.service.SysTenantInfoService;
+import com.cloud.base.user.service.SysUserService;
 import com.cloud.base.user.vo.SysRoleVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -36,6 +37,9 @@ public class SysTenantController extends BaseController {
 
     @Autowired
     private SysTenantInfoService tenantInfoService;
+
+    @Autowired
+    private SysUserService sysUserService;
 
 // ///////////////////////////////////角色管理
 
@@ -96,4 +100,60 @@ public class SysTenantController extends BaseController {
         return ServerResponse.createBySuccess("操作成功", tenantInfoService.tenantInfoQuery(param, getCurrentSysUser(securityAuthority)));
     }
 
+
+    /**
+     * 获取该租户的系统管理员
+     */
+    @GetMapping("/get_mgr_user/{tenantId}")
+    @ApiOperation("获取该租户的系统管理员")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
+            @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "tenantId", value = "租户id")
+    })
+    public ServerResponse<SysUser> getTenantMgrUser(@PathVariable(value = "tenantId") Long tenantId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("接口 [租户信息管理] 创建该租户的系统管理员 参数:tenantId={}", tenantId);
+        return ServerResponse.createBySuccess("获取成功，默认密码: " + UCConstant.DefaultPassword, tenantInfoService.getTenantMgrUser(tenantId, getCurrentSysUser(securityAuthority)));
+    }
+
+    /**
+     * 获取该租户的系统管理员
+     */
+    @PostMapping("/gen_mgr_user")
+    @ApiOperation("获取该租户的系统管理员")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
+            @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "tenantId", value = "租户id")
+    })
+    public ServerResponse<SysUser> genTenantMgrUser(@Validated @RequestBody SysTenantMgrUserCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("接口 [租户信息管理] 创建该租户的系统管理员 参数:param={}", JSON.toJSONString(param));
+        return ServerResponse.createBySuccess("获取成功，默认密码: " + UCConstant.DefaultPassword, tenantInfoService.genTenantMgrUser(param, getCurrentSysUser(securityAuthority)));
+    }
+
+    @PostMapping("/mgr_user/reset_pwd")
+    @ApiOperation("重置租户管理员密码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
+            @ApiImplicitParam(paramType = "body", dataType = "SysUserResetPwdParam", dataTypeClass = SysUserResetPwdParam.class, name = "param", value = "参数")
+    })
+    @HasUrl
+    public ServerResponse resetPassword(@Validated @RequestBody SysUserResetPwdParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("接口 [租户信息管理] 重置租户管理员密码 参数:param={}", JSON.toJSONString(param));
+        sysUserService.resetPassword(param.getUserId(), getCurrentSysUser(securityAuthority));
+        return ServerResponse.createBySuccess("修改成功");
+    }
+
+    @PostMapping("/mgr_user/update")
+    @ApiOperation("更新租户管理员用户信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
+            @ApiImplicitParam(paramType = "body", dataType = "SysTenantMgrUserUpdateParam", dataTypeClass = SysTenantMgrUserUpdateParam.class, name = "param", value = "参数")
+    })
+    @HasUrl
+    public ServerResponse updateTenantMgrUserInfo(@Validated @RequestBody SysTenantMgrUserUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("接口 [租户信息管理] 更新租户管理员用户信息 参数:param={}", JSON.toJSONString(param));
+        tenantInfoService.updateTenantMgrUserInfo(param, getCurrentSysUser(securityAuthority));
+        return ServerResponse.createBySuccess("修改成功");
+    }
 }

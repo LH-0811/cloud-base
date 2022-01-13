@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
  */
 public class UCConstant {
 
+    /**
+     * 默认密码
+     */
+    public final static String DefaultPassword = "123456";
 
     //：0-静态资源 1-目录 2-菜单 3-按钮 4-接口
     @Getter
