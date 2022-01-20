@@ -73,9 +73,6 @@
 
 
     </dependencies>
-
-
-
     <build>
         <plugins>
             <!-- jar 打包-->
@@ -142,7 +139,6 @@
             </resource>
         </resources>
     </build>
-
     <profiles>
         <profile>
             <id>dev</id>

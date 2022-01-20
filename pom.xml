@@ -12,7 +12,6 @@
     <modules>
         <module>base-dependency</module>
         <module>base-common</module>
-        <module>base-code-gen</module>
         <module>base-application</module>
     </modules>
 

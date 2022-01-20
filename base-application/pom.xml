@@ -16,6 +16,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>base-code-gen</module>
         <module>base-gateway</module>
         <module>base-authorize</module>
         <module>user-center</module>

@@ -33,7 +33,7 @@ public class SecurityController {
     @Autowired
     private SecurityCheckAuthority securityCheckAuthority;
 
-    @PostMapping("${xugou.security.server-url-of-token-to-authority}")
+    @PostMapping("${xugou.security.server-url-of-token-to-authority:/xugou/security/token_to_authority}")
     @ApiOperation(tags = "鉴权接口", value = "鉴权接口-token转换为用户权限信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "CheckResParam", dataTypeClass = CheckResParam.class, name = "param", value = "参数")
