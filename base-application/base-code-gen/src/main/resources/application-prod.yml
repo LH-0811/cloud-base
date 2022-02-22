@@ -2,13 +2,13 @@ generator:
   # 默认的数据库连接地址
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/member-user
+    url: jdbc:mysql://10.0.8.4:13306/member-user
     username: root
-    password: 123456
+    password: QQliuhe951@@
 spring:
   cloud:
     nacos: # 配置nacos
       discovery: # 服务发现地址
-        server-addr: localhost:8848 # nacos 启动地址
+        server-addr: 10.0.8.4:18848 # nacos 启动地址
       config:
-        server-addr: localhost:8848 # nacos 启动地址
+        server-addr: 10.0.8.4:18848 # nacos 启动地址

@@ -3,6 +3,8 @@ spring:
     nacos: # 配置nacos
       discovery: # 服务发现地址
         server-addr: 10.0.8.4:18848 # nacos 启动地址
+      config:
+        server-addr: 10.0.8.4:18848 # nacos 启动地址
     sentinel: # 配置sentinel
       transport:
         dashboard: 10.0.8.4:19000 # 配置sentinel dashboard 启动地址

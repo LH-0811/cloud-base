@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    nacos: # 配置nacos
+      discovery: # 服务发现地址
+        server-addr: 10.0.8.4:18848 # nacos 启动地址
+      config:
+        server-addr: 10.0.8.4:18848 # nacos 启动地址
+  datasource:
+    druid:
+      url: jdbc:mysql://10.0.8.4:13306/member-user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      username: root
+      password: QQliuhe951@@
+youji:
+  server:
+    heart-beat-corn: 0/5 * * * * ?
+    die-no-heart-num: 10

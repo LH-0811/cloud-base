@@ -87,10 +87,24 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <repository>localhost:8099/example/${project.artifactId}</repository>
-                    <tag>${profileActive}-${project.version}</tag>
-                    <username>admin</username>
-                    <password>Harbor12345</password>
+                    <!-- 使用maven settings.xml中配置的docker仓库 -->
+                    <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+                    <!-- 这个标签要与setting.xml中的配置一致 ${server.id}/[命名空间]
+                    <servers>
+                        <server>
+                            <id>registry.cn-hangzhou.aliyuncs.com</id>
+                            <username>2329385085@qq.com</username>
+                            <password>liuhe951</password>
+                            <configuration>
+                                <email>2329385085@qq.com</email>
+                            </configuration>
+                        </server>
+                    </servers>
+                    -->
+                    <repository>registry.cn-hangzhou.aliyuncs.com/lh0811/lh0811-docer</repository>
+                    <!--标签-->
+                    <tag>${project.artifactId}-${profileActive}-${project.version}</tag>
+
                     <buildArgs>
                         <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
                     </buildArgs>

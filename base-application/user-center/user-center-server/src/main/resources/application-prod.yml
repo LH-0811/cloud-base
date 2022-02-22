@@ -1,22 +1,22 @@
 spring:
   datasource:
     druid:
-      url: jdbc:mysql://localhost:3306/member-user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://10.0.8.4:13306/member-user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
       username: root
-      password: 123456
+      password: QQliuhe951@@
   cloud:
     nacos: # 配置nacos
       discovery: # 服务发现地址
-        server-addr: localhost:8848 # nacos 启动地址
+        server-addr: 10.0.8.4:18848 # nacos 启动地址
     sentinel: # 配置sentinel
       transport:
-        dashboard: localhost:9000 # 配置sentinel dashboard 启动地址
+        dashboard: 10.0.8.4:19000 # 配置sentinel dashboard 启动地址
         port: 8719 # 直接写8719 端口号默认是8719 如果被占用就是+1 直到找到未被占用端口
-        client-ip: localhost #这个配置时告知sentinel通过哪个ip来ping服务。所以这个ip必须是sentinel所在服务器能ping通的
+        client-ip: 10.0.8.4 #这个配置时告知sentinel通过哪个ip来ping服务。所以这个ip必须是sentinel所在服务器能ping通的
       filter:
         url-patterns: /** # 默认是/* 这里改成/** 则会监控所有的请求
   zipkin:
-    base-url: http://localhost:9411/ # 服务端地址
+    base-url: http://10.0.8.4:19411/ # 服务端地址
     sender:
       type: web # 数据传输方式，web 表示以 HTTP 报文的形式向服务端发送数据
   sleuth:
