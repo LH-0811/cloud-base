@@ -48,7 +48,7 @@ public class DefaultSecurityClientImpl implements SecurityClient {
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     @Override
-    public SecurityAuthority tokenToAuthority() throws Exception {
+    public SecurityAuthority tokenToAuthority(Boolean require) throws Exception {
         String token = provideResToSecurityClient.getTokenFromApplicationContext();
         if (StringUtils.isBlank(token)) {
             throw CommonException.create(ServerResponse.createByError(Integer.valueOf(xuGouSecurityProperties.getNoAuthorizedCode()), "未上传用户token", ""));
@@ -64,6 +64,9 @@ public class DefaultSecurityClientImpl implements SecurityClient {
             if (serverResponse.isSuccess()) {
                 return serverResponse.getData();
             } else {
+                if (!require) {
+                    return null;
+                }
                 throw CommonException.create(ServerResponse.createByError(Integer.valueOf(xuGouSecurityProperties.getNoAuthorizedCode()), "token无效,请登录后重试", ""));
             }
         } else {
@@ -81,7 +84,7 @@ public class DefaultSecurityClientImpl implements SecurityClient {
     @Override
     public SecurityAuthority hasUrl(String url) throws Exception {
         // 获取到当前权限信息
-        SecurityAuthority securityAuthority = tokenToAuthority();
+        SecurityAuthority securityAuthority = tokenToAuthority(true);
         // 获取到所有的url权限
         List<SecurityRes> securityResList = securityAuthority.getSecurityResList();
         if (CollectionUtils.isEmpty(securityResList))
@@ -103,7 +106,7 @@ public class DefaultSecurityClientImpl implements SecurityClient {
     @Override
     public SecurityAuthority hasPermsCode(String permsCode) throws Exception {
         // 获取到当前权限信息
-        SecurityAuthority securityAuthority = tokenToAuthority();
+        SecurityAuthority securityAuthority = tokenToAuthority(true);
         // 获取到所有的权限
         List<SecurityRes> securityResList = securityAuthority.getSecurityResList();
         if (CollectionUtils.isEmpty(securityResList))
@@ -126,7 +129,7 @@ public class DefaultSecurityClientImpl implements SecurityClient {
     @Override
     public SecurityAuthority hasStaticResPath(String resPath) throws Exception {
         // 获取到当前权限信息
-        SecurityAuthority securityAuthority = tokenToAuthority();
+        SecurityAuthority securityAuthority = tokenToAuthority(true);
         // 获取到所有的权限
         List<SecurityRes> securityResList = securityAuthority.getSecurityResList();
         if (CollectionUtils.isEmpty(securityResList))

@@ -7,7 +7,7 @@ import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
  * @date 2021/5/24
  */
 public interface SecurityClient {
-    SecurityAuthority tokenToAuthority() throws Exception;
+    SecurityAuthority tokenToAuthority(Boolean require) throws Exception;
 
     SecurityAuthority hasUrl(String url) throws Exception;
 

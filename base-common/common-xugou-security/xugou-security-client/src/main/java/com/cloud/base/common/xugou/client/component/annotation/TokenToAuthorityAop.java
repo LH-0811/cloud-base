@@ -34,7 +34,7 @@ public class TokenToAuthorityAop implements Ordered {
         TokenToAuthority annotation = signature.getMethod().getAnnotation(TokenToAuthority.class);
 
         // 获取到当前用户信息
-        SecurityAuthority securityAuthority = securityClient.tokenToAuthority();
+        SecurityAuthority securityAuthority = securityClient.tokenToAuthority(annotation.require());
 
         // 替换入参
         Object[] args = joinPoint.getArgs();

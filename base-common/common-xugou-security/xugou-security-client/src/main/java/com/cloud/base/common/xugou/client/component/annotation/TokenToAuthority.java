@@ -14,4 +14,12 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TokenToAuthority {
+    /**
+     * 是否需求强制验证权限信息,false 时允许Controller层的SecurityAuthority参数为空
+     *
+     * contribute by hzy_boy
+     *
+     * @return
+     */
+    boolean require() default true;
 }

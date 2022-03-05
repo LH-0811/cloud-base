@@ -29,7 +29,7 @@ public class UserInfoFromRequest implements LhitLoggerUserInfoFromRequestAdapter
     public SysUser getUserInfoFromRequest(HttpServletRequest request) throws Exception {
 
         try {
-            SecurityAuthority securityAuthority = securityClient.tokenToAuthority();
+            SecurityAuthority securityAuthority = securityClient.tokenToAuthority(true);
             if (securityAuthority != null && securityAuthority.getSecurityUser() != null) {
                 SysUser sysUser = sysUserDao.getById(Long.valueOf(securityAuthority.getSecurityUser().getId()));
                 return sysUser;

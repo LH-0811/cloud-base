@@ -24,5 +24,6 @@
         <module>common-multisource</module>
         <module>common-youji-task</module>
         <module>common-xugou-security</module>
+        <module>common-excel</module>
     </modules>
 </project>
