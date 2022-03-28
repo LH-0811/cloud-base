@@ -158,11 +158,11 @@ cloud-base - 版本依赖管理  <groupId>com.cloud</groupId>
 ## 版本使用说明
 
 ```html
-<springboot.version>2.4.2</springboot.version>
+<springboot.version>2.6.3</springboot.version>
 
-<springcloud.version>2020.0.1</springcloud.version>
+<springcloud.version>2021.0.1</springcloud.version>
 
-<springcloud-alibaba.version>2021.1</springcloud-alibaba.version>
+<springcloud-alibaba.version>2021.0.1.0</springcloud-alibaba.version>
 ```
 
 ## 多环境打包说明
@@ -301,5 +301,14 @@ RUN chmod +x /opt/app.jar
 CMD java -jar /opt/app.jar
 ```
 
+## 更新记录
 
+### 2022.03.28
+
+升级springcloud alibaba 版本
+<springboot.version>2.6.3</springboot.version>
+<springcloud.version>2021.0.1</springcloud.version>
+<springcloud-alibaba.version>2021.0.1.0</springcloud-alibaba.version>
+
+整合springboot2.6.x + swagger文档
 

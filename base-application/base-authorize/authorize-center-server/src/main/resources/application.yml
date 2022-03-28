@@ -2,6 +2,9 @@ server:
   port: 9300
 
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   profiles:
     active: '@profileActive@'
   application:

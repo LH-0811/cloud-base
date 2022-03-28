@@ -7,6 +7,7 @@ import com.cloud.base.common.youji.service.YouJiManageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
@@ -25,6 +26,7 @@ import java.util.concurrent.ScheduledFuture;
 public class YouJiSchedulerTaskScannerInit implements CommandLineRunner {
 
 
+    @Lazy
     @Autowired
     private YouJiManageService youJiManageService;
 

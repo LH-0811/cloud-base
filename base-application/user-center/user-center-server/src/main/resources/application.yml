@@ -2,6 +2,11 @@ server:
   port: 9301
 
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+#  main:
+#    allow-circular-references: true
   profiles:
     active: '@profileActive@'
   application:
@@ -45,6 +50,7 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+
 
 # mybatis-plus相关配置
 mybatis-plus:
