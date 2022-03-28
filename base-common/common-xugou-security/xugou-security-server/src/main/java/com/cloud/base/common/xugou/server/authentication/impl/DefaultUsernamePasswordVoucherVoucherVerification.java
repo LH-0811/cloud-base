@@ -21,7 +21,7 @@ public class DefaultUsernamePasswordVoucherVoucherVerification implements Securi
     public SecurityAuthority verification(DefaultUsernamePasswordVoucher defaultUsernamePasswordVoucher) throws Exception {
         if (defaultUsernamePasswordVoucher.getUsername().equals("admin") && defaultUsernamePasswordVoucher.getPassword().equals("123456")) {
             SecurityAuthority securityAuthority = new SecurityAuthority();
-            securityAuthority.setSecurityUser(new SecurityUser("1", "admin"));
+            securityAuthority.setSecurityUser(new SecurityUser("1", "tenantNo","admin"));
             securityAuthority.setSecurityRoleList(Lists.newArrayList(new SecurityRole(0L,"roleNo","管理员")));
             securityAuthority.setSecurityResList(Lists.newArrayList(SecurityRes.allCodeRes(), SecurityRes.allUrlRes()));
             return securityAuthority;

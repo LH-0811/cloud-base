@@ -324,7 +324,7 @@ public class CurrentUserServiceImpl implements CurrentUserService {
             List<SysRes> resAllList = getResListByUser(loginUser);
 
             SecurityAuthority securityAuthority = new SecurityAuthority();
-            securityAuthority.setSecurityUser(new SecurityUser(String.valueOf(loginUser.getId()), loginUser.getUsername()));
+            securityAuthority.setSecurityUser(new SecurityUser(String.valueOf(loginUser.getId()),loginUser.getTenantNo(), loginUser.getUsername()));
             if (!CollectionUtils.isEmpty(resAllList)) {
                 List<SecurityRes> securityResList = resAllList.stream().map(ele -> new SecurityRes(ele.getType(), ele.getName(), ele.getCode(), ele.getUrl(), "")).collect(Collectors.toList());
                 securityAuthority.setSecurityResList(securityResList);

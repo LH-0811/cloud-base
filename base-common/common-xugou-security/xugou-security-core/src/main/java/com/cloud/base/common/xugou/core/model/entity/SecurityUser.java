@@ -23,6 +23,9 @@ public class SecurityUser {
     @ApiModelProperty(value = "用户id")
     private String id;
 
+    @ApiModelProperty(value = "租户No")
+    private String tenantNo;
+
     @ApiModelProperty(value = "用户名")
     private String username;
 
