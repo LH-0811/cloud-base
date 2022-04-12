@@ -1,8 +1,5 @@
 package com.cloud.base.common.xugou.client.component.provide;
 
-import com.cloud.base.common.core.exception.CommonException;
-import com.cloud.base.common.xugou.core.model.entity.SecurityServerAddr;
-
 /**
  * 从应用上下文中获取到当前用户的token
  *
@@ -18,12 +15,5 @@ public interface ProvideResToSecurityClient {
      * @throws Exception
      */
     String getTokenFromApplicationContext() throws Exception;
-
-    /**
-     * 从应用上下文中提供安全框架服务端地址
-     *
-     * @return
-     */
-    SecurityServerAddr getServerAddrFromApplicationContext() throws CommonException;
 
 }

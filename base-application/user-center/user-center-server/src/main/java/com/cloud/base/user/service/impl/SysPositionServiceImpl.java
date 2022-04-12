@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.cloud.base.common.core.exception.CommonException;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.core.util.IdWorker;
@@ -65,6 +66,10 @@ public class SysPositionServiceImpl implements SysPositionService {
             sysPosition.setCreateBy(sysUser.getId());
             sysPosition.setCreateTime(new Date());
             sysPositionDao.save(sysPosition);
+            UpdateWrapper<SysPosition> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.lambda();
+            sysPositionDao.update(null,null);
+
             log.info("完成 创建岗位信息");
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("创建岗位信息失败,请联系管理员！"));

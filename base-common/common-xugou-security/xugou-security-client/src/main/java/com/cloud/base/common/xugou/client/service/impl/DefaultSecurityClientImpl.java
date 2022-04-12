@@ -1,25 +1,23 @@
 package com.cloud.base.common.xugou.client.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.cloud.base.common.core.exception.CommonException;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.xugou.client.component.provide.ProvideResToSecurityClient;
 import com.cloud.base.common.xugou.client.service.SecurityClient;
-import com.cloud.base.common.xugou.client.util.OkHttpClientUtil;
-import com.cloud.base.common.xugou.core.model.entity.SecurityServerAddr;
-import com.cloud.base.common.xugou.core.model.param.TokenToAuthorityParam;
 import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.common.xugou.core.model.entity.SecurityRes;
+import com.cloud.base.common.xugou.core.model.param.TokenToAuthorityParam;
 import com.cloud.base.common.xugou.core.model.properties.XuGouSecurityProperties;
 import com.cloud.base.common.xugou.core.server.api.authentication.SecurityCheckAuthority;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpEntity;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,10 +38,10 @@ public class DefaultSecurityClientImpl implements SecurityClient {
     private XuGouSecurityProperties xuGouSecurityProperties;
 
     @Autowired
-    private OkHttpClientUtil okHttpClientUtil;
+    private ApplicationContext applicationContext;
 
     @Autowired
-    private ApplicationContext applicationContext;
+    private RestTemplate restTemplate;
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -53,16 +51,13 @@ public class DefaultSecurityClientImpl implements SecurityClient {
         if (StringUtils.isBlank(token)) {
             throw CommonException.create(ServerResponse.createByError(Integer.valueOf(xuGouSecurityProperties.getNoAuthorizedCode()), "未上传用户token", ""));
         }
-        SecurityServerAddr serverAddr = provideResToSecurityClient.getServerAddrFromApplicationContext();
-        if (serverAddr.getIsCloud()) {
-            String reqUrl = serverAddr.toHttpAddrAndPort() + xuGouSecurityProperties.getServerUrlOfTokenToAuthority();
-//            log.debug("获取到token:{}", token);
-//            log.debug("请求访问权限验证服务端地址:{}", reqUrl);
-            Response response = okHttpClientUtil.postJSONParameters(reqUrl, JSON.toJSONString(new TokenToAuthorityParam(token)));
-            ServerResponse<SecurityAuthority> serverResponse = JSON.parseObject(response.body().string(), new TypeReference<ServerResponse<SecurityAuthority>>() {
-            });
+        if (xuGouSecurityProperties.getUseCloud()) {
+            String reqUrl = "http://" + xuGouSecurityProperties.getServerName() + xuGouSecurityProperties.getServerUrlOfTokenToAuthority();
+            HttpEntity<TokenToAuthorityParam> request = new HttpEntity(new TokenToAuthorityParam(token));
+            ServerResponse<SecurityAuthority> serverResponse = restTemplate.postForObject(reqUrl, request, ServerResponse.class);
             if (serverResponse.isSuccess()) {
-                return serverResponse.getData();
+                SecurityAuthority securityAuthority = JSON.parseObject(JSON.toJSONString(serverResponse.getData()), SecurityAuthority.class);
+                return securityAuthority;
             } else {
                 if (!require) {
                     return null;
@@ -70,9 +65,7 @@ public class DefaultSecurityClientImpl implements SecurityClient {
                 throw CommonException.create(ServerResponse.createByError(Integer.valueOf(xuGouSecurityProperties.getNoAuthorizedCode()), "token无效,请登录后重试", ""));
             }
         } else {
-//            log.info("非Cloud应用,本地校验权限");
             SecurityCheckAuthority securityCheckAuthority = applicationContext.getBean(SecurityCheckAuthority.class);
-//            log.info("非Cloud应用,本地校验权限,获取到权限校验组件 SecurityCheckAuthority={}", securityCheckAuthority);
             if (securityCheckAuthority != null) {
                 SecurityAuthority securityAuthority = securityCheckAuthority.getSecurityAuthorityByToken(token);
                 return securityAuthority;

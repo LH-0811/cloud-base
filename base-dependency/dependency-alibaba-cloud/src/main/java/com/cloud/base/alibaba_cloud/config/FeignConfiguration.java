@@ -12,7 +12,6 @@ import java.util.Enumeration;
 /**
  * feign 配置文件
  * 将请求头中的参数，全部作为 feign 请求头参数传递
- * @author: linjinp
  * @create: 2020-06-28 09:54
  **/
 @Configuration

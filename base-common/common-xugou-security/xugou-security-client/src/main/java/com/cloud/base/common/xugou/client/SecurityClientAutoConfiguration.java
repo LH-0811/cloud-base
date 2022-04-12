@@ -9,12 +9,13 @@ import com.cloud.base.common.xugou.client.component.provide.ProvideResToSecurity
 import com.cloud.base.common.xugou.client.component.provide.impl.DefaultProvideResToSecurityClient;
 import com.cloud.base.common.xugou.client.service.SecurityClient;
 import com.cloud.base.common.xugou.client.service.impl.DefaultSecurityClientImpl;
-import com.cloud.base.common.xugou.client.util.OkHttpClientUtil;
 import com.cloud.base.common.xugou.core.model.properties.XuGouSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 
 /**
@@ -30,8 +31,9 @@ public class SecurityClientAutoConfiguration {
 
     // http客户端 ////////////////////////////////////////
     @Bean
-    public OkHttpClientUtil okHttpClientUtil() {
-        return new OkHttpClientUtil();
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     @Bean
