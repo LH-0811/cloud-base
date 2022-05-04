@@ -14,4 +14,13 @@ public interface SecurityClient {
     SecurityAuthority hasPermsCode(String permsCode) throws Exception;
 
     SecurityAuthority hasStaticResPath(String resPath) throws Exception;
+
+
+    SecurityAuthority tokenToAuthority(Boolean require,SecurityAuthority securityAuthority) throws Exception;
+
+    SecurityAuthority hasUrl(String url,SecurityAuthority securityAuthority) throws Exception;
+
+    SecurityAuthority hasPermsCode(String permsCode,SecurityAuthority securityAuthority) throws Exception;
+
+    SecurityAuthority hasStaticResPath(String resPath,SecurityAuthority securityAuthority) throws Exception;
 }

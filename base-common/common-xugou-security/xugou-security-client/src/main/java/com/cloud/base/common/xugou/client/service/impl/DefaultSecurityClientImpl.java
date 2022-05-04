@@ -141,5 +141,71 @@ public class DefaultSecurityClientImpl implements SecurityClient {
         throw CommonException.create(ServerResponse.createByError(xuGouSecurityProperties.getUnAuthorizedCode(), "该用户没有权限访问当前资源"));
     }
 
+    @Override
+    public SecurityAuthority tokenToAuthority(Boolean require, SecurityAuthority securityAuthority) throws Exception {
+        return securityAuthority;
+    }
+
+    @Override
+    public SecurityAuthority hasUrl(String url, SecurityAuthority securityAuthority) throws Exception {
+        // 获取到所有的url权限
+        List<SecurityRes> securityResList = securityAuthority.getSecurityResList();
+        if (CollectionUtils.isEmpty(securityResList))
+            throw CommonException.create(ServerResponse.createByError(xuGouSecurityProperties.getUnAuthorizedCode(), "该用户没有权限访问当前资源"));
+        // 获取到所有的url权限
+        List<SecurityRes> urlResList = securityResList.stream().filter(ele -> StringUtils.isNotBlank(ele.getUrl())).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(urlResList))
+            throw CommonException.create(ServerResponse.createByError(xuGouSecurityProperties.getUnAuthorizedCode(), "该用户没有权限访问当前资源"));
+        // 获取到所有的url
+        List<String> urlMatcherList = urlResList.stream().map(ele -> ele.getUrl()).collect(Collectors.toList());
+        for (String urlMatcher : urlMatcherList) {
+            if (antPathMatcher.match(urlMatcher, url)) {
+                return securityAuthority;
+            }
+        }
+        throw CommonException.create(ServerResponse.createByError(Integer.valueOf(xuGouSecurityProperties.getUnAuthorizedCode()), "该用户没有权限访问当前资源", ""));
+    }
+
+    @Override
+    public SecurityAuthority hasPermsCode(String permsCode, SecurityAuthority securityAuthority) throws Exception {
+        // 获取到所有的权限
+        List<SecurityRes> securityResList = securityAuthority.getSecurityResList();
+        if (CollectionUtils.isEmpty(securityResList))
+            throw CommonException.create(ServerResponse.createByError(xuGouSecurityProperties.getUnAuthorizedCode(), "该用户没有权限访问当前资源"));
+        // 获取到所有的permsCode权限
+        List<SecurityRes> permsResList = securityResList.stream().filter(ele -> StringUtils.isNotBlank(ele.getCode())).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(permsResList))
+            throw CommonException.create(ServerResponse.createByError(xuGouSecurityProperties.getUnAuthorizedCode(), "该用户没有权限访问当前资源"));
+        // 获取到所有的code
+        List<String> codeList = permsResList.stream().map(ele -> ele.getCode()).collect(Collectors.toList());
+
+        for (String code : codeList) {
+            if (codeList.contains(SecurityRes.ALL) || code.equalsIgnoreCase(permsCode)) {
+                return securityAuthority;
+            }
+        }
+        throw CommonException.create(ServerResponse.createByError(xuGouSecurityProperties.getUnAuthorizedCode(), "该用户没有权限访问当前资源"));
+    }
+
+    @Override
+    public SecurityAuthority hasStaticResPath(String resPath, SecurityAuthority securityAuthority) throws Exception {
+        // 获取到所有的权限
+        List<SecurityRes> securityResList = securityAuthority.getSecurityResList();
+        if (CollectionUtils.isEmpty(securityResList))
+            throw CommonException.create(ServerResponse.createByError(xuGouSecurityProperties.getUnAuthorizedCode(), "该用户没有权限访问当前资源"));
+        // 获取到所有的permsCode权限
+        List<SecurityRes> staticResResList = securityResList.stream().filter(ele -> StringUtils.isNotBlank(ele.getPath())).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(staticResResList))
+            throw CommonException.create(ServerResponse.createByError(xuGouSecurityProperties.getUnAuthorizedCode(), "该用户没有权限访问当前资源"));
+        // 获取到所有的code
+        List<String> staticResPathList = staticResResList.stream().map(ele -> ele.getPath()).collect(Collectors.toList());
+        for (String path : staticResPathList) {
+            if (staticResPathList.contains(SecurityRes.ALL) || path.equalsIgnoreCase(resPath)) {
+                return securityAuthority;
+            }
+        }
+        throw CommonException.create(ServerResponse.createByError(xuGouSecurityProperties.getUnAuthorizedCode(), "该用户没有权限访问当前资源"));
+    }
+
 
 }

@@ -32,9 +32,14 @@
         </dependency>
 
         <!-- 定时任务模块 -->
+<!--        <dependency>-->
+<!--            <groupId>com.cloud.common</groupId>-->
+<!--            <artifactId>youji-task-manage</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.cloud.common</groupId>
-            <artifactId>youji-task-manage</artifactId>
+            <artifactId>youji-cronjob-mgr</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

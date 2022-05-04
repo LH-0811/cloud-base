@@ -17,7 +17,7 @@ import org.springframework.core.Ordered;
  */
 @Aspect
 @Slf4j
-public class TokenToAuthorityAop implements Ordered {
+public class TokenToAuthorityAop extends AuthAbstractClass implements Ordered {
 
     @Autowired
     private SecurityClient securityClient;
@@ -32,18 +32,20 @@ public class TokenToAuthorityAop implements Ordered {
         log.debug("进入HasTokenAop切面");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         TokenToAuthority annotation = signature.getMethod().getAnnotation(TokenToAuthority.class);
-
-        // 获取到当前用户信息
-        SecurityAuthority securityAuthority = securityClient.tokenToAuthority(annotation.require());
-
-        // 替换入参
-        Object[] args = joinPoint.getArgs();
-        for (int i = 0; i < args.length; i++) {
-            Object arg = args[i];
-            if (arg instanceof SecurityAuthority)
-                args[i] = securityAuthority;
+        // 判断是否已经有了用户权限信息
+        SecurityAuthority securityAuthority = getSecurityAuthority(joinPoint);
+        if (securityAuthority != null) {
+            // 获取到当前用户信息
+            securityAuthority = securityClient.tokenToAuthority(annotation.require());
+            // 设置用户权限信息
+            setSecurityAuthority(joinPoint,securityAuthority);
+        }else {
+            // 获取到当前用户信息
+            securityAuthority = securityClient.tokenToAuthority(annotation.require(),securityAuthority);
+            // 设置用户权限信息
+            setSecurityAuthority(joinPoint,securityAuthority);
         }
-        Object proceed = joinPoint.proceed(args);
+        Object proceed = joinPoint.proceed(joinPoint.getArgs());
         log.debug("退出HasTokenAop切面");
         return proceed;
     }
@@ -52,4 +54,6 @@ public class TokenToAuthorityAop implements Ordered {
     public int getOrder() {
         return 0;
     }
+
+
 }

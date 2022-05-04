@@ -60,6 +60,7 @@ public class SecurityClientAutoConfiguration {
     public SecurityClient securityClient(){
         return new DefaultSecurityClientImpl();
     }
+
     @Bean
     public ProvideResToSecurityClient provideResToSecurityClient() {
         return new DefaultProvideResToSecurityClient();

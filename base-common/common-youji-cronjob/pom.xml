@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>base-common</artifactId>
+        <groupId>com.cloud.common</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cloud.common</groupId>
+    <artifactId>common-youji-cronjob</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <modules>
+        <module>youji-cronjob-code</module>
+        <module>youji-cronjob-mgr</module>
+        <module>youji-cronjob-worker</module>
+    </modules>
+
+    <packaging>pom</packaging>
+
+    <description>
+        酉鸡（定时任务管理模块） -- 一唱雄鸡天下白。
+        该模块是第一个以十二生肖动物名命名的模块，雄鸡表现出的时间观念与定时任务十分切合。
+        增加些传统和生命感，会激励自己不断迭代，集成12生肖。
+    </description>
+
+
+</project>

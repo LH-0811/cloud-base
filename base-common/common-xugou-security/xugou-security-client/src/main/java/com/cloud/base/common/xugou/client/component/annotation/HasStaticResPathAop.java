@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Aspect
 @Slf4j
-public class HasStaticResPathAop {
+public class HasStaticResPathAop extends AuthAbstractClass {
 
     @Autowired
     private SecurityClient securityClient;
@@ -36,18 +36,21 @@ public class HasStaticResPathAop {
         if (StringUtils.isBlank(resPath))
             throw CommonException.create(ServerResponse.createByError("使用@HasStaticResPath注解，必须填写resPath。"));
 
-
-        // 判断是否有静态资源权限并返回权限信息
-        SecurityAuthority securityAuthority = securityClient.hasStaticResPath(resPath);
-
-        // 补充入参
-        Object[] args = joinPoint.getArgs();
-        for (int i = 0; i < args.length; i++) {
-            Object arg = args[i];
-            if (arg instanceof SecurityAuthority)
-                args[i] = securityAuthority;
+        // 判断是否已经有了用户权限信息
+        SecurityAuthority securityAuthority = getSecurityAuthority(joinPoint);
+        if (securityAuthority != null) {
+            // 获取到当前用户信息
+            securityAuthority = securityClient.hasStaticResPath(resPath);
+            // 设置用户权限信息
+            setSecurityAuthority(joinPoint,securityAuthority);
+        }else {
+            // 获取到当前用户信息
+            securityAuthority = securityClient.hasStaticResPath(resPath,securityAuthority);
+            // 设置用户权限信息
+            setSecurityAuthority(joinPoint,securityAuthority);
         }
-        Object proceed = joinPoint.proceed(args);
+
+        Object proceed = joinPoint.proceed(joinPoint.getArgs());
         log.debug("退出HasStaticResPathAop切面");
         return proceed;
 

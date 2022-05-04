@@ -24,16 +24,11 @@ import java.util.zip.ZipOutputStream;
  */
 public class MainGen {
 
+    private static List<String> tableList = Lists.newArrayList("common_file_attach", "common_region");
 
+    private static String packageName = "com.fbi.psfs.svc.project.repository";
 
-
-
-
-    private static List<String> tableList = Lists.newArrayList("user");
-
-    private static String packageName = "com.example.k8sjartest.repository";
-
-    private static String dbUrl = "jdbc:mysql://192.168.31.193:31935/test";
+    private static String dbUrl = "jdbc:mysql://49.232.166.94:13306/psfs";
     private static String dbUsername = "root";
     private static String dbPassword = "123456";
 

@@ -154,10 +154,10 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
         }
 
         if (param.getCreateTimeLow() != null) {
-            lambda.ge(SysTenantInfo::getCreateTime, param.getCreateTimeLow());
+            lambda.ge(SysTenantInfo::getCreateTime, param.getCreateTimeLow() + " 00:00:01");
         }
         if (param.getCreateTimeUp() != null) {
-            lambda.le(SysTenantInfo::getCreateTime, param.getCreateTimeUp());
+            lambda.le(SysTenantInfo::getCreateTime, param.getCreateTimeUp() + " 23:59:59");
         }
         PageHelper.startPage(param.getPageNum(), param.getPageSize());
         List<SysTenantInfo> list = sysTenantInfoDao.list(queryWrapper);

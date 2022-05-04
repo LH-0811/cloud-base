@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -80,6 +82,7 @@ public class SysTenantInfo implements Serializable {
 	/**
 	 * 创建时间
 	 */
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
 	@ApiModelProperty(value="创建时间")
 	private Date createTime;
 	/**
@@ -90,6 +93,7 @@ public class SysTenantInfo implements Serializable {
 	/**
 	 * 更新时间
 	 */
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
 	@ApiModelProperty(value="更新时间")
 	private Date updateTime;
 	/**

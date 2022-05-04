@@ -12,5 +12,6 @@ spring:
       password: 123456
 youji:
   server:
-    heart-beat-corn: 0/5 * * * * ?
-    die-no-heart-num: 10
+    mgr-index: 1
+    mgr-ip: 127.0.0.1
+    enable: true

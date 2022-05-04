@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class CustomerGlobalFilter implements GlobalFilter, Ordered {
 
-    private static final AntPathMatcher antPathMatcher = new AntPathMatcher();
+//    private static final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     @SneakyThrows
     @Override

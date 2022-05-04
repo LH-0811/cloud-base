@@ -50,13 +50,13 @@ public class SysTenantInfoQueryParam implements Serializable {
 	 * 创建时间
 	 */
 	@ApiModelProperty(value="创建时间(起)")
-	private Date createTimeLow;
+	private String createTimeLow;
 
 	/**
 	 * 创建时间
 	 */
 	@ApiModelProperty(value="创建时间(止)")
-	private Date createTimeUp;
+	private String createTimeUp;
 
 	@ApiModelProperty(value = "页码 默认1")
 	private Integer pageNum= CommonEntity.pageNum;

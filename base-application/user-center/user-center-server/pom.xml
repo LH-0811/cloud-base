@@ -52,11 +52,16 @@
         </dependency>
 
         <!-- 引入定时任务 酉鸡 -->
-        <dependency>
-            <groupId>com.cloud.common</groupId>
-            <artifactId>youji-task-worker</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.cloud.common</groupId>-->
+<!--            <artifactId>youji-task-worker</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.cloud.common</groupId>-->
+<!--            <artifactId>youji-cronjob-mgr</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--        </dependency>-->
 
 
     </dependencies>

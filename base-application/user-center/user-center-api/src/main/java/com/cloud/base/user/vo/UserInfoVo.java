@@ -20,6 +20,9 @@ public class UserInfoVo {
     private SysUserVo userInfo;
 
     @ApiModelProperty(value = "菜单信息")
-    private List<MenuVo> menuList;
+    private List<MenuVo> menuTree;
+
+    @ApiModelProperty(value = "菜单列表")
+    private List<SysResVo> menuList;
 
 }

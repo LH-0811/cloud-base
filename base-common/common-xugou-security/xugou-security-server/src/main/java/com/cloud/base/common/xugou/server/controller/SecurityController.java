@@ -4,7 +4,6 @@ import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.common.xugou.core.model.param.CheckResParam;
 import com.cloud.base.common.xugou.core.model.param.TokenParam;
-import com.cloud.base.common.xugou.core.model.properties.XuGouSecurityProperties;
 import com.cloud.base.common.xugou.core.server.api.authentication.SecurityCheckAuthority;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -26,9 +25,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 public class SecurityController {
 
-
-    @Autowired
-    private XuGouSecurityProperties xuGouSecurityProperties;
 
     @Autowired
     private SecurityCheckAuthority securityCheckAuthority;

@@ -1,11 +1,13 @@
 package com.cloud.base.user.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.cloud.base.common.core.constant.CommonConstant;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.xugou.client.component.annotation.HasUrl;
 import com.cloud.base.common.xugou.client.component.annotation.TokenToAuthority;
 import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
-import com.cloud.base.user.constant.UCConstant;
+import com.cloud.base.user.api.UserCenterAuthorizeApi;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.entity.SysRes;
@@ -14,6 +16,7 @@ import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.CurrentUserService;
 import com.cloud.base.user.service.SysUserService;
 import com.cloud.base.user.vo.MenuVo;
+import com.cloud.base.user.vo.SysResVo;
 import com.cloud.base.user.vo.SysUserVo;
 import com.cloud.base.user.vo.UserInfoVo;
 import com.github.pagehelper.PageInfo;
@@ -41,7 +44,7 @@ import java.util.List;
 @Api(tags = "用户中心-系统管理员接口")
 @RestController
 @RequestMapping("/sys_user")
-public class SysUserController extends BaseController {
+public class SysUserController extends BaseController implements UserCenterAuthorizeApi {
 
     @Resource
     private SysUserService sysUserService;
@@ -189,12 +192,15 @@ public class SysUserController extends BaseController {
         log.info("进入 获取当前用户信息 接口 : SysUserCurrentUserController-getUesrInfo");
         SysUser sysUser = currentUserService.getUserByUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         List<MenuVo> menuTreeByUser = currentUserService.getMenuTreeByUser(sysUser);
+        List<SysRes> resListByUser = currentUserService.getResListByUser(sysUser);
         // 组织vo
         UserInfoVo userInfoVo = new UserInfoVo();
         SysUserVo sysUserVo = new SysUserVo();
         BeanUtils.copyProperties(sysUser,sysUserVo);
+        List<SysResVo> sysResVos = JSONArray.parseArray(JSON.toJSONString(resListByUser), SysResVo.class);
         userInfoVo.setUserInfo(sysUserVo);
-        userInfoVo.setMenuList(menuTreeByUser);
+        userInfoVo.setMenuTree(menuTreeByUser);
+        userInfoVo.setMenuList(sysResVos);
         return ServerResponse.createBySuccess("获取成功",userInfoVo);
     }
 

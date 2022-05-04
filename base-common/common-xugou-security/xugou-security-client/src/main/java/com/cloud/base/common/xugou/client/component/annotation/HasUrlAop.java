@@ -21,7 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 @Aspect
 @Slf4j
-public class HasUrlAop {
+public class HasUrlAop extends AuthAbstractClass {
 
     @Autowired
     private SecurityClient securityClient;
@@ -40,16 +40,22 @@ public class HasUrlAop {
         if (StringUtils.isBlank(url)) {
             throw CommonException.create(ServerResponse.createByError("使用HasUrl标志的方法必须在请求上下文中:"+signature.getDeclaringType().getName()+"."+signature.getMethod().getName()));
         }
-        // 判断是否有静态资源权限并返回权限信息
-        SecurityAuthority securityAuthority = securityClient.hasUrl(url);
-        // 替换入参
-        Object[] args = joinPoint.getArgs();
-        for (int i = 0; i < args.length; i++) {
-            Object arg = args[i];
-            if (arg instanceof SecurityAuthority)
-                args[i] = securityAuthority;
+
+        // 判断是否已经有了用户权限信息
+        SecurityAuthority securityAuthority = getSecurityAuthority(joinPoint);
+        if (securityAuthority != null) {
+            // 获取到当前用户信息
+            securityAuthority = securityClient.hasUrl(url);
+            // 设置用户权限信息
+            setSecurityAuthority(joinPoint,securityAuthority);
+        }else {
+            // 获取到当前用户信息
+            securityClient.hasUrl(url,securityAuthority);
+            // 设置用户权限信息
+            setSecurityAuthority(joinPoint,securityAuthority);
         }
-        Object proceed = joinPoint.proceed(args);
+
+        Object proceed = joinPoint.proceed(joinPoint.getArgs());
         log.debug("退出HasUrlAop切面");
         return proceed;
     }
