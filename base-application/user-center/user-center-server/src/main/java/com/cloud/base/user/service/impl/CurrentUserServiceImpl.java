@@ -25,11 +25,14 @@ import com.cloud.base.user.repository.entity.*;
 import com.cloud.base.user.service.CurrentUserService;
 import com.cloud.base.user.vo.MenuVo;
 import com.cloud.base.user.vo.SysResVo;
+import com.cloud.base.user.vo.SysRoleVo;
+import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,15 +79,24 @@ public class CurrentUserServiceImpl implements CurrentUserService {
      * 获取用户角色列表
      */
     @Override
-    public List<SysRole> getUserRoleList(SysUser sysUser) throws Exception {
+    public List<SysRoleVo> getUserRoleList(Long userId) throws Exception {
         log.info("开始  获取用户角色列表");
         try {
             QueryWrapper<SysUserRoleRel> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().eq(SysUserRoleRel::getUserId, sysUser.getId());
+            queryWrapper.lambda().eq(SysUserRoleRel::getUserId, userId);
             List<SysUserRoleRel> userRoleList = sysUserRoleRelDao.list(queryWrapper);
             List<SysRole> sysRoles = sysRoleDao.listByIds(userRoleList.stream().map(ele -> ele.getRoleId()).collect(Collectors.toList()));
             log.info("完成  获取用户角色列表");
-            return sysRoles;
+            if (CollectionUtils.isEmpty(sysRoles)) {
+                return Lists.newArrayList();
+            } else {
+                List<SysRoleVo> voList = sysRoles.stream().map(ele -> {
+                    SysRoleVo sysRoleVo = new SysRoleVo();
+                    BeanUtils.copyProperties(ele, sysRoleVo);
+                    return sysRoleVo;
+                }).collect(Collectors.toList());
+                return voList;
+            }
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取用户角色列表失败,请联系管理员"));
         }
@@ -94,19 +106,23 @@ public class CurrentUserServiceImpl implements CurrentUserService {
      * 用户修改密码
      */
     @Override
-    public void updateUserPassword(SysUserUpdatePasswordParam param, SysUser sysUser) throws Exception {
+    public void updateUserPassword(SysUserUpdatePasswordParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 用户修改密码");
+        SysUser currentUser = sysUserDao.getById(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+        if (currentUser == null) {
+            throw CommonException.create(ServerResponse.createByError("当前用户不存在"));
+        }
         if (!param.getRePwd().equals(param.getNewPwd())) {
             throw CommonException.create(ServerResponse.createByError("两次输入密码不一致"));
         }
 
-        if (!sysUser.getPassword().equals(Md5Util.getMD5Str(param.getOldPwd(), sysUser.getSalt()))) {
+        if (!currentUser.getPassword().equals(Md5Util.getMD5Str(param.getOldPwd(), currentUser.getSalt()))) {
             throw CommonException.create(ServerResponse.createByError("旧密码不正确"));
         }
         try {
             SysUser updateUser = new SysUser();
-            updateUser.setId(sysUser.getId());
-            updateUser.setPassword(Md5Util.getMD5Str(param.getNewPwd(), sysUser.getSalt()));
+            updateUser.setId(currentUser.getId());
+            updateUser.setPassword(Md5Util.getMD5Str(param.getNewPwd(), currentUser.getSalt()));
             sysUserDao.updateById(updateUser);
             log.info("完成 用户修改密码");
         } catch (Exception e) {
@@ -118,13 +134,13 @@ public class CurrentUserServiceImpl implements CurrentUserService {
      * 获取用户菜单树
      */
     @Override
-    public List<MenuVo> getMenuTreeByUser(SysUser sysUser) throws Exception {
+    public List<MenuVo> getMenuTreeByUser(Long userId) throws Exception {
         log.info("进入 获取用户菜单树");
         try {
             // 获取用户角色
             QueryWrapper<SysUserRoleRel> queryWrapper = new QueryWrapper<>();
             queryWrapper.lambda()
-                    .eq(SysUserRoleRel::getUserId, sysUser.getId());
+                    .eq(SysUserRoleRel::getUserId, userId);
             List<SysUserRoleRel> roleList = sysUserRoleRelDao.list(queryWrapper);
             if (CollectionUtils.isEmpty(roleList)) {
                 return Lists.newArrayList();
@@ -181,13 +197,13 @@ public class CurrentUserServiceImpl implements CurrentUserService {
      * 获取用户资源列表
      */
     @Override
-    public List<SysRes> getResListByUser(SysUser sysUser) throws Exception {
+    public List<SysResVo> getResListByUser(Long userId) throws Exception {
         log.info("进入  获取用户资源列表");
         try {
             // 获取用户角色
             QueryWrapper<SysUserRoleRel> sysUserRoleRelQuery = new QueryWrapper<>();
             sysUserRoleRelQuery.lambda()
-                    .eq(SysUserRoleRel::getUserId, sysUser.getId());
+                    .eq(SysUserRoleRel::getUserId, userId);
             List<SysUserRoleRel> roleList = sysUserRoleRelDao.list(sysUserRoleRelQuery);
             if (CollectionUtils.isEmpty(roleList)) {
                 return Lists.newArrayList();
@@ -208,7 +224,16 @@ public class CurrentUserServiceImpl implements CurrentUserService {
             List<SysRes> sysRes = sysResDao.listByIds(resIds);
 
             log.info("完成 获取用户资源列表");
-            return sysRes;
+            if (CollectionUtils.isEmpty(sysRes)) {
+                return Lists.newArrayList();
+            } else {
+                List<SysResVo> voList = sysRes.stream().map(ele -> {
+                    SysResVo sysResVo = new SysResVo();
+                    BeanUtils.copyProperties(ele, sysResVo);
+                    return sysResVo;
+                }).collect(Collectors.toList());
+                return voList;
+            }
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
         }
@@ -218,12 +243,17 @@ public class CurrentUserServiceImpl implements CurrentUserService {
      * 根据用户id 获取用户基本信息
      */
     @Override
-    public SysUser getUserByUserId(Long userId) throws Exception {
+    public SysUserVo getUserByUserId(Long userId) throws Exception {
         log.info("进入 根据用户id获取用户信息接口");
         try {
             SysUser sysUser = sysUserDao.getById(userId);
             log.info("完成 根据用户id获取用户信息接口");
-            return sysUser;
+            if (sysUser != null) {
+                SysUserVo sysUserVo = new SysUserVo();
+                BeanUtils.copyProperties(sysUser,sysUserVo);
+                return sysUserVo;
+            }
+            return null;
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("根据用户id获取用户信息接口失败,请联系管理员"));
         }
@@ -238,7 +268,7 @@ public class CurrentUserServiceImpl implements CurrentUserService {
      * @throws Exception
      */
     @Override
-    public SysUser getUserByUsernameAndPassword(String username, String password) throws Exception {
+    public SysUserVo getUserByUsernameAndPassword(String username, String password) throws Exception {
         log.info("开始 通过用户名 密码获取用户信息");
 
         SysUser currentUser = null;
@@ -264,14 +294,19 @@ public class CurrentUserServiceImpl implements CurrentUserService {
             throw CommonException.create(ServerResponse.createByError("密码错误"));
         }
         log.info("完成 通过用户名 密码获取用户信息");
-        return currentUser;
+        if (currentUser != null) {
+            SysUserVo sysUserVo = new SysUserVo();
+            BeanUtils.copyProperties(currentUser,sysUserVo);
+            return sysUserVo;
+        }
+        return null;
     }
 
     /**
      * 获取部门用户信息
      */
     @Override
-    public PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception {
+    public PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 获取部门角色信息：param=" + JSON.toJSONString(param));
         try {
             PageHelper.startPage(param.getPageNum(), param.getPageSize());
@@ -310,7 +345,7 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     public SecurityAuthority verification(UsernamePasswordVerificationParam param) throws Exception {
         log.info("开始 通过用户名密码 获取用户信息 并组装权限信息:{}", JSON.toJSONString(param));
         // 获取到等用户
-        SysUser loginUser = getUserByUsernameAndPassword(param.getUsername(), param.getPassword());
+        SysUserVo loginUser = getUserByUsernameAndPassword(param.getUsername(), param.getPassword());
         if (loginUser == null) {
             throw CommonException.create(ServerResponse.createByError("用户名或密码错误"));
         }
@@ -319,12 +354,12 @@ public class CurrentUserServiceImpl implements CurrentUserService {
         }
         try {
             // 获取用户角色列表
-            List<SysRole> userRoleList = getUserRoleList(loginUser);
+            List<SysRoleVo> userRoleList = getUserRoleList(loginUser.getId());
             // 获取用户资源列表
-            List<SysRes> resAllList = getResListByUser(loginUser);
+            List<SysResVo> resAllList = getResListByUser(loginUser.getId());
 
             SecurityAuthority securityAuthority = new SecurityAuthority();
-            securityAuthority.setSecurityUser(new SecurityUser(String.valueOf(loginUser.getId()),loginUser.getTenantNo(), loginUser.getUsername()));
+            securityAuthority.setSecurityUser(new SecurityUser(String.valueOf(loginUser.getId()), loginUser.getTenantNo(), loginUser.getUsername()));
             if (!CollectionUtils.isEmpty(resAllList)) {
                 List<SecurityRes> securityResList = resAllList.stream().map(ele -> new SecurityRes(ele.getType(), ele.getName(), ele.getCode(), ele.getUrl(), "")).collect(Collectors.toList());
                 securityAuthority.setSecurityResList(securityResList);

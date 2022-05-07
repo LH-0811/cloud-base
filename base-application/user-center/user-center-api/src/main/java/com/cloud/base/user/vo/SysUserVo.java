@@ -18,7 +18,11 @@ public class SysUserVo {
      */
     @ApiModelProperty(value = "系统用户id")
     private Long id;
-
+    /**
+     * 租户no
+     */
+    @ApiModelProperty(value="租户no")
+    private String tenantNo;
     /**
      * 用户名
      */

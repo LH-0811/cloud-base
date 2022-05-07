@@ -7,6 +7,7 @@ import com.cloud.base.common.core.exception.CommonException;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.core.util.IdWorker;
 import com.cloud.base.common.core.util.Md5Util;
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.dao.SysTenantInfoDao;
@@ -15,6 +16,8 @@ import com.cloud.base.user.repository.dao.SysUserRoleRelDao;
 import com.cloud.base.user.repository.entity.*;
 import com.cloud.base.user.service.SysSerialService;
 import com.cloud.base.user.service.SysTenantInfoService;
+import com.cloud.base.user.vo.SysTenantInfoVo;
+import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +62,7 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
      * 创建租户信息
      */
     @Override
-    public SysTenantInfo tenantInfoCreate(SysTenantInfoCreateParam param, SysUser sysUser) throws Exception {
+    public SysTenantInfoVo tenantInfoCreate(SysTenantInfoCreateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("[租户信息管理] 创建租户信息 参数:{}", JSON.toJSONString(param));
         // 判断租户名称是否已经存在
         checkTenantName(param.getTenantName());
@@ -71,19 +74,22 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
         // 设置业务序号
         sysTenantInfo.setTenantNo(sysSerialService.getNextNumByBizType(UCConstant.SerialBizType.TenantNo));
         // 创建信息
-        sysTenantInfo.setCreateBy(sysUser.getId());
+        sysTenantInfo.setCreateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         sysTenantInfo.setCreateTime(new Date());
         sysTenantInfo.setDelFlag(Boolean.FALSE);
         // 保存数据
         sysTenantInfoDao.save(sysTenantInfo);
-        return sysTenantInfo;
+
+        SysTenantInfoVo sysTenantInfoVo = new SysTenantInfoVo();
+        BeanUtils.copyProperties(sysTenantInfo,sysTenantInfoVo);
+        return sysTenantInfoVo;
     }
 
     /**
      * 删除租户信息(软删)
      */
     @Override
-    public void tenantInfoDelete(Long tenantInfoId, SysUser sysUser) throws Exception {
+    public void tenantInfoDelete(Long tenantInfoId, SecurityAuthority securityAuthority) throws Exception {
         log.info("[租户信息管理] 删除租户信息 参数:{}", tenantInfoId);
         SysTenantInfo sysTenantInfo = sysTenantInfoDao.getById(tenantInfoId);
         if (sysTenantInfo == null) {
@@ -92,7 +98,7 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
         SysTenantInfo updateInfo = new SysTenantInfo();
         updateInfo.setId(tenantInfoId);
         updateInfo.setDelFlag(Boolean.TRUE);
-        sysTenantInfo.setUpdateBy(sysUser.getId());
+        sysTenantInfo.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         sysTenantInfo.setUpdateTime(new Date());
         sysTenantInfoDao.updateById(updateInfo);
     }
@@ -101,7 +107,7 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
      * 更新租户信息
      */
     @Override
-    public SysTenantInfo tenantInfoUpdate(SysTenantInfoUpdateParam param, SysUser sysUser) throws Exception {
+    public SysTenantInfoVo tenantInfoUpdate(SysTenantInfoUpdateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("[租户信息管理] 更新租户信息 参数:{}", JSON.toJSONString(param));
         SysTenantInfo sysTenantInfo = sysTenantInfoDao.getById(param.getId());
         if (sysTenantInfo == null) {
@@ -109,17 +115,20 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
         }
         SysTenantInfo updateInfo = new SysTenantInfo();
         BeanUtils.copyProperties(param, updateInfo);
-        sysTenantInfo.setUpdateBy(sysUser.getId());
+        sysTenantInfo.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         sysTenantInfo.setUpdateTime(new Date());
         sysTenantInfoDao.updateById(updateInfo);
-        return sysTenantInfoDao.getById(param.getId());
+        SysTenantInfo newInfo = sysTenantInfoDao.getById(param.getId());
+        SysTenantInfoVo sysTenantInfoVo = new SysTenantInfoVo();
+        BeanUtils.copyProperties(newInfo,sysTenantInfoVo);
+        return sysTenantInfoVo;
     }
 
     /**
      * 查询租户信息
      */
     @Override
-    public PageInfo<SysTenantInfo> tenantInfoQuery(SysTenantInfoQueryParam param, SysUser sysUser) throws Exception {
+    public PageInfo<SysTenantInfoVo> tenantInfoQuery(SysTenantInfoQueryParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("[租户信息管理] 查询租户信息 参数:{}", JSON.toJSONString(param));
         QueryWrapper<SysTenantInfo> queryWrapper = new QueryWrapper<>();
         LambdaQueryWrapper<SysTenantInfo> lambda = queryWrapper.lambda();
@@ -161,8 +170,16 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
         }
         PageHelper.startPage(param.getPageNum(), param.getPageSize());
         List<SysTenantInfo> list = sysTenantInfoDao.list(queryWrapper);
-        PageInfo<SysTenantInfo> pageInfo = new PageInfo<>(list);
+        PageInfo pageInfo = new PageInfo<>(list);
         PageHelper.clearPage();
+        if (CollectionUtils.isNotEmpty(list)) {
+            List<SysTenantInfoVo> voList = list.stream().map(ele -> {
+                SysTenantInfoVo sysTenantInfoVo = new SysTenantInfoVo();
+                BeanUtils.copyProperties(ele, sysTenantInfoVo);
+                return sysTenantInfoVo;
+            }).collect(Collectors.toList());
+            pageInfo.setList(voList);
+        }
         return pageInfo;
     }
 
@@ -171,7 +188,7 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
      * 创建该租户的系统管理员
      */
     @Override
-    public SysUser getTenantMgrUser(Long tenantId, SysUser sysUser) throws Exception {
+    public SysUserVo getTenantMgrUser(Long tenantId, SecurityAuthority securityAuthority) throws Exception {
         log.info("[租户信息管理] 查询租户信息 参数:tenantId={}", tenantId);
         SysTenantInfo sysTenantInfo = sysTenantInfoDao.getById(tenantId);
         if (sysTenantInfo == null) {
@@ -179,7 +196,9 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
         }
         SysUser tenantSysMgrUser = sysTenantInfoDao.getTenantSysMgrUser(sysTenantInfo.getTenantNo());
         if (tenantSysMgrUser != null) {
-            return tenantSysMgrUser;
+            SysUserVo sysUserVo = new SysUserVo();
+            BeanUtils.copyProperties(tenantSysMgrUser,sysUserVo);
+            return sysUserVo;
         }
         throw CommonException.create(ServerResponse.createByError("当前租户不存在管理员,请先创建"));
     }
@@ -189,7 +208,7 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
      * 创建租户管理员
      */
     @Override
-    public SysUser genTenantMgrUser(SysTenantMgrUserCreateParam param, SysUser sysUser) throws Exception {
+    public SysUserVo genTenantMgrUser(SysTenantMgrUserCreateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("[租户信息管理] 创建租户系统管理员 参数:{}", JSON.toJSONString(param));
         SysTenantInfo sysTenantInfo = sysTenantInfoDao.getById(param.getTenantId());
         if (sysTenantInfo == null) {
@@ -215,26 +234,28 @@ public class SysTenantInfoServiceImpl implements SysTenantInfoService {
         sysUserNew.setId(idWorker.nextId());
         String salt = RandomStringUtils.random(4);
         sysUserNew.setSalt(salt);
-        sysUserNew.setTenantNo(sysUser.getTenantNo());
-        sysUserNew.setCreateBy(sysUser.getId());
+        sysUserNew.setTenantNo(securityAuthority.getSecurityUser().getTenantNo());
+        sysUserNew.setCreateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         sysUserNew.setCreateTime(new Date());
         sysUserNew.setPassword(Md5Util.getMD5Str(UCConstant.DefaultPassword, salt));
         sysUserNew.setActiveFlag(true);
         sysUserNew.setDelFlag(false);
-        sysUserNew.setCreateBy(sysUser.getId());
+        sysUserNew.setCreateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         sysUserNew.setCreateTime(new Date());
         sysUserDao.save(sysUserNew);
         // 保存用户角色信息
         SysUserRoleRel sysUserRoleRel = new SysUserRoleRel(idWorker.nextId(), sysTenantInfo.getTenantNo(), sysUserNew.getId(), UCConstant.RoleType.SystemMgr.getRoleId());
         sysUserRoleRelDao.save(sysUserRoleRel);
-        return sysUserNew;
+        SysUserVo sysUserVo = new SysUserVo();
+        BeanUtils.copyProperties(sysUserNew,sysUserVo);
+        return sysUserVo;
     }
 
     /**
      * 更新租户管理员信息
      */
     @Override
-    public void updateTenantMgrUserInfo(SysTenantMgrUserUpdateParam param, SysUser currentSysUser) throws Exception {
+    public void updateTenantMgrUserInfo(SysTenantMgrUserUpdateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("[租户信息管理] 更新租户管理员用户信息 参数:{}", JSON.toJSONString(param));
         SysUser sysUser = sysUserDao.getById(param.getUserId());
         if (sysUser == null) {

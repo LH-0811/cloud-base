@@ -40,7 +40,7 @@ public class SysResCreateParam implements Serializable {
     private String code;
 
     @ApiModelProperty(value = "图标")
-    private String icon;
+    private String iconStr;
 
     @ApiModelProperty(value = "排序")
     private String orderNo;

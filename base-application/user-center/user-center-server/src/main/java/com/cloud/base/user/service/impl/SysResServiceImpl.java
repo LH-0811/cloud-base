@@ -7,6 +7,7 @@ import com.cloud.base.common.core.entity.CommonMethod;
 import com.cloud.base.common.core.exception.CommonException;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.core.util.IdWorker;
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.param.SysResCreateParam;
 import com.cloud.base.user.repository.dao.SysResDao;
@@ -15,6 +16,7 @@ import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysRoleResRel;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.SysResService;
+import com.cloud.base.user.vo.SysResSimpleVo;
 import com.cloud.base.user.vo.SysResVo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -51,12 +53,12 @@ public class SysResServiceImpl implements SysResService {
      * 创建资源
      *
      * @param param   参数
-     * @param sysUser 系统用户
+     * @param securityAuthority 系统用户
      * @throws Exception 异常
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createRes(SysResCreateParam param, SysUser sysUser) throws Exception {
+    public void createRes(SysResCreateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("进入 创建资源:" + JSON.toJSONString(param));
         QueryWrapper<SysRes> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(SysRes::getName, param.getName());
@@ -69,8 +71,8 @@ public class SysResServiceImpl implements SysResService {
             BeanUtils.copyProperties(param, sysRes);
 
             sysRes.setId(idWorker.nextId());
-            sysRes.setTenantNo(sysUser.getTenantNo());
-            sysRes.setCreateBy(sysUser.getId());
+            sysRes.setTenantNo(securityAuthority.getSecurityUser().getTenantNo());
+            sysRes.setCreateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             sysRes.setCreateTime(new Date());
 
             SysRes parent = sysResDao.getById(sysRes.getParentId());
@@ -94,25 +96,25 @@ public class SysResServiceImpl implements SysResService {
      * 删除资源信息
      *
      * @param resId
-     * @param sysUser
+     * @param securityAuthority
      * @throws Exception
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteRes(Long resId, SysUser sysUser) throws Exception {
+    public void deleteRes(Long resId, SecurityAuthority securityAuthority) throws Exception {
         log.info("进入 删除资源信息:" + resId);
         SysRes sysRes = sysResDao.getById(resId);
         if (sysRes == null) {
             throw CommonException.create(ServerResponse.createByError("权限信息不存在"));
         }
-        if (!sysRes.getTenantNo().equals(sysUser.getTenantNo())) {
+        if (!sysRes.getTenantNo().equals(securityAuthority.getSecurityUser().getTenantNo())) {
             throw CommonException.create(ServerResponse.createByError("非法操作"));
         }
 
         QueryWrapper<SysRes> resQueryWrapper = new QueryWrapper<>();
         resQueryWrapper.lambda()
                 .eq(SysRes::getParentId, resId)
-                .eq(SysRes::getTenantNo, sysUser.getTenantNo());
+                .eq(SysRes::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
         if (sysResDao.count(resQueryWrapper) > 0) {
             throw CommonException.create(ServerResponse.createByError("当前资源有子资源，不能删除"));
         }
@@ -148,12 +150,12 @@ public class SysResServiceImpl implements SysResService {
      * @throws Exception 异常
      */
     @Override
-    public List<SysResVo> getAllResTree(SysUser sysUser) throws Exception {
+    public List<SysResVo> getAllResTree(SecurityAuthority securityAuthority) throws Exception {
         log.info("进入 获取全部资源树");
         try {
             // 所有的资源列表
             QueryWrapper<SysRes> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().eq(SysRes::getTenantNo, sysUser.getTenantNo());
+            queryWrapper.lambda().eq(SysRes::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
             List<SysRes> sysResList = sysResDao.list(queryWrapper);
             List<SysResVo> sysResVoList = JSONArray.parseArray(JSON.toJSONString(sysResList), SysResVo.class);
             for (SysResVo sysRes : sysResVoList) {
@@ -165,6 +167,34 @@ public class SysResServiceImpl implements SysResService {
             JSONArray jsonArray = CommonMethod.listToTree(sysResVoList, "0", "parentId", "id", "children");
             log.info("完成 获取全部资源树");
             return jsonArray.toJavaList(SysResVo.class);
+        } catch (Exception e) {
+            throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
+        }
+    }
+
+
+
+    /**
+     * 获取全部资源树(简单属性)
+     *
+     * @throws Exception 异常
+     */
+    @Override
+    public List<SysResSimpleVo> getAllResTreeSimple() throws Exception {
+        log.info("进入 获取全部资源树");
+        try {
+            // 所有的资源列表
+            List<SysRes> sysResList = sysResDao.list();
+            List<SysResVo> sysResVoList = JSONArray.parseArray(JSON.toJSONString(sysResList),SysResVo.class);
+            for (SysResVo sysRes : sysResVoList) {
+                sysRes.setTitle(sysRes.getName() + "[" + UCConstant.Type.getDescByCode(sysRes.getType()) + "]");
+                sysRes.setKey(String.valueOf(sysRes.getId()));
+                sysRes.setPkey(String.valueOf(sysRes.getParentId()));
+            }
+            // 组装未tree数据
+            JSONArray jsonArray = CommonMethod.listToTree(sysResVoList, "0", "parentId", "id", "children");
+            log.info("完成 获取全部资源树");
+            return jsonArray.toJavaList(SysResSimpleVo.class);
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取资源树失败"));
         }

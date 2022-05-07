@@ -144,7 +144,7 @@ TokenToAuthority
 @Api(tags = "用户中心-系统管理员接口")
 @RestController
 @RequestMapping("/sys_user")
-public class SysUserController extends BaseController {
+public class SysUserController  {
 
     @Autowired
     private SysUserService sysUserService;

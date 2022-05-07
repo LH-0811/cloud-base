@@ -8,6 +8,7 @@ import com.cloud.base.common.core.entity.CommonMethod;
 import com.cloud.base.common.core.exception.CommonException;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.core.util.IdWorker;
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.param.SysDeptCreateParam;
 import com.cloud.base.user.repository.dao.SysDeptDao;
 import com.cloud.base.user.repository.dao.SysUserDeptRelDao;
@@ -53,7 +54,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createSysDept(SysDeptCreateParam param, SysUser sysUser) throws Exception {
+    public void createSysDept(SysDeptCreateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 创建部门信息: param=" + JSON.toJSONString(param));
         // 检查父级部门
         SysDept parentDept = sysDeptDao.getById(param.getParentId());
@@ -68,8 +69,8 @@ public class SysDeptServiceImpl implements SysDeptService {
             BeanUtils.copyProperties(param, sysDept);
             // 设置基本信息
             sysDept.setId(idWorker.nextId());
-            sysDept.setTenantNo(sysUser.getTenantNo());
-            sysDept.setCreateBy(sysUser.getId());
+            sysDept.setTenantNo(securityAuthority.getSecurityUser().getTenantNo());
+            sysDept.setCreateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             sysDept.setCreateTime(new Date());
 
 
@@ -95,12 +96,12 @@ public class SysDeptServiceImpl implements SysDeptService {
      * 获取部门树
      */
     @Override
-    public List<SysDeptVo> queryDeptTree(String deptName, SysUser sysUser) throws Exception {
+    public List<SysDeptVo> queryDeptTree(String deptName, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 获取部门树");
         try {
             QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysDept> lambda = queryWrapper.lambda();
-            lambda.eq(SysDept::getTenantNo, sysUser.getTenantNo());
+            lambda.eq(SysDept::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
             if (StringUtils.isNotBlank(deptName)) {
                 lambda.like(SysDept::getName, "%" + deptName + "%");
             }
@@ -128,7 +129,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteSysDept(Long deptId, SysUser sysUser) throws Exception {
+    public void deleteSysDept(Long deptId, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 删除部门信息: deptId=" + deptId);
 
         // 检查部门是否存在
@@ -145,7 +146,7 @@ public class SysDeptServiceImpl implements SysDeptService {
         QueryWrapper<SysDept> childQuery = new QueryWrapper<>();
         childQuery.lambda()
                 .eq(SysDept::getParentId, deptId)
-                .eq(SysDept::getTenantNo, sysUser.getTenantNo());
+                .eq(SysDept::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
         List<SysDept> childrenList = sysDeptDao.list(childQuery);
         if (CollectionUtils.isNotEmpty(childrenList)) {
             throw CommonException.create(ServerResponse.createByError("部门下有所属子部门不能删除"));
@@ -155,7 +156,7 @@ public class SysDeptServiceImpl implements SysDeptService {
         QueryWrapper<SysUserDeptRel> queryRel = new QueryWrapper<>();
         queryRel.lambda()
                 .eq(SysUserDeptRel::getDeptId, deptId)
-                .eq(SysUserDeptRel::getTenantNo, sysUser.getTenantNo());
+                .eq(SysUserDeptRel::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
         List<SysUserDeptRel> userDeptRelationList = sysUserDeptRelDao.list(queryRel);
 
         if (CollectionUtils.isNotEmpty(userDeptRelationList)) {
@@ -168,7 +169,7 @@ public class SysDeptServiceImpl implements SysDeptService {
             QueryWrapper<SysDept> pChildrenQuery = new QueryWrapper<>();
             pChildrenQuery.lambda()
                     .eq(SysDept::getParentId, sysDept.getParentId())
-                    .eq(SysDept::getTenantNo, sysUser.getTenantNo());
+                    .eq(SysDept::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
             if (sysDeptDao.count(pChildrenQuery) == 0) {
                 SysDept pUpdateParam = new SysDept();
                 pUpdateParam.setId(sysDept.getParentId());
@@ -186,12 +187,12 @@ public class SysDeptServiceImpl implements SysDeptService {
      * 获取部门级联选项列表
      */
     @Override
-    public List<SysDeptVo> queryDeptCascader(String deptName, SysUser sysUser) throws Exception {
+    public List<SysDeptVo> queryDeptCascader(String deptName, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 获取部门级联列表");
         try {
             QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysDept> lambda = queryWrapper.lambda();
-            lambda.eq(SysDept::getTenantNo, sysUser.getTenantNo());
+            lambda.eq(SysDept::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
             if (StringUtils.isNotBlank(deptName)) {
                 lambda.like(SysDept::getName, "%" + deptName + "%");
             }

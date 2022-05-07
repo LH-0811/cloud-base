@@ -222,7 +222,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/sys_positions")
 @HasUrl
-public class SysPositionController extends BaseController {
+public class SysPositionController  {
 
     @Autowired
     private SysPositionService sysPositionService;

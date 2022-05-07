@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cloud.base.common.core.exception.CommonException;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.core.util.IdWorker;
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.param.SysRoleCreateParam;
 import com.cloud.base.user.param.SysRoleQueryParam;
 import com.cloud.base.user.param.SysRoleUpdateParam;
@@ -65,7 +66,7 @@ public class SysRoleServiceImpl implements SysRoleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createRole(SysRoleCreateParam param, SysUser sysUser) throws Exception {
+    public void createRole(SysRoleCreateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("进入 SysAdminServiceImpl.createRole:" + JSON.toJSONString(param));
         QueryWrapper<SysRole> roleNameQueryWrapper = new QueryWrapper<>();
         roleNameQueryWrapper.lambda().eq(SysRole::getName, param.getName());
@@ -78,14 +79,14 @@ public class SysRoleServiceImpl implements SysRoleService {
             SysRole sysRole = new SysRole();
             BeanUtils.copyProperties(param, sysRole);
             sysRole.setId(idWorker.nextId());
-            sysRole.setTenantNo(sysUser.getTenantNo());
+            sysRole.setTenantNo(securityAuthority.getSecurityUser().getTenantNo());
             sysRole.setCreateTime(new Date());
-            sysRole.setCreateBy(sysUser.getId());
+            sysRole.setCreateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             sysRoleDao.save(sysRole);
 
             // 添加角色与资源之间的关系
             if (CollectionUtils.isNotEmpty(param.getResIdList())) {
-                List<SysRoleResRel> sysRoleResRelList = param.getResIdList().stream().map(resId -> new SysRoleResRel(idWorker.nextId(), sysUser.getTenantNo(), sysRole.getId(), resId)).collect(Collectors.toList());
+                List<SysRoleResRel> sysRoleResRelList = param.getResIdList().stream().map(resId -> new SysRoleResRel(idWorker.nextId(), securityAuthority.getSecurityUser().getTenantNo(), sysRole.getId(), resId)).collect(Collectors.toList());
                 sysRoleResRelDao.saveBatch(sysRoleResRelList);
             }
 
@@ -101,20 +102,20 @@ public class SysRoleServiceImpl implements SysRoleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateRole(SysRoleUpdateParam param, SysUser sysUser) throws Exception {
+    public void updateRole(SysRoleUpdateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("进入 SysAdminServiceImpl.updateRole:" + JSON.toJSONString(param));
         SysRole sysRole = sysRoleDao.getById(param.getId());
         if (sysRole == null) {
             log.info("角色信息不存在");
             throw CommonException.create(ServerResponse.createByError("角色信息不存在"));
         }
-        if (!sysRole.getTenantNo().equals(sysUser.getTenantNo())) {
+        if (!sysRole.getTenantNo().equals(securityAuthority.getSecurityUser().getTenantNo())) {
             throw CommonException.create(ServerResponse.createByError("非法操作"));
         }
 
         try {
             BeanUtils.copyProperties(param, sysRole);
-            sysRole.setUpdateBy(sysUser.getId());
+            sysRole.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             sysRole.setUpdateTime(new Date());
             sysRoleDao.updateById(sysRole);
             // 添加角色与资源之间的关系
@@ -124,7 +125,7 @@ public class SysRoleServiceImpl implements SysRoleService {
                 roleResDelQueryWrapper.lambda().eq(SysRoleResRel::getRoleId, param.getId());
                 sysRoleResRelDao.remove(roleResDelQueryWrapper);
 
-                List<SysRoleResRel> sysRoleResRelList = param.getResIdList().stream().map(resId -> new SysRoleResRel(idWorker.nextId(), sysUser.getTenantNo(), sysRole.getId(), resId)).collect(Collectors.toList());
+                List<SysRoleResRel> sysRoleResRelList = param.getResIdList().stream().map(resId -> new SysRoleResRel(idWorker.nextId(), securityAuthority.getSecurityUser().getTenantNo(), sysRole.getId(), resId)).collect(Collectors.toList());
                 sysRoleResRelDao.saveBatch(sysRoleResRelList);
             }
 
@@ -140,14 +141,14 @@ public class SysRoleServiceImpl implements SysRoleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteRole(Long roleId, SysUser sysUser) throws Exception {
+    public void deleteRole(Long roleId, SecurityAuthority securityAuthority) throws Exception {
         log.info("进入 SysAdminServiceImpl.deleteRole:" + roleId);
         SysRole sysRole = sysRoleDao.getById(roleId);
         if (sysRole == null) {
             log.info("角色信息不存在");
             throw CommonException.create(ServerResponse.createByError("角色信息不存在"));
         }
-        if (!sysRole.getTenantNo().equals(sysUser.getTenantNo())) {
+        if (!sysRole.getTenantNo().equals(securityAuthority.getSecurityUser().getTenantNo())) {
             throw CommonException.create(ServerResponse.createByError("非法操作"));
         }
 
@@ -155,7 +156,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         QueryWrapper<SysUserRoleRel> userRoleExistQueryWrapper = new QueryWrapper<>();
         userRoleExistQueryWrapper.lambda()
                 .eq(SysUserRoleRel::getRoleId, roleId)
-                .eq(SysUserRoleRel::getTenantNo, sysUser.getTenantNo());
+                .eq(SysUserRoleRel::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
         if (sysUserRoleRelDao.count(userRoleExistQueryWrapper) > 0) {
             log.info("角色有关联用户不可删除");
             throw CommonException.create(ServerResponse.createByError("角色有关联用户不可删除"));
@@ -168,7 +169,7 @@ public class SysRoleServiceImpl implements SysRoleService {
             QueryWrapper<SysRoleResRel> roleResDelWrapper = new QueryWrapper<>();
             roleResDelWrapper.lambda()
                     .eq(SysRoleResRel::getRoleId, roleId)
-                    .eq(SysRoleResRel::getTenantNo, sysUser.getTenantNo());
+                    .eq(SysRoleResRel::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
             sysRoleResRelDao.remove(roleResDelWrapper);
             log.info("完成 SysAdminServiceImpl.deleteRole:" + roleId);
         } catch (Exception e) {
@@ -182,14 +183,14 @@ public class SysRoleServiceImpl implements SysRoleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public PageInfo<SysRoleVo> queryRole(SysRoleQueryParam param, SysUser sysUser) throws Exception {
+    public PageInfo<SysRoleVo> queryRole(SysRoleQueryParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("进入 SysAdminServiceImpl.queryRole:" + JSON.toJSONString(param));
         try {
             QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysRole> lambda = queryWrapper.lambda();
             lambda.orderByDesc(SysRole::getSortNum, SysRole::getCreateTime);
 
-            lambda.eq(SysRole::getTenantNo, sysUser.getTenantNo());
+            lambda.eq(SysRole::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
             if (StringUtils.isNotEmpty(param.getName())) {
                 lambda.like(SysRole::getName, "%" + param.getName() + "%");
             }
@@ -240,19 +241,27 @@ public class SysRoleServiceImpl implements SysRoleService {
      * @throws Exception
      */
     @Override
-    public List<SysRole> getRoleList(String roleName, SysUser sysUser) throws Exception {
+    public List<SysRoleVo> getRoleList(String roleName, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 获取角色列表");
         try {
             QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysRole> lambda = queryWrapper.lambda();
             lambda.orderByDesc(SysRole::getSortNum, SysRole::getCreateTime);
-            lambda.eq(SysRole::getTenantNo, sysUser.getTenantNo());
+            lambda.eq(SysRole::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
             if (StringUtils.isNotBlank(roleName)) {
                 lambda.eq(SysRole::getName, roleName);
             }
             List<SysRole> roles = sysRoleDao.list(queryWrapper);
-            log.info("完成 获取角色列表");
-            return roles;
+            if (CollectionUtils.isNotEmpty(roles)) {
+                List<SysRoleVo> voList = roles.stream().map(ele -> {
+                    SysRoleVo sysRoleVo = new SysRoleVo();
+                    BeanUtils.copyProperties(ele, sysRoleVo);
+                    return sysRoleVo;
+                }).collect(Collectors.toList());
+                return voList;
+            }else {
+                return Lists.newArrayList();
+            }
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取角色列表失败,请联系管理员"));
         }
@@ -263,7 +272,7 @@ public class SysRoleServiceImpl implements SysRoleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<SysRes> getSysResListByRoleId(Long roleId, SysUser sysUser) throws Exception {
+    public List<SysResVo> getSysResListByRoleId(Long roleId, SecurityAuthority securityAuthority) throws Exception {
         log.info("进入 查询角色资源列表:" + roleId);
         // 检查角色是否存在
         SysRole sysRole = sysRoleDao.getById(roleId);
@@ -274,14 +283,24 @@ public class SysRoleServiceImpl implements SysRoleService {
             QueryWrapper<SysRoleResRel> queryWrapper = new QueryWrapper<>();
             queryWrapper.lambda()
                     .eq(SysRoleResRel::getRoleId, roleId)
-                    .eq(SysRoleResRel::getTenantNo, sysUser.getTenantNo());
+                    .eq(SysRoleResRel::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
             List<SysRoleResRel> roleResList = sysRoleResRelDao.list(queryWrapper);
             if (org.apache.commons.collections4.CollectionUtils.isEmpty(roleResList)) {
                 return Lists.newArrayList();
             }
             List<SysRes> sysRes = sysResDao.listByIds(roleResList.stream().map(ele -> ele.getResId()).collect(Collectors.toList()));
             log.info("完成 查询角色资源列表");
-            return sysRes;
+            if (CollectionUtils.isNotEmpty(sysRes)) {
+                List<SysResVo> voList = sysRes.stream().map(ele -> {
+                    SysResVo sysResVo = new SysResVo();
+                    BeanUtils.copyProperties(ele, sysResVo);
+                    return sysResVo;
+                }).collect(Collectors.toList());
+                return voList;
+            }else {
+                return Lists.newArrayList();
+            }
+
         } catch (Exception e) {
             throw CommonException.create(e, ServerResponse.createByError("获取角色资源列表失败,请联系管理员"));
         }

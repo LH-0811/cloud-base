@@ -5,6 +5,7 @@ import com.cloud.base.common.logger.adapter.LhitLoggerRoleInfoByUserAdapter;
 import com.cloud.base.user.repository.entity.SysRole;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.CurrentUserService;
+import com.cloud.base.user.vo.SysRoleVo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,18 +19,18 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class RoleInfoByUser implements LhitLoggerRoleInfoByUserAdapter<SysRole, SysUser> {
+public class RoleInfoByUser implements LhitLoggerRoleInfoByUserAdapter<SysRoleVo, SysUser> {
 
     @Resource
     private CurrentUserService currentUserService;
 
     @Override
-    public List<SysRole> getRoleInfoByUserInfo(SysUser user) {
+    public List<SysRoleVo> getRoleInfoByUserInfo(SysUser user) {
         try {
-            return currentUserService.getUserRoleList(user);
+            return currentUserService.getUserRoleList(user.getId());
         } catch (Exception e) {
             log.error(CommonMethod.getTrace(e));
-            return Lists.newArrayList(new SysRole());
+            return Lists.newArrayList(new SysRoleVo());
         }
     }
 }

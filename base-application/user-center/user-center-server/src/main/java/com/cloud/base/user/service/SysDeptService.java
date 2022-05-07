@@ -1,5 +1,6 @@
 package com.cloud.base.user.service;
 
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.param.SysDeptCreateParam;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.vo.SysDeptVo;
@@ -16,7 +17,7 @@ public interface SysDeptService {
     /**
      * 创建部门 信息
      */
-    void createSysDept(SysDeptCreateParam param, SysUser sysUser) throws Exception;
+    void createSysDept(SysDeptCreateParam param, SecurityAuthority securityAuthority) throws Exception;
 
     /**
      * 获取部门树
@@ -24,16 +25,16 @@ public interface SysDeptService {
      * @return
      * @throws Exception
      */
-    List<SysDeptVo> queryDeptTree(String deptName, SysUser sysUser) throws Exception;
+    List<SysDeptVo> queryDeptTree(String deptName, SecurityAuthority securityAuthority) throws Exception;
 
     /**
      * 删除部门信息
      */
-    void deleteSysDept(Long deptId, SysUser sysUser) throws Exception;
+    void deleteSysDept(Long deptId, SecurityAuthority securityAuthority) throws Exception;
 
 
     /**
      * 获取部门级联选项列表
      */
-    List<SysDeptVo> queryDeptCascader(String deptName, SysUser sysUser) throws Exception;
+    List<SysDeptVo> queryDeptCascader(String deptName, SecurityAuthority securityAuthority) throws Exception;
 }

@@ -15,6 +15,8 @@ import com.cloud.base.user.service.SysRoleService;
 import com.cloud.base.user.service.SysTenantInfoService;
 import com.cloud.base.user.service.SysUserService;
 import com.cloud.base.user.vo.SysRoleVo;
+import com.cloud.base.user.vo.SysTenantInfoVo;
+import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -33,7 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/sys_tenant")
 @HasUrl
-public class SysTenantController extends BaseController {
+public class SysTenantController  {
 
     @Autowired
     private SysTenantInfoService tenantInfoService;
@@ -52,9 +54,9 @@ public class SysTenantController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysTenantInfoCreateParam", dataTypeClass = SysTenantInfoCreateParam.class, name = "param", value = "参数")
     })
-    public ServerResponse<SysTenantInfo> tenantInfoCreate(@Validated @RequestBody SysTenantInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<SysTenantInfoVo> tenantInfoCreate(@Validated @RequestBody SysTenantInfoCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("接口 [租户信息管理] 创建租户信息 参数:{}", JSON.toJSONString(param));
-        return ServerResponse.createBySuccess("创建成功", tenantInfoService.tenantInfoCreate(param, getCurrentSysUser(securityAuthority)));
+        return ServerResponse.createBySuccess("创建成功", tenantInfoService.tenantInfoCreate(param,securityAuthority));
     }
 
     /**
@@ -68,7 +70,7 @@ public class SysTenantController extends BaseController {
     })
     public ServerResponse tenantInfoDelete(@PathVariable(value = "tenantInfoId") Long tenantInfoId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("接口 [租户信息管理] 删除租户信息 参数:{}", tenantInfoId);
-        tenantInfoService.tenantInfoDelete(tenantInfoId, getCurrentSysUser(securityAuthority));
+        tenantInfoService.tenantInfoDelete(tenantInfoId, securityAuthority);
         return ServerResponse.createBySuccess("操作成功");
     }
 
@@ -81,9 +83,9 @@ public class SysTenantController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysTenantInfoUpdateParam", dataTypeClass = SysTenantInfoUpdateParam.class, name = "param", value = "参数")
     })
-    public ServerResponse<SysTenantInfo> tenantInfoUpdate(@Validated @RequestBody SysTenantInfoUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<SysTenantInfoVo> tenantInfoUpdate(@Validated @RequestBody SysTenantInfoUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("接口 [租户信息管理] 更新租户信息 参数:{}", JSON.toJSONString(param));
-        return ServerResponse.createBySuccess("操作成功", tenantInfoService.tenantInfoUpdate(param, getCurrentSysUser(securityAuthority)));
+        return ServerResponse.createBySuccess("操作成功", tenantInfoService.tenantInfoUpdate(param, securityAuthority));
     }
 
     /**
@@ -95,9 +97,9 @@ public class SysTenantController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "body", dataType = "SysTenantInfoUpdateParam", dataTypeClass = SysTenantInfoUpdateParam.class, name = "param", value = "参数")
     })
-    public ServerResponse<PageInfo<SysTenantInfo>> tenantInfoQuery(@Validated @RequestBody SysTenantInfoQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<PageInfo<SysTenantInfoVo>> tenantInfoQuery(@Validated @RequestBody SysTenantInfoQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("接口 [租户信息管理] 查询租户信息 参数:{}", JSON.toJSONString(param));
-        return ServerResponse.createBySuccess("操作成功", tenantInfoService.tenantInfoQuery(param, getCurrentSysUser(securityAuthority)));
+        return ServerResponse.createBySuccess("操作成功", tenantInfoService.tenantInfoQuery(param, securityAuthority));
     }
 
 
@@ -110,9 +112,9 @@ public class SysTenantController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "tenantId", value = "租户id")
     })
-    public ServerResponse<SysUser> getTenantMgrUser(@PathVariable(value = "tenantId") Long tenantId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<SysUserVo> getTenantMgrUser(@PathVariable(value = "tenantId") Long tenantId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("接口 [租户信息管理] 创建该租户的系统管理员 参数:tenantId={}", tenantId);
-        return ServerResponse.createBySuccess("获取成功，默认密码: " + UCConstant.DefaultPassword, tenantInfoService.getTenantMgrUser(tenantId, getCurrentSysUser(securityAuthority)));
+        return ServerResponse.createBySuccess("获取成功，默认密码: " + UCConstant.DefaultPassword, tenantInfoService.getTenantMgrUser(tenantId, securityAuthority));
     }
 
     /**
@@ -124,9 +126,9 @@ public class SysTenantController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "tenantId", value = "租户id")
     })
-    public ServerResponse<SysUser> genTenantMgrUser(@Validated @RequestBody SysTenantMgrUserCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<SysUserVo> genTenantMgrUser(@Validated @RequestBody SysTenantMgrUserCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("接口 [租户信息管理] 创建该租户的系统管理员 参数:param={}", JSON.toJSONString(param));
-        return ServerResponse.createBySuccess("获取成功，默认密码: " + UCConstant.DefaultPassword, tenantInfoService.genTenantMgrUser(param, getCurrentSysUser(securityAuthority)));
+        return ServerResponse.createBySuccess("获取成功，默认密码: " + UCConstant.DefaultPassword, tenantInfoService.genTenantMgrUser(param, securityAuthority));
     }
 
     @PostMapping("/mgr_user/reset_pwd")
@@ -139,7 +141,7 @@ public class SysTenantController extends BaseController {
     public ServerResponse resetPassword(@Validated @RequestBody SysUserResetPwdParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("接口 [租户信息管理] 重置租户管理员密码 参数:param={}", JSON.toJSONString(param));
-        sysUserService.resetPassword(param.getUserId(), getCurrentSysUser(securityAuthority));
+        sysUserService.resetPassword(param.getUserId(), securityAuthority);
         return ServerResponse.createBySuccess("修改成功");
     }
 
@@ -153,7 +155,7 @@ public class SysTenantController extends BaseController {
     public ServerResponse updateTenantMgrUserInfo(@Validated @RequestBody SysTenantMgrUserUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("接口 [租户信息管理] 更新租户管理员用户信息 参数:param={}", JSON.toJSONString(param));
-        tenantInfoService.updateTenantMgrUserInfo(param, getCurrentSysUser(securityAuthority));
+        tenantInfoService.updateTenantMgrUserInfo(param, securityAuthority);
         return ServerResponse.createBySuccess("修改成功");
     }
 }

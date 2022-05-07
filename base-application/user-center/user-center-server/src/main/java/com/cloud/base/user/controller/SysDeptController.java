@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/sys_dept")
 @HasUrl
-public class SysDeptController extends BaseController {
+public class SysDeptController {
 
     @Autowired
     private SysDeptService sysDeptService;
@@ -46,7 +46,7 @@ public class SysDeptController extends BaseController {
     public ServerResponse createSysDept(@Validated @RequestBody SysDeptCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建部门信息 接口 : SysDeptController-createSysDept ");
-        sysDeptService.createSysDept(param, getCurrentSysUser(securityAuthority));
+        sysDeptService.createSysDept(param, securityAuthority);
         return ServerResponse.createBySuccess("创建成功");
     }
 
@@ -58,10 +58,10 @@ public class SysDeptController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
-    public ServerResponse<List<SysDeptVo>> queryDeptTree(@RequestParam(value = "deptName",required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysDeptVo>> queryDeptTree(@RequestParam(value = "deptName", required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取部门树 接口 : SysDeptController-queryDeptTree ");
-        List<SysDeptVo> sysDeptList = sysDeptService.queryDeptTree(deptName, getCurrentSysUser(securityAuthority));
+        List<SysDeptVo> sysDeptList = sysDeptService.queryDeptTree(deptName, securityAuthority);
         return ServerResponse.createBySuccess("查询成功", sysDeptList);
     }
 
@@ -73,10 +73,10 @@ public class SysDeptController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
-    public ServerResponse<List<SysDeptVo>> queryDeptCascader(@RequestParam(value = "deptName",required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysDeptVo>> queryDeptCascader(@RequestParam(value = "deptName", required = false) String deptName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取部门级联列表 接口 : SysDeptController-queryDeptCascader ");
-        List<SysDeptVo> sysDeptList = sysDeptService.queryDeptCascader(deptName, getCurrentSysUser(securityAuthority));
+        List<SysDeptVo> sysDeptList = sysDeptService.queryDeptCascader(deptName, securityAuthority);
         return ServerResponse.createBySuccess("查询成功", sysDeptList);
     }
 
@@ -92,10 +92,9 @@ public class SysDeptController extends BaseController {
     public ServerResponse deleteSysDept(@PathVariable(value = "deptId") Long deptId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除部门信息 接口 : SysDeptController-deleteSysDept ");
-        sysDeptService.deleteSysDept(deptId, getCurrentSysUser(securityAuthority));
+        sysDeptService.deleteSysDept(deptId, securityAuthority);
         return ServerResponse.createBySuccess("删除成功");
     }
-
 
 
 }

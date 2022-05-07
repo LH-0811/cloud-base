@@ -4,7 +4,6 @@ import com.cloud.base.common.core.constant.CommonConstant;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.xugou.client.component.annotation.HasUrl;
 import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
-import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.param.SysPositionCreateParam;
 import com.cloud.base.user.param.SysPositionQueryParam;
 import com.cloud.base.user.service.SysPositionService;
@@ -31,7 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/sys_positions")
 @HasUrl
-public class SysPositionController extends BaseController {
+public class SysPositionController {
 
     @Autowired
     private SysPositionService sysPositionService;
@@ -49,7 +48,7 @@ public class SysPositionController extends BaseController {
     public ServerResponse createPosition(@Validated @RequestBody SysPositionCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建岗位信息 接口 : SysPositionController-createPosition ");
-        sysPositionService.createPosition(param, getCurrentSysUser(securityAuthority));
+        sysPositionService.createPosition(param, securityAuthority);
         return ServerResponse.createBySuccess("创建成功");
     }
 
@@ -65,7 +64,7 @@ public class SysPositionController extends BaseController {
     public ServerResponse deletePosition(@PathVariable(value = "positionId") Long positionId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除岗位信息 接口 : SysPositionController-deletePosition ");
-        sysPositionService.deletePosition(positionId, getCurrentSysUser(securityAuthority));
+        sysPositionService.deletePosition(positionId, securityAuthority);
         return ServerResponse.createBySuccess("删除成功");
     }
 
@@ -81,7 +80,7 @@ public class SysPositionController extends BaseController {
     public ServerResponse<PageInfo<SysPositionVo>> queryPosition(@Validated @RequestBody SysPositionQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询岗位信息 接口 : SysPositionController-queryPosition ");
-        PageInfo<SysPositionVo> sysPositionPageInfo = sysPositionService.queryPosition(param, getCurrentSysUser(securityAuthority));
+        PageInfo<SysPositionVo> sysPositionPageInfo = sysPositionService.queryPosition(param, securityAuthority);
         return ServerResponse.createBySuccess("获取成功", sysPositionPageInfo);
     }
 
@@ -97,10 +96,9 @@ public class SysPositionController extends BaseController {
     public ServerResponse<List<SysPositionVo>> queryAllPosition(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询岗位信息 接口 : SysPositionController-queryPosition ");
-        List<SysPositionVo> sysPositionVoList = sysPositionService.queryAllPosition(getCurrentSysUser(securityAuthority));
+        List<SysPositionVo> sysPositionVoList = sysPositionService.queryAllPosition(securityAuthority);
         return ServerResponse.createBySuccess("获取成功", sysPositionVoList);
     }
-
 
 
 }

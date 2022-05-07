@@ -1,8 +1,11 @@
 package com.cloud.base.user.service;
 
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.entity.SysTenantInfo;
 import com.cloud.base.user.repository.entity.SysUser;
+import com.cloud.base.user.vo.SysTenantInfoVo;
+import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -17,35 +20,35 @@ public interface SysTenantInfoService {
     /**
      * 创建租户信息
      */
-    SysTenantInfo tenantInfoCreate(SysTenantInfoCreateParam param, SysUser sysUser) throws Exception;
+    SysTenantInfoVo tenantInfoCreate(SysTenantInfoCreateParam param, SecurityAuthority securityAuthority) throws Exception;
 
     /**
      * 删除租户信息(软删)
      */
-    void tenantInfoDelete(Long tenantInfoId, SysUser sysUser) throws Exception;
+    void tenantInfoDelete(Long tenantInfoId, SecurityAuthority securityAuthority) throws Exception;
 
     /**
      * 更新租户信息
      */
-    SysTenantInfo tenantInfoUpdate(SysTenantInfoUpdateParam param, SysUser sysUser) throws Exception;
+    SysTenantInfoVo tenantInfoUpdate(SysTenantInfoUpdateParam param, SecurityAuthority securityAuthority) throws Exception;
 
     /**
      * 查询租户信息
      */
-    PageInfo<SysTenantInfo> tenantInfoQuery(SysTenantInfoQueryParam param, SysUser sysUser) throws Exception;
+    PageInfo<SysTenantInfoVo> tenantInfoQuery(SysTenantInfoQueryParam param, SecurityAuthority securityAuthority) throws Exception;
 
     /**
      * 创建该租户的系统管理员
      */
-    SysUser getTenantMgrUser(Long tenantId, SysUser sysUser) throws Exception;
+    SysUserVo getTenantMgrUser(Long tenantId, SecurityAuthority securityAuthority) throws Exception;
 
     /**
      * 创建租户管理员
      */
-    SysUser genTenantMgrUser(SysTenantMgrUserCreateParam param, SysUser sysUser) throws Exception;
+    SysUserVo genTenantMgrUser(SysTenantMgrUserCreateParam param, SecurityAuthority securityAuthority) throws Exception;
 
     /**
      * 更新租户管理员信息
      */
-    void updateTenantMgrUserInfo(SysTenantMgrUserUpdateParam param, SysUser currentSysUser) throws Exception;
+    void updateTenantMgrUserInfo(SysTenantMgrUserUpdateParam param, SecurityAuthority securityAuthority) throws Exception;
 }

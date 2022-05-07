@@ -9,6 +9,9 @@ import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysRole;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.vo.MenuVo;
+import com.cloud.base.user.vo.SysResVo;
+import com.cloud.base.user.vo.SysRoleVo;
+import com.cloud.base.user.vo.SysUserVo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -23,22 +26,22 @@ public interface CurrentUserService {
     /**
      * 完成 获取角色
      */
-    List<SysRole> getUserRoleList(SysUser sysUser) throws Exception;
+    List<SysRoleVo> getUserRoleList(Long userId) throws Exception;
 
     /**
      * 用户修改密码
      */
-    void updateUserPassword(SysUserUpdatePasswordParam param, SysUser sysUser) throws Exception;
+    void updateUserPassword(SysUserUpdatePasswordParam param, SecurityAuthority securityAuthority) throws Exception;
 
     /**
      * 获取用户菜单树
      */
-    List<MenuVo> getMenuTreeByUser(SysUser sysUser) throws Exception;
+    List<MenuVo> getMenuTreeByUser(Long userId) throws Exception;
 
     /**
      * 获取用户资源列表
      */
-    List<SysRes> getResListByUser(SysUser sysUser) throws Exception;
+    List<SysResVo> getResListByUser(Long userId) throws Exception;
 
     /**
      * 获取部门用户信息
@@ -47,7 +50,7 @@ public interface CurrentUserService {
      * @return
      * @throws Exception
      */
-    PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SysUser sysUser) throws Exception;
+    PageInfo<DeptUserDto> selectDeptUser(SysDeptUserQueryParam param, SecurityAuthority securityAuthority) throws Exception;
 
 
     /**
@@ -56,7 +59,7 @@ public interface CurrentUserService {
      * @param userId
      * @return
      */
-    SysUser getUserByUserId(Long userId) throws Exception;
+    SysUserVo getUserByUserId(Long userId) throws Exception;
 
     /**
      * 通过用户名 密码获取用户信息
@@ -66,7 +69,7 @@ public interface CurrentUserService {
      * @return
      * @throws Exception
      */
-    SysUser getUserByUsernameAndPassword(String username, String password) throws Exception;
+    SysUserVo getUserByUsernameAndPassword(String username, String password) throws Exception;
 
 
 

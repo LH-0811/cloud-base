@@ -8,6 +8,7 @@ import com.cloud.base.common.xugou.client.component.annotation.HasUrl;
 import com.cloud.base.common.xugou.client.component.annotation.TokenToAuthority;
 import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.api.UserCenterAuthorizeApi;
+import com.cloud.base.user.api.UserCenterCurrentUserApi;
 import com.cloud.base.user.dto.DeptUserDto;
 import com.cloud.base.user.param.*;
 import com.cloud.base.user.repository.entity.SysRes;
@@ -15,10 +16,7 @@ import com.cloud.base.user.repository.entity.SysRole;
 import com.cloud.base.user.repository.entity.SysUser;
 import com.cloud.base.user.service.CurrentUserService;
 import com.cloud.base.user.service.SysUserService;
-import com.cloud.base.user.vo.MenuVo;
-import com.cloud.base.user.vo.SysResVo;
-import com.cloud.base.user.vo.SysUserVo;
-import com.cloud.base.user.vo.UserInfoVo;
+import com.cloud.base.user.vo.*;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -44,7 +42,7 @@ import java.util.List;
 @Api(tags = "用户中心-系统管理员接口")
 @RestController
 @RequestMapping("/sys_user")
-public class SysUserController extends BaseController implements UserCenterAuthorizeApi {
+public class SysUserController  implements UserCenterAuthorizeApi, UserCenterCurrentUserApi {
 
     @Resource
     private SysUserService sysUserService;
@@ -69,7 +67,7 @@ public class SysUserController extends BaseController implements UserCenterAutho
     public ServerResponse createUser(@Valid @RequestBody SysUserCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建用户 接口 : SysUserAdminController-createUser ");
-        sysUserService.createUser(param, getCurrentSysUser(securityAuthority));
+        sysUserService.createUser(param, securityAuthority);
         return ServerResponse.createBySuccess("创建成功");
     }
 
@@ -89,7 +87,7 @@ public class SysUserController extends BaseController implements UserCenterAutho
     public ServerResponse updateUser(@Validated @RequestBody SysUserUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改用户 接口 : SysUserAdminController-updateUser ");
-        sysUserService.updateUser(param, getCurrentSysUser(securityAuthority));
+        sysUserService.updateUser(param, securityAuthority);
         return ServerResponse.createBySuccess("修改成功");
     }
 
@@ -110,7 +108,7 @@ public class SysUserController extends BaseController implements UserCenterAutho
     public ServerResponse<PageInfo<SysUserVo>> queryUser(@Validated @RequestBody SysUserQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询用户 接口 : SysUserAdminController-queryUser ");
-        PageInfo<SysUserVo> pageInfo = sysUserService.queryUser(param, getCurrentSysUser(securityAuthority));
+        PageInfo<SysUserVo> pageInfo = sysUserService.queryUser(param, securityAuthority);
         return ServerResponse.createBySuccess("查询成功", pageInfo);
     }
 
@@ -127,7 +125,7 @@ public class SysUserController extends BaseController implements UserCenterAutho
     public ServerResponse delUser(@PathVariable(value = "userId") Long userId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除用户 接口 : SysUserAdminController-delUser");
-        sysUserService.delUser(userId, getCurrentSysUser(securityAuthority));
+        sysUserService.delUser(userId, securityAuthority);
         return ServerResponse.createBySuccess("删除成功");
     }
 
@@ -145,7 +143,7 @@ public class SysUserController extends BaseController implements UserCenterAutho
     public ServerResponse resetPassword(@Validated @RequestBody SysUserResetPwdParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改用户 接口 : SysUserAdminController-resetPassword ");
-        sysUserService.resetPassword(param.getUserId(), getCurrentSysUser(securityAuthority));
+        sysUserService.resetPassword(param.getUserId(), securityAuthority);
         return ServerResponse.createBySuccess("修改成功");
     }
 
@@ -190,9 +188,9 @@ public class SysUserController extends BaseController implements UserCenterAutho
     public ServerResponse<UserInfoVo> getUserInfo(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取当前用户信息 接口 : SysUserCurrentUserController-getUesrInfo");
-        SysUser sysUser = currentUserService.getUserByUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
-        List<MenuVo> menuTreeByUser = currentUserService.getMenuTreeByUser(sysUser);
-        List<SysRes> resListByUser = currentUserService.getResListByUser(sysUser);
+        SysUserVo sysUser = currentUserService.getUserByUserId(Long.valueOf(securityAuthority.getSecurityUser().getId()));
+        List<MenuVo> menuTreeByUser = currentUserService.getMenuTreeByUser(sysUser.getId());
+        List<SysResVo> resListByUser = currentUserService.getResListByUser(sysUser.getId());
         // 组织vo
         UserInfoVo userInfoVo = new UserInfoVo();
         SysUserVo sysUserVo = new SysUserVo();
@@ -216,10 +214,10 @@ public class SysUserController extends BaseController implements UserCenterAutho
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "userId", value = "参数")
     })
     @TokenToAuthority
-    public ServerResponse<List<SysRole>> getUserRoleList(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysRoleVo>> getUserRoleList(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取用户角色列表 接口 : SysUserCurrentUserController-getUserRoleList");
-        List<SysRole> roles = currentUserService.getUserRoleList(getCurrentSysUser(securityAuthority));
+        List<SysRoleVo> roles = currentUserService.getUserRoleList(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         return ServerResponse.createBySuccess("查询成功", roles);
     }
 
@@ -237,7 +235,7 @@ public class SysUserController extends BaseController implements UserCenterAutho
     public ServerResponse<PageInfo<DeptUserDto>> selectDeptUser(@Validated @RequestBody SysDeptUserQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取部门用户信息 接口 : SysDeptController-selectDeptUser ");
-        PageInfo<DeptUserDto> deptUserDtoPageInfo = currentUserService.selectDeptUser(param, getCurrentSysUser(securityAuthority));
+        PageInfo<DeptUserDto> deptUserDtoPageInfo = currentUserService.selectDeptUser(param, securityAuthority);
         return ServerResponse.createBySuccess("查询成功", deptUserDtoPageInfo);
     }
 
@@ -256,7 +254,7 @@ public class SysUserController extends BaseController implements UserCenterAutho
     public ServerResponse<List<MenuVo>> getMenuTreeByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取用户资源树 接口 : SysUserCurrentUserController-getMenuTreeByUser");
-        List<MenuVo> menuTreeByUser = currentUserService.getMenuTreeByUser(getCurrentSysUser(securityAuthority));
+        List<MenuVo> menuTreeByUser = currentUserService.getMenuTreeByUser(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         return ServerResponse.createBySuccess("查询成功", menuTreeByUser);
     }
 
@@ -271,10 +269,10 @@ public class SysUserController extends BaseController implements UserCenterAutho
             @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
     })
     @TokenToAuthority
-    public ServerResponse<List<SysRes>> getResListByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysResVo>> getResListByUser(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取用户资源列表 接口 : SysUserCurrentUserController-getResListByUser");
-        List<SysRes> resListByUser = currentUserService.getResListByUser(getCurrentSysUser(securityAuthority));
+        List<SysResVo> resListByUser = currentUserService.getResListByUser(Long.valueOf(securityAuthority.getSecurityUser().getId()));
         return ServerResponse.createBySuccess("查询成功", resListByUser);
     }
 
@@ -294,7 +292,7 @@ public class SysUserController extends BaseController implements UserCenterAutho
     public ServerResponse updateUserPassword(@Validated @RequestBody SysUserUpdatePasswordParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 用户修改密码 接口 : SysUserCurrentUserController-updateUserPassword");
-        currentUserService.updateUserPassword(param, getCurrentSysUser(securityAuthority));
+        currentUserService.updateUserPassword(param, securityAuthority);
         return ServerResponse.createBySuccess("修改成功");
     }
 

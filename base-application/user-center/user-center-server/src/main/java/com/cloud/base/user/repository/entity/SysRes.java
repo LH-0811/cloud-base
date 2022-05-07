@@ -66,7 +66,7 @@ public class SysRes implements Serializable {
 	 * 图标
 	 */
 	@ApiModelProperty(value="图标")
-	private String icon;
+	private String iconStr;
 	/**
 	 * 排序
 	 */

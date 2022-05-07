@@ -10,6 +10,7 @@ import com.cloud.base.user.param.SysRoleUpdateParam;
 import com.cloud.base.user.repository.entity.SysRes;
 import com.cloud.base.user.repository.entity.SysRole;
 import com.cloud.base.user.service.SysRoleService;
+import com.cloud.base.user.vo.SysResVo;
 import com.cloud.base.user.vo.SysRoleVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -35,7 +36,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/sys_role")
 @HasUrl
-public class SysRoleController extends BaseController {
+public class SysRoleController  {
 
 
     @Autowired
@@ -55,7 +56,7 @@ public class SysRoleController extends BaseController {
     public ServerResponse createRole(@Validated @RequestBody SysRoleCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建系统角色信息 接口 : SysAdminController-createRole ");
-        sysRoleService.createRole(param, getCurrentSysUser(securityAuthority));
+        sysRoleService.createRole(param, securityAuthority);
         return ServerResponse.createBySuccess("创建成功");
     }
 
@@ -71,7 +72,7 @@ public class SysRoleController extends BaseController {
     public ServerResponse updateRole(@Validated @RequestBody SysRoleUpdateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 修改系统角色信息 接口 : SysAdminController-updateRole ");
-        sysRoleService.updateRole(param, getCurrentSysUser(securityAuthority));
+        sysRoleService.updateRole(param, securityAuthority);
         return ServerResponse.createBySuccess("修改成功");
     }
 
@@ -87,7 +88,7 @@ public class SysRoleController extends BaseController {
     public ServerResponse deleteRole(@PathVariable(name = "roleId") Long roleId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除系统角色信息 接口 : SysAdminController-deleteRole ");
-        sysRoleService.deleteRole(roleId, getCurrentSysUser(securityAuthority));
+        sysRoleService.deleteRole(roleId, securityAuthority);
         return ServerResponse.createBySuccess("删除成功");
     }
 
@@ -103,7 +104,7 @@ public class SysRoleController extends BaseController {
     public ServerResponse<PageInfo<SysRoleVo>> queryRole(@Validated @RequestBody SysRoleQueryParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询系统角色信息 接口 : SysAdminController-queryRole ");
-        PageInfo<SysRoleVo> pageInfo = sysRoleService.queryRole(param, getCurrentSysUser(securityAuthority));
+        PageInfo<SysRoleVo> pageInfo = sysRoleService.queryRole(param, securityAuthority);
         return ServerResponse.createBySuccess("查询成功", pageInfo);
     }
 
@@ -115,10 +116,10 @@ public class SysRoleController extends BaseController {
      */
     @GetMapping("/query/all_list")
     @ApiOperation("获取角色列表")
-    public ServerResponse<List<SysRole>> getRoleList(@RequestParam(value = "roleName", required = false) String roleName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysRoleVo>> getRoleList(@RequestParam(value = "roleName", required = false) String roleName, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取角色列表 接口 : SysAdminController-getRoleList ");
-        List<SysRole> roleList = sysRoleService.getRoleList(roleName, getCurrentSysUser(securityAuthority));
+        List<SysRoleVo> roleList = sysRoleService.getRoleList(roleName, securityAuthority);
         return ServerResponse.createBySuccess("查询成功", roleList);
     }
 
@@ -131,10 +132,10 @@ public class SysRoleController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
             @ApiImplicitParam(paramType = "path", dataType = "Long", dataTypeClass = Long.class, name = "roleId", value = "角色Id")
     })
-    public ServerResponse<List<SysRes>> getSysResListByRoleId(@PathVariable(name = "roleId") Long roleId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+    public ServerResponse<List<SysResVo>> getSysResListByRoleId(@PathVariable(name = "roleId") Long roleId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 查询角色资源列表 接口 : SysAdminController-getSysResListByRoleId ");
-        List<SysRes> sysResList = sysRoleService.getSysResListByRoleId(roleId, getCurrentSysUser(securityAuthority));
+        List<SysResVo> sysResList = sysRoleService.getSysResListByRoleId(roleId, securityAuthority);
         return ServerResponse.createBySuccess("查询成功", sysResList);
     }
 

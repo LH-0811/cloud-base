@@ -8,6 +8,7 @@ import com.cloud.base.common.core.exception.CommonException;
 import com.cloud.base.common.core.response.ServerResponse;
 import com.cloud.base.common.core.util.IdWorker;
 import com.cloud.base.common.core.util.Md5Util;
+import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.param.SysUserCreateParam;
 import com.cloud.base.user.param.SysUserQueryParam;
@@ -75,12 +76,12 @@ public class SysUserServiceImpl implements SysUserService {
      * 创建用户
      *
      * @param param
-     * @param sysUser
+     * @param securityAuthority
      * @throws Exception
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createUser(SysUserCreateParam param, SysUser sysUser) throws Exception {
+    public void createUser(SysUserCreateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 创建用户");
         QueryWrapper<SysUser> sysUserNameQueryWrapper = new QueryWrapper<>();
         sysUserNameQueryWrapper.lambda().eq(SysUser::getDelFlag, false).eq(SysUser::getUsername, param.getUsername());
@@ -99,15 +100,13 @@ public class SysUserServiceImpl implements SysUserService {
             SysUser sysUserNew = new SysUser();
             BeanUtils.copyProperties(param, sysUserNew);
             sysUserNew.setId(idWorker.nextId());
+            sysUserNew.setTenantNo(securityAuthority.getSecurityUser().getTenantNo());
             String salt = RandomStringUtils.random(4);
             sysUserNew.setSalt(salt);
-            sysUserNew.setTenantNo(sysUser.getTenantNo());
-            sysUserNew.setCreateBy(sysUser.getId());
-            sysUserNew.setCreateTime(new Date());
             sysUserNew.setPassword(Md5Util.getMD5Str(UCConstant.DefaultPassword, salt));
             sysUserNew.setActiveFlag(true);
             sysUserNew.setDelFlag(false);
-            sysUserNew.setCreateBy(sysUser.getId());
+            sysUserNew.setCreateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             sysUserNew.setCreateTime(new Date());
             sysUserDao.save(sysUserNew);
 
@@ -115,7 +114,7 @@ public class SysUserServiceImpl implements SysUserService {
             if (param.getDeptId() != null) {
                 SysUserDeptRel sysUserDeptRel = new SysUserDeptRel();
                 sysUserDeptRel.setId(idWorker.nextId());
-                sysUserDeptRel.setTenantNo(sysUser.getTenantNo());
+                sysUserDeptRel.setTenantNo(securityAuthority.getSecurityUser().getTenantNo());
                 sysUserDeptRel.setUserId(sysUserNew.getId());
                 sysUserDeptRel.setDeptId(param.getDeptId());
                 sysUserDeptRelDao.save(sysUserDeptRel);
@@ -123,13 +122,13 @@ public class SysUserServiceImpl implements SysUserService {
 
             // 保存用户岗位信息
             if (CollectionUtils.isNotEmpty(param.getPositionIdList())) {
-                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), sysUser.getTenantNo(), sysUserNew.getId(), ele)).collect(Collectors.toList());
+                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), securityAuthority.getSecurityUser().getTenantNo(), sysUserNew.getId(), ele)).collect(Collectors.toList());
                 sysUserPositionRelDao.saveBatch(sysUserPositionRelList);
             }
 
             // 保存用户角色信息
             if (CollectionUtils.isNotEmpty(param.getRoleIdList())) {
-                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), sysUser.getTenantNo(), sysUserNew.getId(), ele)).collect(Collectors.toList());
+                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), securityAuthority.getSecurityUser().getTenantNo(), sysUserNew.getId(), ele)).collect(Collectors.toList());
                 sysUserRoleRelDao.saveBatch(sysUserRoleRelList);
             }
 
@@ -143,19 +142,19 @@ public class SysUserServiceImpl implements SysUserService {
      * 修改用户
      *
      * @param param
-     * @param sysUser
+     * @param securityAuthority
      * @throws Exception
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateUser(SysUserUpdateParam param, SysUser sysUser) throws Exception {
+    public void updateUser(SysUserUpdateParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 修改用户");
         try {
             // 更新用户信息
             SysUser updateUser = new SysUser();
             BeanUtils.copyProperties(param, updateUser);
             updateUser.setId(param.getUserId());
-            updateUser.setUpdateBy(sysUser.getId());
+            updateUser.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             updateUser.setUpdateTime(new Date());
             sysUserDao.updateById(updateUser);
 
@@ -166,7 +165,7 @@ public class SysUserServiceImpl implements SysUserService {
                 delSysUserPositionRel.lambda().eq(SysUserPositionRel::getUserId, param.getUserId());
                 sysUserPositionRelDao.remove(delSysUserPositionRel);
 
-                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), sysUser.getTenantNo(), param.getUserId(), ele)).collect(Collectors.toList());
+                List<SysUserPositionRel> sysUserPositionRelList = param.getPositionIdList().stream().map(ele -> new SysUserPositionRel(idWorker.nextId(), securityAuthority.getSecurityUser().getTenantNo(), param.getUserId(), ele)).collect(Collectors.toList());
                 sysUserPositionRelDao.saveBatch(sysUserPositionRelList);
             }
 
@@ -176,7 +175,7 @@ public class SysUserServiceImpl implements SysUserService {
                 delWrapper.lambda().eq(SysUserRoleRel::getUserId, param.getUserId());
                 sysUserRoleRelDao.remove(delWrapper);
 
-                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), sysUser.getTenantNo(), param.getUserId(), ele)).collect(Collectors.toList());
+                List<SysUserRoleRel> sysUserRoleRelList = param.getRoleIdList().stream().map(ele -> new SysUserRoleRel(idWorker.nextId(), securityAuthority.getSecurityUser().getTenantNo(), param.getUserId(), ele)).collect(Collectors.toList());
                 sysUserRoleRelDao.saveBatch(sysUserRoleRelList);
             }
             log.info("完成 修改用户");
@@ -189,19 +188,19 @@ public class SysUserServiceImpl implements SysUserService {
      * 查询用户
      *
      * @param param
-     * @param sysUser
+     * @param securityAuthority
      * @return
      * @throws Exception
      */
     @Override
-    public PageInfo<SysUserVo> queryUser(SysUserQueryParam param, SysUser sysUser) throws Exception {
+    public PageInfo<SysUserVo> queryUser(SysUserQueryParam param, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 查询用户");
         try {
             QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
             LambdaQueryWrapper<SysUser> lambda = queryWrapper.lambda();
             lambda.orderByDesc(SysUser::getCreateTime);
             lambda.eq(SysUser::getDelFlag, Boolean.FALSE);
-            lambda.eq(SysUser::getTenantNo, sysUser.getTenantNo());
+            lambda.eq(SysUser::getTenantNo, securityAuthority.getSecurityUser().getTenantNo());
             if (StringUtils.isNotBlank(param.getUsername())) {
                 lambda.like(SysUser::getUsername, "%" + param.getUsername() + "%");
             }
@@ -288,19 +287,19 @@ public class SysUserServiceImpl implements SysUserService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delUser(Long userId, SysUser sysUser) throws Exception {
+    public void delUser(Long userId, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 删除用户");
         SysUser checkUser = sysUserDao.getById(userId);
         if (checkUser == null) {
             throw CommonException.create(ServerResponse.createByError("用户信息不存在"));
         }
-        if (!checkUser.getTenantNo().equals(sysUser.getTenantNo())) {
+        if (!checkUser.getTenantNo().equals(securityAuthority.getSecurityUser().getTenantNo())) {
             throw CommonException.create(ServerResponse.createByError("非法操作"));
         }
         try {
             // 删除用户
             checkUser.setDelFlag(true);
-            checkUser.setUpdateBy(sysUser.getId());
+            checkUser.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             checkUser.setUpdateTime(new Date());
             sysUserDao.updateById(checkUser);
             log.info("完成 删除用户");
@@ -315,13 +314,13 @@ public class SysUserServiceImpl implements SysUserService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void resetPassword(Long userId, SysUser sysUser) throws Exception {
+    public void resetPassword(Long userId, SecurityAuthority securityAuthority) throws Exception {
         log.info("开始 重置用户密码");
         SysUser checkUser = sysUserDao.getById(userId);
         if (checkUser == null) {
             throw CommonException.create(ServerResponse.createByError("用户信息不存在"));
         }
-        if (!checkUser.getTenantNo().equals(sysUser.getTenantNo())) {
+        if (!checkUser.getTenantNo().equals(securityAuthority.getSecurityUser().getTenantNo())) {
             throw CommonException.create(ServerResponse.createByError("非法操作"));
         }
         try {
@@ -329,7 +328,7 @@ public class SysUserServiceImpl implements SysUserService {
             SysUser updateUser = new SysUser();
             updateUser.setId(checkUser.getId());
             updateUser.setPassword(Md5Util.getMD5Str(UCConstant.DefaultPassword, checkUser.getSalt()));
-            updateUser.setUpdateBy(sysUser.getId());
+            updateUser.setUpdateBy(Long.valueOf(securityAuthority.getSecurityUser().getId()));
             updateUser.setUpdateTime(new Date());
             sysUserDao.updateById(updateUser);
             log.info("完成 重置用户密码");

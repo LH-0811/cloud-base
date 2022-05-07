@@ -7,6 +7,7 @@ import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.user.constant.UCConstant;
 import com.cloud.base.user.param.SysResCreateParam;
 import com.cloud.base.user.service.SysResService;
+import com.cloud.base.user.vo.SysResSimpleVo;
 import com.cloud.base.user.vo.SysResVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -31,7 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/sys_res")
 @HasUrl
-public class SysResController extends BaseController {
+public class SysResController  {
 
     @Autowired
     private SysResService sysResService;
@@ -48,7 +49,7 @@ public class SysResController extends BaseController {
     public ServerResponse createRes(@Validated @RequestBody SysResCreateParam param, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 创建权限 接口 : SysAdminController-createRes ");
-        sysResService.createRes(param, getCurrentSysUser(securityAuthority));
+        sysResService.createRes(param, securityAuthority);
         return ServerResponse.createBySuccess("创建成功");
     }
 
@@ -64,7 +65,7 @@ public class SysResController extends BaseController {
     public ServerResponse deleteRes(@PathVariable(value = "resId") Long resId, @ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 删除权限信息 接口 : SysAdminController-deleteRes ");
-        sysResService.deleteRes(resId, getCurrentSysUser(securityAuthority));
+        sysResService.deleteRes(resId, securityAuthority);
         return ServerResponse.createBySuccess("删除成功");
     }
 
@@ -80,9 +81,23 @@ public class SysResController extends BaseController {
     public ServerResponse<List<SysResVo>> getAllResTree(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
         log.info("|-----------------------------------------------|");
         log.info("进入 获取全部资源树 接口 : SysAdminController-getAllResTree ");
-        List<SysResVo> allResTree = sysResService.getAllResTree(getCurrentSysUser(securityAuthority));
+        List<SysResVo> allResTree = sysResService.getAllResTree(securityAuthority);
         return ServerResponse.createBySuccess("获取成功", allResTree);
     }
 
+    /**
+     * 获取全部资源树
+     */
+    @GetMapping("/tree/simple")
+    @ApiOperation("获取全部资源树(简单)")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "string", name = CommonConstant.TokenKey, value = "用户token"),
+    })
+    public ServerResponse<List<SysResSimpleVo>> getAllResTreeSimple(@ApiIgnore SecurityAuthority securityAuthority) throws Exception {
+        log.info("|-----------------------------------------------|");
+        log.info("进入 获取全部资源树 接口 : SysAdminController-getAllResTreeSimple ");
+        List<SysResSimpleVo> allResTree = sysResService.getAllResTreeSimple();
+        return ServerResponse.createBySuccess("获取成功", allResTree);
+    }
 
 }
