@@ -40,6 +40,14 @@ public class XuGouSecurityProperties {
     @Setter
     private Boolean useCloud = true;
 
+
+    /**
+     * 是否在每次验证token后,都刷新token信息
+     */
+    @Getter
+    @Setter
+    private Boolean tokenRefresh = true;
+
     /**
      * 如果配置了useCloud = true;
      * 则需要配置注册中心中授权中心的服务名

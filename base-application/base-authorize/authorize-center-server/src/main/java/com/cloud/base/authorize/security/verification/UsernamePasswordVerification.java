@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsernamePasswordVerification implements SecurityVoucher {
+public class UsernamePasswordVerification extends SecurityVoucher {
 
     // 用户名
     @NotBlank(message = "未上传 username")

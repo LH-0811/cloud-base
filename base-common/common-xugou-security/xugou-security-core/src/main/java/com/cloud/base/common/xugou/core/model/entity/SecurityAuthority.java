@@ -29,6 +29,9 @@ public class SecurityAuthority {
     @ApiModelProperty(value = "用户信息")
     private SecurityUser securityUser;
 
+    @ApiModelProperty(value = "客户端类型")
+    private String clientType;
+
     @ApiModelProperty(value = "角色信息")
     private List<SecurityRole> securityRoleList;
 

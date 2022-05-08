@@ -1,5 +1,6 @@
 package com.cloud.base.common.xugou.server.authentication.impl;
 
+import com.cloud.base.common.xugou.core.model.properties.XuGouSecurityProperties;
 import com.cloud.base.common.xugou.core.server.api.authentication.SecurityCheckAuthority;
 import com.cloud.base.common.xugou.core.model.entity.SecurityAuthority;
 import com.cloud.base.common.xugou.core.model.entity.SecurityRes;
@@ -21,6 +22,9 @@ public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
 
     @Autowired
     private TokenManager tokenManager;
+
+    @Autowired
+    private XuGouSecurityProperties properties;
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -131,8 +135,14 @@ public class DefaultSecurityCheckAuthority implements SecurityCheckAuthority {
     public SecurityAuthority getSecurityAuthorityByToken(String token) throws Exception {
         // 获取到token对应存储的用户权限信息
         SecurityAuthority securityAuthorityByToken = tokenManager.getSecurityAuthorityByToken(token);
-        // 重新设置token信息 实现token续期
-        tokenManager.delayExpired(token);
+        // 判断是否配置了token刷新
+        if (properties.getTokenRefresh()) {
+            // 生成新的token
+            tokenManager.tokenGenerateAndSave(securityAuthorityByToken);
+        }else {
+            // 重新设置token信息 实现token续期
+            tokenManager.delayExpired(token);
+        }
         return securityAuthorityByToken;
     }
 

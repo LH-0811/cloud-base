@@ -37,6 +37,8 @@ public class DefaultSecurityVoucherVerificationProcess implements SecurityVouche
         SecurityVoucherVerification voucherVerification = find(voucher);
         // 认证凭证
         SecurityAuthority securityAuthority = voucherVerification.verification(voucher);
+        // 凭证类增加客户端类型
+        securityAuthority.setClientType(voucher.clientType);
         // 生成token
         String token = tokenManager.tokenGenerateAndSave(securityAuthority);
 

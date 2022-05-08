@@ -44,7 +44,7 @@ public interface TokenManager {
      * @param userId
      * @return
      */
-    Boolean checkToken(String token, String userId) throws Exception;
+    Boolean checkToken(String token, String userId,String clientType) throws Exception;
 
     /**
      * 根据用户token 获取用户信息

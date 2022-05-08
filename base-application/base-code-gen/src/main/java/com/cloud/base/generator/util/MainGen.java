@@ -24,7 +24,23 @@ import java.util.zip.ZipOutputStream;
  */
 public class MainGen {
 
-    private static List<String> tableList = Lists.newArrayList("common_file_attach", "common_region");
+    private static List<String> tableList = Lists.newArrayList("company_archive",
+            "company_info",
+            "company_user",
+            "contract_cancel",
+            "contract_info",
+            "contract_repay_plan",
+            "project_agreement",
+            "project_building",
+            "project_building_keep_ratio",
+            "project_building_progress",
+            "project_info",
+            "project_land_ower",
+            "project_pro_sale",
+            "project_progress",
+            "project_room",
+            "project_user_change",
+            "supervision_standard");
 
     private static String packageName = "com.fbi.psfs.svc.project.repository";
 

@@ -13,6 +13,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.lang.reflect.Method;
+
 
 @Aspect
 @Slf4j
@@ -49,6 +51,11 @@ public class HasPermsCodeAop extends AuthAbstractClass {
             setSecurityAuthority(joinPoint, securityAuthority);
         }
         Object proceed = joinPoint.proceed(joinPoint.getArgs());
+        // 将新的token写入到返回值中
+        Method setToken = proceed.getClass().getDeclaredMethod("setToken", String.class);
+        if (setToken!=null) {
+            setToken.invoke(proceed,securityAuthority.getToken());
+        }
         log.debug("退出HasPermsCodeAop切面");
         return proceed;
     }

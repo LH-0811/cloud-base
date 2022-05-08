@@ -17,7 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(value = "用户名密码凭证类")
-public class DefaultUsernamePasswordVoucher implements SecurityVoucher {
+public class DefaultUsernamePasswordVoucher extends SecurityVoucher {
 
     @ApiModelProperty(value = "用户名")
     private String username;

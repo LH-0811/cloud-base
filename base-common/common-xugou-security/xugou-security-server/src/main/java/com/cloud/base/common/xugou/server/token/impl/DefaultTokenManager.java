@@ -70,14 +70,14 @@ public class DefaultTokenManager implements TokenManager {
             throw CommonException.create(ServerResponse.createByError("保存用户token时，用户信息不能为空"));
         if (authority == null)
             throw CommonException.create(ServerResponse.createByError("保存用户token时，用户权限不能为空"));
-        // 如果存在缓存 就先
-        String oldToken = userIdTokenCache.getIfPresent(authority.getSecurityUser().getId());
+        // 如果存在缓存 先失效
+        String oldToken = userIdTokenCache.getIfPresent(authority.getSecurityUser().getId() + "-" + authority.getClientType());
         if (!StringUtils.isEmpty(oldToken)) {
             tokenAuthorityCache.invalidate(oldToken);
             userIdTokenCache.invalidate(authority.getSecurityUser().getId());
         }
         // 保存token与权限的关系
-        userIdTokenCache.put(authority.getSecurityUser().getId(), token);
+        userIdTokenCache.put(authority.getSecurityUser().getId() + "-" + authority.getClientType(), token);
         tokenAuthorityCache.put(token, authority);
     }
 
@@ -89,13 +89,13 @@ public class DefaultTokenManager implements TokenManager {
         // 如果存在  移除token 与 perms的缓存
         tokenAuthorityCache.invalidate(token);
         // 移除掉userId 对应的 token缓存
-        userIdTokenCache.invalidate(authority.getSecurityUser().getId());
+        userIdTokenCache.invalidate(authority.getSecurityUser().getId() + "-" + authority.getClientType());
     }
 
     @Override
-    public Boolean checkToken(String token, String userId) throws Exception {
+    public Boolean checkToken(String token, String userId, String clientType) throws Exception {
         // 获取到用户id对应的token
-        String saveToken = userIdTokenCache.getIfPresent(userId);
+        String saveToken = userIdTokenCache.getIfPresent(userId + "-" + clientType);
         if (StringUtils.isEmpty(saveToken)) return false;
         // 判断token是否正确
         return token.equals(saveToken);
@@ -109,7 +109,7 @@ public class DefaultTokenManager implements TokenManager {
         // 获取token 存在的有效权限信息
         SecurityAuthority authority = tokenAuthorityCache.getIfPresent(token);
         if (authority == null) {
-            throw CommonException.create(ServerResponse.createByError(Integer.parseInt(xuGouSecurityProperties.getNoAuthorizedCode()),"token无效"));
+            throw CommonException.create(ServerResponse.createByError(Integer.parseInt(xuGouSecurityProperties.getNoAuthorizedCode()), "token无效"));
         }
         // 完成验证后 返回权限信息
         return authority;

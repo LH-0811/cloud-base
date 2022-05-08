@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.lang.reflect.Method;
+
 /**
  * @author lh0811
  * @date 2021/5/10
@@ -56,6 +58,11 @@ public class HasUrlAop extends AuthAbstractClass {
         }
 
         Object proceed = joinPoint.proceed(joinPoint.getArgs());
+        // 将新的token写入到返回值中
+        Method setToken = proceed.getClass().getDeclaredMethod("setToken", String.class);
+        if (setToken!=null) {
+            setToken.invoke(proceed,securityAuthority.getToken());
+        }
         log.debug("退出HasUrlAop切面");
         return proceed;
     }

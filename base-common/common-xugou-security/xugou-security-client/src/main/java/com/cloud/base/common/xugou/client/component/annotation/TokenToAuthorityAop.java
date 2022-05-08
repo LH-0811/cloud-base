@@ -11,6 +11,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 
+import java.lang.reflect.Method;
+
 /**
  * @author lh0811
  * @date 2021/5/10
@@ -46,6 +48,11 @@ public class TokenToAuthorityAop extends AuthAbstractClass implements Ordered {
             setSecurityAuthority(joinPoint,securityAuthority);
         }
         Object proceed = joinPoint.proceed(joinPoint.getArgs());
+        // 将新的token写入到返回值中
+        Method setToken = proceed.getClass().getDeclaredMethod("setToken", String.class);
+        if (setToken!=null) {
+            setToken.invoke(proceed,securityAuthority.getToken());
+        }
         log.debug("退出HasTokenAop切面");
         return proceed;
     }

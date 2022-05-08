@@ -14,7 +14,6 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <dependencies>
-
         <!--通用-->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -95,14 +94,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-
         <!--web应用-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
     </dependencies>
-
 
 </project>

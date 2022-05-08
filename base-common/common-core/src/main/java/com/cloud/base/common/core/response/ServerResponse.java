@@ -16,6 +16,8 @@ public class ServerResponse<T> implements Serializable {
     @ApiModelProperty(value = "附加消息")
     private String msg;
 
+    @ApiModelProperty(value = "用户token")
+    private String token;
 
     @ApiModelProperty(value = "数据")
     private T data;
