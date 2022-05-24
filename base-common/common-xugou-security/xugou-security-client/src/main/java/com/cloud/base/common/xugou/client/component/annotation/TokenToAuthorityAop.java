@@ -11,6 +11,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
@@ -34,6 +35,13 @@ public class TokenToAuthorityAop extends AuthAbstractClass implements Ordered {
         log.debug("进入HasTokenAop切面");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         TokenToAuthority annotation = signature.getMethod().getAnnotation(TokenToAuthority.class);
+        if (annotation == null) {
+            Annotation declaredAnnotation = signature.getDeclaringType().getDeclaredAnnotation(TokenToAuthority.class);
+            if (declaredAnnotation != null) {
+                annotation = (TokenToAuthority) declaredAnnotation;
+            }
+        }
+
         // 判断是否已经有了用户权限信息
         SecurityAuthority securityAuthority = getSecurityAuthority(joinPoint);
         if (securityAuthority != null) {
@@ -48,6 +56,9 @@ public class TokenToAuthorityAop extends AuthAbstractClass implements Ordered {
             setSecurityAuthority(joinPoint,securityAuthority);
         }
         Object proceed = joinPoint.proceed(joinPoint.getArgs());
+        if (proceed == null) {
+            return proceed;
+        }
         // 将新的token写入到返回值中
         Method setToken = proceed.getClass().getDeclaredMethod("setToken", String.class);
         if (setToken!=null) {

@@ -47,6 +47,9 @@ public class DefaultSecurityClientImpl implements SecurityClient {
 
     @Override
     public SecurityAuthority tokenToAuthority(Boolean require) throws Exception {
+        if (!require) {
+            return new SecurityAuthority();
+        }
         String token = provideResToSecurityClient.getTokenFromApplicationContext();
         if (StringUtils.isBlank(token)) {
             throw CommonException.create(ServerResponse.createByError(Integer.valueOf(xuGouSecurityProperties.getNoAuthorizedCode()), "未上传用户token", ""));

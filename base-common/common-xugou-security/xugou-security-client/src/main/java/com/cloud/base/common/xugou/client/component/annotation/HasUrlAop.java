@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
@@ -38,6 +39,12 @@ public class HasUrlAop extends AuthAbstractClass {
         log.debug("进入HasUrlAop切面");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         HasUrl annotation = signature.getMethod().getAnnotation(HasUrl.class);
+        if (annotation == null) {
+            Annotation declaredAnnotation = signature.getDeclaringType().getDeclaredAnnotation(HasUrl.class);
+            if (declaredAnnotation != null) {
+                annotation = (HasUrl) declaredAnnotation;
+            }
+        }
         String url = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getRequestURI();
         if (StringUtils.isBlank(url)) {
             throw CommonException.create(ServerResponse.createByError("使用HasUrl标志的方法必须在请求上下文中:"+signature.getDeclaringType().getName()+"."+signature.getMethod().getName()));
@@ -58,6 +65,9 @@ public class HasUrlAop extends AuthAbstractClass {
         }
 
         Object proceed = joinPoint.proceed(joinPoint.getArgs());
+        if (proceed == null) {
+            return proceed;
+        }
         // 将新的token写入到返回值中
         Method setToken = proceed.getClass().getDeclaredMethod("setToken", String.class);
         if (setToken!=null) {

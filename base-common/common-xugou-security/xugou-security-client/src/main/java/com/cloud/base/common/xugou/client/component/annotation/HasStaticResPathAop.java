@@ -13,6 +13,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 
@@ -33,7 +34,12 @@ public class HasStaticResPathAop extends AuthAbstractClass {
         log.debug("进入HasStaticResPathAop切面");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         HasStaticResPath annotation = signature.getMethod().getAnnotation(HasStaticResPath.class);
-
+        if (annotation == null) {
+            Annotation declaredAnnotation = signature.getDeclaringType().getDeclaredAnnotation(HasStaticResPath.class);
+            if (declaredAnnotation != null) {
+                annotation = (HasStaticResPath) declaredAnnotation;
+            }
+        }
         String resPath = annotation.resPath();
         if (StringUtils.isBlank(resPath))
             throw CommonException.create(ServerResponse.createByError("使用@HasStaticResPath注解，必须填写resPath。"));
@@ -53,6 +59,9 @@ public class HasStaticResPathAop extends AuthAbstractClass {
         }
 
         Object proceed = joinPoint.proceed(joinPoint.getArgs());
+        if (proceed == null) {
+            return proceed;
+        }
         // 将新的token写入到返回值中
         Method setToken = proceed.getClass().getDeclaredMethod("setToken", String.class);
         if (setToken!=null) {

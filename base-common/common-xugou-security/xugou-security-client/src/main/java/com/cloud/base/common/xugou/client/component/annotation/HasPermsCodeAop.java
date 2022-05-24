@@ -13,6 +13,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 
@@ -34,6 +35,12 @@ public class HasPermsCodeAop extends AuthAbstractClass {
         log.debug("进入HasPermsCodeAop切面");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         HasPermsCode annotation = signature.getMethod().getAnnotation(HasPermsCode.class);
+        if (annotation == null) {
+            Annotation declaredAnnotation = signature.getDeclaringType().getDeclaredAnnotation(HasPermsCode.class);
+            if (declaredAnnotation != null) {
+                annotation = (HasPermsCode) declaredAnnotation;
+            }
+        }
         String permsCode = annotation.permsCode();
         if (StringUtils.isBlank(permsCode))
             throw CommonException.create(ServerResponse.createByError("使用@HasPermsCode注解，必须填写permsCode。"));
@@ -51,6 +58,9 @@ public class HasPermsCodeAop extends AuthAbstractClass {
             setSecurityAuthority(joinPoint, securityAuthority);
         }
         Object proceed = joinPoint.proceed(joinPoint.getArgs());
+        if (proceed == null) {
+            return proceed;
+        }
         // 将新的token写入到返回值中
         Method setToken = proceed.getClass().getDeclaredMethod("setToken", String.class);
         if (setToken!=null) {
