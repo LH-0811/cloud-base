@@ -20,7 +20,6 @@
         <module>base-gateway</module>
         <module>base-authorize</module>
         <module>user-center</module>
-        <module>youji-manage-server</module>
     </modules>
 
 

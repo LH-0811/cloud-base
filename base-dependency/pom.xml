@@ -19,7 +19,6 @@
     <description>功能能力依赖管理模块</description>
 
     <modules>
-        <module>dependency-mybatis-tk</module>
         <module>dependency-alibaba-cloud</module>
         <module>dependency-seata</module>
         <module>dependency-sentinel</module>

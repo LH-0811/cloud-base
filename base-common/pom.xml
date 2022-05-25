@@ -22,9 +22,6 @@
         <module>common-core</module>
         <module>common-logger</module>
         <module>common-multisource</module>
-        <module>common-youji-task</module>
         <module>common-xugou-security</module>
-        <module>common-excel</module>
-        <module>common-youji-cronjob</module>
     </modules>
 </project>

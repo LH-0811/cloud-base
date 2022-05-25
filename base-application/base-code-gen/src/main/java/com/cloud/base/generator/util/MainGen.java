@@ -24,7 +24,9 @@ import java.util.zip.ZipOutputStream;
  */
 public class MainGen {
 
-    private static List<String> tableList = Lists.newArrayList("bank_act_fund_use");
+    private static List<String> tableList = Lists.newArrayList("contract_info",
+            "contract_repay_detail",
+            "contract_repay_plan");
 
     private static String packageName = "com.fbi.psfs.svc.account.repository";
 
